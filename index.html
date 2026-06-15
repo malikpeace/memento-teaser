@@ -350,13 +350,13 @@ section{ padding:64px 0; }
 .appmock{ text-align:center; }
 .mock{ display:flex; justify-content:center; margin-top:10px; }
 .mock__frame{
-  position:relative; width:320px; max-width:88vw; border-radius:24px; padding:16px;
+  position:relative; width:320px; max-width:88vw; border-radius:24px; padding:46px 16px 16px;
   background:linear-gradient(180deg, rgba(var(--ink),0.05), rgba(var(--ink),0.02));
   -webkit-backdrop-filter:blur(30px) saturate(140%); backdrop-filter:blur(30px) saturate(140%);
   box-shadow:var(--glass-highlight), 0 30px 80px rgba(0,0,0,0.55);
 }
 .mock__soon{
-  position:absolute; top:14px; right:14px; z-index:3;
+  position:absolute; top:14px; left:14px; z-index:3;
   font-size:10px; font-weight:600; letter-spacing:0.08em; text-transform:uppercase;
   color:var(--text-mid); background:rgba(8,8,12,0.6); padding:6px 11px; border-radius:999px;
   -webkit-backdrop-filter:blur(8px); backdrop-filter:blur(8px);
@@ -368,7 +368,14 @@ section{ padding:64px 0; }
   background:rgba(var(--ink),0.035); box-shadow:var(--glass-highlight);
   display:flex; flex-direction:column; gap:8px;
 }
-.mock__dot{ width:16px; height:16px; border-radius:6px; background:rgba(var(--ink),0.10); }
+.mock__dot{ width:18px; height:18px; border-radius:6px; background:rgba(var(--ink),0.10); }
+.mock__dot--a{ background:rgba(138,114,255,0.55); }
+.mock__dot--b{ background:rgba(255,255,255,0.5); }
+.mock__dot--c{ background:rgba(48,209,88,0.5); }
+.mock__dot--d{ background:rgba(var(--ink),0.14); }
+.mock__cardline--s{ width:60px; margin-top:-4px; opacity:0.6; }
+.pillars-intro{ max-width:30ch; margin:0 auto; text-align:center; font-size:15px; line-height:1.55; color:var(--text-mid); }
+.pillars-note{ margin-top:30px; }
 .mock__line{ height:6px; border-radius:999px; background:rgba(var(--ink),0.07); }
 .mock__line--s{ width:56%; }
 .mock__card{
@@ -477,7 +484,7 @@ section{ padding:64px 0; }
       <p>Read hundreds of books, watch thousands of videos, study the people who actually made it, and you'll get a thousand different answers.</p>
       <p>But the common denominator between all of them is that they took <b class="cool">focused action, on one thing, over a long period of time.</b></p>
       <p>That's how anything worthwhile gets done. I honestly can't think of how you can achieve anything without that. If you just focus on that, it makes not achieving your goals unreasonable. A lot of people overcomplicate it, have information overload, and don't have a space they can return to and get clear on their mission. That's where Memento comes in.</p>
-      <p>Memento is built to be one place that helps you get clear on what you actually want, find the highest-leverage action to get there, and stay consistent until you do.</p>
+      <p>Memento is built to be one place that helps you get clear on what you actually want, why you want it, find the highest-leverage action to get there, and stay consistent until you do.</p>
     </div>
   </section>
 
@@ -485,6 +492,7 @@ section{ padding:64px 0; }
 
   <!-- ============ PILLARS ============ -->
   <section id="pillars">
+    <p class="pillars-intro reveal">The philosophy behind Memento is split into three main pillars:</p>
     <div class="pillars">
       <div class="pillar reveal" style="--d:0.05s;">
         <div class="pillar__icon"><svg viewBox="0 0 80 80" fill="none" xmlns="http://www.w3.org/2000/svg"><circle cx="40" cy="40" r="32" stroke="#8a72ff" stroke-width="1.2" opacity="0.2"/><circle cx="40" cy="40" r="22" stroke="#8a72ff" stroke-width="1.2" opacity="0.45"/><circle cx="40" cy="40" r="12" stroke="#8a72ff" stroke-width="1.5" opacity="0.75"/><circle cx="40" cy="40" r="3.5" fill="#8a72ff"/></svg></div>
@@ -502,29 +510,30 @@ section{ padding:64px 0; }
         <div class="pillar__desc">You show up, it stacks, the goal becomes inevitable.</div>
       </div>
     </div>
+    <div class="note reveal pillars-note">
+      <p>Memento is a tool that helps you find all three, plus many other tools to keep you on track and aligned.</p>
+      <p>Memento means remember in Latin, and mementos are objects that remind us of something specific.</p>
+      <p>Memento is a personal souvenir you build over time, that keeps you in line.</p>
+    </div>
   </section>
 
   <div class="divider"></div>
 
   <!-- ============ APP MOCKUP ============ -->
   <section class="appmock">
-    <div class="reveal">
-      <div class="eyebrow">A look inside</div>
-      <h2 class="h2">Everything in one view.</h2>
-    </div>
-    <div class="mock reveal" style="--d:0.08s;">
+    <div class="mock reveal">
       <div class="mock__frame">
         <span class="mock__soon">Coming soon</span>
-        <div class="mock__bar" aria-hidden="true"></div>
         <div class="mock__grid" aria-hidden="true">
-          <div class="mock__tile"><div class="mock__dot"></div><div class="mock__line"></div><div class="mock__line mock__line--s"></div></div>
-          <div class="mock__tile"><div class="mock__dot"></div><div class="mock__line"></div><div class="mock__line mock__line--s"></div></div>
+          <div class="mock__tile"><div class="mock__dot mock__dot--a"></div><div class="mock__line"></div><div class="mock__line mock__line--s"></div></div>
+          <div class="mock__tile"><div class="mock__dot mock__dot--b"></div><div class="mock__line"></div><div class="mock__line mock__line--s"></div></div>
           <div class="mock__card">
             <svg viewBox="0 0 512 512" aria-hidden="true"><path d="M150 146 L256 252 L362 146 L362 366 L150 366 Z" stroke-width="14" stroke-linejoin="round"/></svg>
             <div class="mock__cardline"></div>
+            <div class="mock__cardline mock__cardline--s"></div>
           </div>
-          <div class="mock__tile"><div class="mock__dot"></div><div class="mock__line"></div><div class="mock__line mock__line--s"></div></div>
-          <div class="mock__tile"><div class="mock__dot"></div><div class="mock__line"></div><div class="mock__line mock__line--s"></div></div>
+          <div class="mock__tile"><div class="mock__dot mock__dot--c"></div><div class="mock__line"></div><div class="mock__line mock__line--s"></div></div>
+          <div class="mock__tile"><div class="mock__dot mock__dot--d"></div><div class="mock__line"></div><div class="mock__line mock__line--s"></div></div>
         </div>
       </div>
     </div>
