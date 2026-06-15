@@ -299,8 +299,22 @@ section{ padding:64px 0; }
 .note{ max-width:540px; margin:0 auto; text-align:center; }
 .note p{ font-size:15px; line-height:1.65; color:var(--text-mid); margin-bottom:16px; }
 .note p:last-child{ margin-bottom:0; }
-#problem .h2{ color:#ff8178; }
-#solution .h2{ color:#3ddc84; }
+.note b.hot{ color:#ff8178; }
+.note b.cool{ color:#3ddc84; }
+.note-toggle{ max-width:540px; margin:0 auto; }
+.note-toggle summary{
+  list-style:none; cursor:pointer; display:flex; align-items:center; justify-content:center; gap:8px;
+  min-height:44px; font-size:14px; font-weight:500; letter-spacing:0.01em; color:var(--text-mid);
+  transition:color 160ms var(--ease-out);
+}
+.note-toggle summary::-webkit-details-marker{ display:none; }
+.note-toggle summary:hover{ color:var(--text-hi); }
+.note-toggle summary:focus-visible{ outline:none; color:var(--text-hi); box-shadow:0 0 0 3px rgba(var(--accent-rgb),0.5); border-radius:8px; }
+.note-toggle summary svg{ width:16px; height:16px; transition:transform 200ms var(--ease-out); }
+.note-toggle[open] summary svg{ transform:rotate(180deg); }
+.note-toggle__body{ max-width:540px; margin:16px auto 0; text-align:center; }
+.note-toggle__body p{ font-size:15px; line-height:1.65; color:var(--text-mid); margin-bottom:16px; }
+.note-toggle__body p:last-child{ margin-bottom:0; }
 .note__sign{ margin-top:24px; font-size:14px; color:var(--text-lo); }
 .note__sign a{ color:var(--text-mid); text-decoration:none; }
 .note__sign a:hover{ color:var(--text-hi); }
@@ -367,6 +381,7 @@ section{ padding:64px 0; }
   .ns-star, .ns-star-glow, .ns-star-blob{ animation:none !important; }
   .ambient__rays-beam-shaft{ opacity:var(--omax, 0.4); }
   .reveal{ opacity:1 !important; transform:none !important; filter:none !important; transition:none !important; }
+  .note-toggle summary svg{ transition:none !important; }
 }
 </style>
 </head>
@@ -418,10 +433,9 @@ section{ padding:64px 0; }
   <!-- ============ THE PROBLEM ============ -->
   <section class="note" id="problem">
     <div class="reveal">
-      <h2 class="h2">The Problem.</h2>
-      <p>People can't focus. People can't stay consistent. People can't stick with the promises they make to themselves, and they live in a constant limbo of discomfort and dissatisfaction with their lives.</p>
-      <p>Over the years, as I've experienced this myself, and reached millions of people with the same problem, I decided to create a tool to <b>actually</b> fix this.</p>
-      <p>99% of the time it's not just because people are lazy. It's because they have too many distractions, too much information, and don't know what to do or how to do it.</p>
+      <p>You know exactly what you should be doing. <b class="hot">You're just not doing it.</b></p>
+      <p>You can't focus, you can't stay consistent, and the promises you make to yourself keep slipping. So you stay stuck, year after year.</p>
+      <p>It's not that you're lazy. It's too many distractions, too much information, and no clear idea of what to actually do.</p>
     </div>
   </section>
 
@@ -430,12 +444,9 @@ section{ padding:64px 0; }
   <!-- ============ THE SOLUTION ============ -->
   <section class="note" id="solution">
     <div class="reveal">
-      <h2 class="h2">The Solution.</h2>
-      <p>Memento. I'm frustrated seeing so many people struggle to get the most out of their existence, so I'm creating a tool to help people on a deeper level.</p>
-      <p>Read hundreds of books, listen to thousands of stories, watch tens of thousands of videos, learning from different people in different times, all achieving success in their own way, and you'll get a thousand different answers.</p>
-      <p>But the common denominator between them all is this: <b>focused action, on one thing, over a long period of time.</b></p>
-      <p>Strip everything down to that simple equation, and that's how things get done.</p>
-      <p>It's easier said than done, of course. That's where Memento comes in.</p>
+      <p>Read hundreds of books, watch thousands of videos, study the people who actually made it, and you'll get a thousand different answers.</p>
+      <p>Underneath all of them is the same thing: <b class="cool">focused action, on one thing, over a long period of time.</b></p>
+      <p>That's how anything real gets done. It's just hard to do alone. That's where Memento comes in.</p>
     </div>
   </section>
 
@@ -490,16 +501,18 @@ section{ padding:64px 0; }
 
   <div class="divider"></div>
 
-  <!-- ============ FROM MALIK ============ -->
-  <section class="note">
-    <div class="reveal">
-      <div class="eyebrow">From me to you</div>
-      <h2 class="h2">Why I'm building this.</h2>
-      <p>I've spent years trying to get better, to improve my life and make progress toward my goals. But I always struggled with focus and actually doing the things I claimed I wanted to do. I never quite understood why.</p>
-      <p>Over the years, as I've learned more about myself and reached thousands of people, I realized it comes down to a few things. Clarity, Action, and Consistency. This system is built off years of my own experience and philosophy, to help people actually get the most out of their lives.</p>
-      <p>Memento is something you keep to remember what matters. I want it to be a place you come back to over and over again, to get clear on what you want, see exactly how to get it, and stay consistent until you reach it.</p>
+  <!-- ============ FROM MALIK (collapsible) ============ -->
+  <details class="note-toggle reveal">
+    <summary>
+      Why I'm building this
+      <svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M6 9l6 6 6-6" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+    </summary>
+    <div class="note-toggle__body">
+      <p>I've spent years trying to get better, to make real progress toward my goals. But I always struggled with focus and actually doing the things I said I wanted to. I never understood why.</p>
+      <p>Over the years, as I learned more about myself and reached millions of people, I realized it comes down to a few things: Clarity, Action, and Consistency. Memento is built off years of my own experience and philosophy.</p>
+      <p>Memento is something you keep to remember what matters. I want it to be a place you come back to over and over, to get clear on what you want, see how to get it, and stay consistent until you do.</p>
     </div>
-  </section>
+  </details>
 
   <div class="divider"></div>
 
