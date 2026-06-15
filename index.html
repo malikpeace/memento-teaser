@@ -152,7 +152,7 @@ section{ padding:64px 0; }
 }
 .hero__line{
   font-size:clamp(15px, 4vw, 17px); line-height:1.5; color:var(--text-mid);
-  max-width:30ch; margin:0 auto 34px; animation:rise 0.9s var(--ease-out) 0.26s both; text-wrap:balance;
+  max-width:30ch; margin:0 auto 18px; animation:rise 0.9s var(--ease-out) 0.26s both; text-wrap:balance;
 }
 .softcta{
   display:inline-flex; align-items:center; gap:6px; margin-top:26px; min-height:44px;
@@ -161,7 +161,7 @@ section{ padding:64px 0; }
 }
 .softcta:hover{ color:var(--text-hi); gap:10px; }
 .softcta:focus-visible{ outline:none; color:var(--text-hi); box-shadow:0 0 0 3px rgba(var(--accent-rgb),0.5); border-radius:6px; }
-.cta-row{ animation:rise 0.9s var(--ease-out) 0.34s both; }
+.cta-row{ margin-top:30px; animation:rise 0.9s var(--ease-out) 0.42s both; }
 .btn{
   display:inline-flex; align-items:center; justify-content:center; gap:9px;
   min-height:52px; border:0; cursor:pointer; font-family:var(--font);
@@ -175,8 +175,8 @@ section{ padding:64px 0; }
 .btn:active{ transform:scale(0.98); }
 .btn:focus-visible{ outline:none; box-shadow:inset 0 1px 0 rgba(255,255,255,0.85), 0 0 0 3px rgba(var(--accent-rgb),0.6); }
 .hero__soon{
-  margin-top:22px; font-size:12.5px; letter-spacing:0.04em; color:var(--text-lo);
-  display:inline-flex; align-items:center; gap:8px; animation:rise 0.9s var(--ease-out) 0.42s both;
+  margin-top:0; font-size:12.5px; letter-spacing:0.04em; color:var(--text-lo);
+  display:inline-flex; align-items:center; gap:8px; animation:rise 0.9s var(--ease-out) 0.34s both;
 }
 .hero__soon::before{ content:''; width:6px; height:6px; border-radius:50%; background:var(--accent); box-shadow:0 0 10px rgba(var(--accent-rgb),0.8); animation:soonPulse 2.2s ease-in-out infinite; }
 @keyframes soonPulse{
@@ -418,13 +418,13 @@ section{ padding:64px 0; }
     </div>
     <h1 class="hero__mark">Memento</h1>
     <p class="hero__line">A personal system for those who <b>actually</b> want to lock in.</p>
+    <div class="hero__soon">Currently in private testing. Coming soon...</div>
     <div class="cta-row">
       <a class="btn" href="#signup">
         Be first to know
         <svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M12 5v14M5 12l7 7 7-7" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
       </a>
     </div>
-    <div class="hero__soon">Currently in private testing. Coming soon...</div>
     <a class="scrollcue" href="#about" aria-label="Read more">
       <svg viewBox="0 0 24 24" fill="none"><path d="M6 9l6 6 6-6" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
     </a>
