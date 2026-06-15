@@ -68,13 +68,12 @@ body{
 }
 .ambient__rays-beam-shaft{
   position:absolute; inset:0;
-  /* Light loses power along its length: brightest at the source (top-left),
-     tapering to nothing well before the end so the tips fade out softly
-     instead of running across as straight lines. */
-  background:radial-gradient(ellipse 46% 50% at 0% 50%,
-    rgb(var(--c, 255 255 255) / 0.95) 0%, rgb(var(--c, 255 255 255) / 0.58) 13%,
-    rgb(var(--c, 255 255 255) / 0.30) 32%, rgb(var(--c, 255 255 255) / 0.13) 52%,
-    rgb(var(--c, 255 255 255) / 0.045) 72%, transparent 90%);
+  /* Long beams that reach across the screen like the Memento app: brightest
+     at the source (top-left), fading out near the far end. */
+  background:radial-gradient(ellipse 92% 50% at 0% 50%,
+    rgb(var(--c, 255 255 255) / 0.95) 0%, rgb(var(--c, 255 255 255) / 0.62) 14%,
+    rgb(var(--c, 255 255 255) / 0.30) 32%, rgb(var(--c, 255 255 255) / 0.12) 54%,
+    rgb(var(--c, 255 255 255) / 0.04) 74%, transparent 92%);
   filter:blur(7px); transform-origin:0% 50%;
   opacity:var(--omin, 0.05);
   animation:ambientBeamFlicker var(--d, 10s) ease-in-out infinite;
