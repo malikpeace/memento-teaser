@@ -301,6 +301,11 @@ section{ padding:64px 0; }
 .note p:last-child{ margin-bottom:0; }
 .note b.hot{ color:#ff8178; }
 .note b.cool{ color:#3ddc84; }
+#problem .h2{ color:#ff8178; }
+.problem-list{ list-style:none; max-width:34ch; margin:18px auto 0; text-align:left; display:flex; flex-direction:column; gap:9px; }
+.problem-list li{ position:relative; padding-left:20px; font-size:15px; line-height:1.45; color:var(--text-mid); }
+.problem-list li::before{ content:''; position:absolute; left:3px; top:0.6em; width:5px; height:5px; border-radius:50%; background:#ff8178; opacity:0.85; }
+.problem-more{ color:var(--text-lo); margin-top:14px; }
 .note-toggle{ max-width:540px; margin:0 auto; }
 .note-toggle summary{
   list-style:none; cursor:pointer; display:flex; align-items:center; justify-content:center; gap:8px;
@@ -435,7 +440,6 @@ section{ padding:64px 0; }
     <div class="reveal">
       <h2 class="h2">What is Memento?</h2>
       <p>Memento is a personal system I've been building in the background for months, to help you beyond just my videos.</p>
-      <p>Over the years I've seen the same problems show up in millions of people, and this is my shot at actually fixing them.</p>
     </div>
   </section>
 
@@ -444,9 +448,19 @@ section{ padding:64px 0; }
   <!-- ============ THE PROBLEM ============ -->
   <section class="note" id="problem">
     <div class="reveal">
-      <p>You know exactly what you should be doing. <b class="hot">You're just not doing it.</b></p>
-      <p>You can't focus, you can't stay consistent, and the promises you make to yourself keep slipping. So you stay stuck, year after year.</p>
-      <p>It's not that you're lazy. It's too many distractions, too much information, and no clear idea of what to actually do.</p>
+      <h2 class="h2">The Problem</h2>
+      <p>Over the years I've seen the same problems show up again and again in millions of people:</p>
+      <ul class="problem-list">
+        <li>Lack of focus</li>
+        <li>Lack of direction</li>
+        <li>10+ hour screen time</li>
+        <li>Being ambitious but lazy</li>
+        <li>Inability to be consistent for longer than 5 days</li>
+        <li>Knowing exactly what to do and still not doing it</li>
+        <li>Watching 1,000s of videos yet changing nothing</li>
+        <li>Not taking real, meaningful, high-leverage actions towards goals</li>
+      </ul>
+      <p class="problem-more">and on and on and on.</p>
     </div>
   </section>
 
