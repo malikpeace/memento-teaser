@@ -153,9 +153,9 @@ section{ padding:64px 0; }
   font-size:clamp(15px, 4vw, 17px); line-height:1.5; color:var(--text-mid);
   max-width:30ch; margin:0 auto 10px; animation:rise 0.9s var(--ease-out) 0.26s both; text-wrap:balance;
 }
-.hero__value{
-  font-size:clamp(14px, 3.7vw, 15.5px); line-height:1.45; color:var(--text-mid);
-  max-width:38ch; margin:0 auto 32px; animation:rise 0.9s var(--ease-out) 0.32s both; text-wrap:balance;
+.hero__explain{
+  font-size:clamp(14px, 3.7vw, 15px); line-height:1.6; color:var(--text-mid);
+  max-width:46ch; margin:0 auto 32px; animation:rise 0.9s var(--ease-out) 0.32s both; text-wrap:pretty;
 }
 .softcta{
   display:inline-flex; align-items:center; gap:6px; margin-top:26px; min-height:44px;
@@ -208,21 +208,21 @@ section{ padding:64px 0; }
 .eq-op{ font-size:16px; color:var(--text-lo); font-weight:400; }
 
 /* ============ PILLARS ============ */
-.pillars{ display:grid; grid-template-columns:repeat(3, 1fr); gap:14px; margin-top:36px; }
-@media (max-width:640px){ .pillars{ grid-template-columns:1fr; max-width:420px; margin-inline:auto; } }
+.pillars{ display:flex; flex-direction:column; gap:10px; margin-top:28px; max-width:440px; margin-inline:auto; }
 .pillar{
-  padding:24px 22px; border-radius:16px; text-align:left;
+  display:grid; grid-template-columns:auto 1fr; column-gap:16px; align-items:center;
+  padding:15px 18px; border-radius:14px; text-align:left;
   background:var(--glass-card); -webkit-backdrop-filter:blur(20px) saturate(130%); backdrop-filter:blur(20px) saturate(130%);
   box-shadow:var(--glass-highlight); transition:background 220ms var(--ease-out), transform 220ms var(--ease-out);
 }
 @media (hover:hover){ .pillar:hover{ background:var(--glass-card-hover); transform:translateY(-2px); } }
 .pillar__icon{
-  height:46px; display:flex; align-items:center; justify-content:flex-start;
-  margin-bottom:14px;
+  grid-row:1 / span 2; align-self:center; width:40px; height:40px;
+  display:flex; align-items:center; justify-content:center;
 }
-.pillar__icon svg{ width:46px; height:46px; display:block; }
-.pillar__title{ font-size:16px; font-weight:600; letter-spacing:-0.01em; margin-bottom:7px; color:var(--text-hi); }
-.pillar__desc{ font-size:13.5px; line-height:1.6; color:var(--text-mid); }
+.pillar__icon svg{ width:40px; height:40px; display:block; }
+.pillar__title{ font-size:15px; font-weight:600; letter-spacing:-0.01em; margin-bottom:2px; color:var(--text-hi); }
+.pillar__desc{ font-size:13px; line-height:1.45; color:var(--text-mid); }
 
 /* ============ NEUTRON STAR (the real app asset: WebGL .ns-star-blob + glow) ============ */
 .neutron{ text-align:center; }
@@ -364,7 +364,7 @@ section{ padding:64px 0; }
 @media (prefers-reduced-motion: reduce){
   html{ scroll-behavior:auto; }
   .ambient__rays-source, .ambient__rays-beam-shaft, .logo-tile, .hero__mark,
-  .hero__line, .hero__value, .cta-row, .hero__soon, .hero__soon::before, .scrollcue,
+  .hero__line, .hero__explain, .cta-row, .hero__soon, .hero__soon::before, .scrollcue,
   .ns-star, .ns-star-glow, .ns-star-blob{ animation:none !important; }
   .ambient__rays-beam-shaft{ opacity:var(--omax, 0.4); }
   .reveal{ opacity:1 !important; transform:none !important; filter:none !important; transition:none !important; }
@@ -403,8 +403,8 @@ section{ padding:64px 0; }
       </svg>
     </div>
     <h1 class="hero__mark">Memento</h1>
-    <p class="hero__line">A system for those who <b>actually</b> want to lock in.</p>
-    <p class="hero__value">Get clear on the one goal that matters, then follow through.</p>
+    <p class="hero__line">A personal system for those who <b>actually</b> want to lock in.</p>
+    <p class="hero__explain">Memento is Latin for remember. It helps you remember what you want, why you want it, and how to get it, all in one place, so you keep moving forward.</p>
     <div class="cta-row">
       <a class="btn" href="#signup">
         Be first to know
@@ -461,20 +461,6 @@ section{ padding:64px 0; }
           <div class="mock__tile"><div class="mock__dot"></div><div class="mock__line"></div><div class="mock__line mock__line--s"></div></div>
         </div>
       </div>
-    </div>
-  </section>
-
-  <div class="divider"></div>
-
-  <!-- ============ NEUTRON STAR ============ -->
-  <section class="neutron">
-    <div class="reveal">
-      <div class="ns-star" aria-hidden="true">
-        <div class="ns-star-glow"></div>
-        <canvas class="ns-star-blob" id="nsStarBlob" width="360" height="360"></canvas>
-      </div>
-      <h2 class="h2">Find your Neutron Star.</h2>
-      <p class="lead">The one goal so worth chasing that everything else orbits around it.</p>
     </div>
   </section>
 
