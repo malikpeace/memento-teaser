@@ -608,9 +608,8 @@ function initStarBlob(canvas, size){
 (function(){ var c = document.getElementById('nsStarBlob'); if(c) initStarBlob(c, 360); })();
 
 (function(){
-  // Scroll-reveal: animate sections/cards both ways. They ease in as they
-  // enter the middle of the viewport and ease back out as they leave, so the
-  // motion plays whether you scroll down OR back up (not just once).
+  // Scroll-reveal: each section/card eases in ONCE as it enters the viewport,
+  // then stays put. No re-animation when scrolling back up.
   var items = document.querySelectorAll('.reveal');
   var reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
   if(reduce || !('IntersectionObserver' in window)){
@@ -619,9 +618,9 @@ function initStarBlob(canvas, size){
   }
   var io = new IntersectionObserver(function(entries){
     entries.forEach(function(e){
-      e.target.classList.toggle('in', e.isIntersecting);
+      if(e.isIntersecting){ e.target.classList.add('in'); io.unobserve(e.target); }
     });
-  }, { rootMargin: '-12% 0px -12% 0px', threshold: 0 });
+  }, { rootMargin: '0px 0px -10% 0px', threshold: 0 });
   items.forEach(function(el){ io.observe(el); });
 })();
 </script>
