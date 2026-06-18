@@ -206,10 +206,13 @@ section{ padding:64px 0; }
 .eq-op{ font-size:16px; color:var(--text-lo); font-weight:400; }
 
 /* ============ PILLARS ============ */
-.pillars{ display:flex; flex-direction:column; gap:30px; margin-top:34px; max-width:40ch; margin-inline:auto; }
+.pillars{ display:flex; flex-direction:column; gap:34px; margin-top:34px; max-width:40ch; margin-inline:auto; }
 .pillar{ text-align:center; }
-.pillar__icon{ display:none; }
+.pillar__icon{ display:flex; justify-content:center; align-items:center; height:44px; margin-bottom:12px; }
+.pillar__icon svg{ width:42px; height:42px; display:block; }
 .pillar__title{ font-size:18px; font-weight:600; letter-spacing:-0.01em; margin-bottom:6px; color:var(--text-hi); }
+.pillar:nth-child(1) .pillar__title{ color:#9d8cff; }
+.pillar:nth-child(3) .pillar__title{ color:#3ddc84; }
 .pillar__desc{ font-size:14px; line-height:1.55; color:var(--text-mid); max-width:34ch; margin-inline:auto; }
 
 /* ============ NEUTRON STAR (the real app asset: WebGL .ns-star-blob + glow) ============ */
