@@ -206,21 +206,11 @@ section{ padding:64px 0; }
 .eq-op{ font-size:16px; color:var(--text-lo); font-weight:400; }
 
 /* ============ PILLARS ============ */
-.pillars{ display:flex; flex-direction:column; gap:10px; margin-top:28px; max-width:440px; margin-inline:auto; }
-.pillar{
-  display:grid; grid-template-columns:auto 1fr; column-gap:16px; align-items:center;
-  padding:15px 18px; border-radius:14px; text-align:left;
-  background:var(--glass-card); -webkit-backdrop-filter:blur(20px) saturate(130%); backdrop-filter:blur(20px) saturate(130%);
-  box-shadow:var(--glass-highlight); transition:background 220ms var(--ease-out), transform 220ms var(--ease-out);
-}
-@media (hover:hover){ .pillar:hover{ background:var(--glass-card-hover); transform:translateY(-2px); } }
-.pillar__icon{
-  grid-row:1 / span 2; align-self:center; width:40px; height:40px;
-  display:flex; align-items:center; justify-content:center;
-}
-.pillar__icon svg{ width:40px; height:40px; display:block; }
-.pillar__title{ font-size:15px; font-weight:600; letter-spacing:-0.01em; margin-bottom:2px; color:var(--text-hi); }
-.pillar__desc{ font-size:13px; line-height:1.45; color:var(--text-mid); }
+.pillars{ display:flex; flex-direction:column; gap:30px; margin-top:34px; max-width:40ch; margin-inline:auto; }
+.pillar{ text-align:center; }
+.pillar__icon{ display:none; }
+.pillar__title{ font-size:18px; font-weight:600; letter-spacing:-0.01em; margin-bottom:6px; color:var(--text-hi); }
+.pillar__desc{ font-size:14px; line-height:1.55; color:var(--text-mid); max-width:34ch; margin-inline:auto; }
 
 /* ============ NEUTRON STAR (the real app asset: WebGL .ns-star-blob + glow) ============ */
 .neutron{ text-align:center; }
