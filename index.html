@@ -152,7 +152,7 @@ section{ padding:64px 0; }
 }
 .hero__line{
   font-size:clamp(15px, 4vw, 17px); line-height:1.5; color:var(--text-mid);
-  max-width:30ch; margin:0 auto 18px; animation:rise 0.9s var(--ease-out) 0.26s both; text-wrap:balance;
+  max-width:30ch; margin:0 auto; animation:rise 0.9s var(--ease-out) 0.26s both; text-wrap:balance;
 }
 .softcta{
   display:inline-flex; align-items:center; gap:6px; margin-top:26px; min-height:44px;
@@ -162,7 +162,7 @@ section{ padding:64px 0; }
 .softcta:hover{ color:var(--text-hi); gap:10px; }
 .softcta:focus-visible{ outline:none; color:var(--text-hi); box-shadow:0 0 0 3px rgba(var(--accent-rgb),0.5); border-radius:6px; }
 .cta-row{ margin-top:30px; animation:rise 0.9s var(--ease-out) 0.42s both; }
-.cta-note{ margin:16px auto 0; max-width:34ch; font-size:13px; line-height:1.5; color:var(--text-lo); animation:rise 0.9s var(--ease-out) 0.5s both; }
+.cta-note{ margin:14px auto 0; max-width:34ch; font-size:12.5px; line-height:1.5; color:var(--text-lo); animation:rise 0.9s var(--ease-out) 0.46s both; }
 .btn{
   display:inline-flex; align-items:center; justify-content:center; gap:9px;
   min-height:52px; border:0; cursor:pointer; font-family:var(--font);
@@ -176,15 +176,15 @@ section{ padding:64px 0; }
 .btn:active{ transform:scale(0.98); }
 .btn:focus-visible{ outline:none; box-shadow:inset 0 1px 0 rgba(255,255,255,0.85), 0 0 0 3px rgba(var(--accent-rgb),0.6); }
 .hero__soon{
-  margin-top:0; font-size:12.5px; letter-spacing:0.04em; color:var(--text-lo);
-  display:inline-flex; align-items:center; gap:8px; animation:rise 0.9s var(--ease-out) 0.34s both;
+  margin-top:18px; font-size:11px; letter-spacing:0.05em; color:var(--text-faint);
+  display:inline-flex; align-items:center; gap:7px; animation:rise 0.9s var(--ease-out) 0.52s both;
 }
 .hero__soon::before{ content:''; width:6px; height:6px; border-radius:50%; background:var(--accent); box-shadow:0 0 10px rgba(var(--accent-rgb),0.8); animation:soonPulse 2.2s ease-in-out infinite; }
 @keyframes soonPulse{
   0%, 100%{ transform:scale(1); opacity:0.8; box-shadow:0 0 8px rgba(var(--accent-rgb),0.65); }
   50%{ transform:scale(1.35); opacity:1; box-shadow:0 0 14px rgba(var(--accent-rgb),1); }
 }
-.scrollcue{ margin-top:54px; color:var(--text-faint); display:inline-flex; align-items:center; justify-content:center; min-width:44px; min-height:44px; animation:rise 0.9s var(--ease-out) 0.5s both, bob 2.4s ease-in-out 1.2s infinite; }
+.scrollcue{ margin-top:54px; color:var(--text-faint); display:inline-flex; align-items:center; justify-content:center; min-width:44px; min-height:44px; animation:rise 0.9s var(--ease-out) 0.56s both, bob 2.4s ease-in-out 1.2s infinite; }
 .scrollcue svg{ width:22px; height:22px; }
 .scrollcue:focus-visible{ outline:none; color:var(--text-mid); box-shadow:0 0 0 3px rgba(var(--accent-rgb),0.5); border-radius:8px; }
 @keyframes bob{ 0%,100%{ transform:translateY(0); } 50%{ transform:translateY(5px); } }
@@ -434,10 +434,11 @@ section{ padding:64px 0; }
     </div>
     <h1 class="hero__mark">Memento</h1>
     <p class="hero__line">The personal system for those who <b>actually</b> want to lock in.</p>
-    <div class="hero__soon">Currently in private testing. Coming soon...</div>
     <div class="cta-row">
       <a class="btn" href="#signup">Join the list</a>
     </div>
+    <p class="cta-note">Updates now, and your discount at launch.</p>
+    <div class="hero__soon">Currently in private testing. Coming soon...</div>
     <a class="scrollcue" href="#about" aria-label="Read more">
       <svg viewBox="0 0 24 24" fill="none"><path d="M6 9l6 6 6-6" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
     </a>
@@ -547,7 +548,7 @@ section{ padding:64px 0; }
   <section class="signup" id="signup">
     <div class="reveal">
       <h2 class="h2">Be first when it's live 🫡</h2>
-      <p class="lead">Drop your email for updates, plus a founder discount when it launches. No spam, ever.</p>
+      <p class="lead">Drop your email for updates, and your discount at launch. No spam, ever.</p>
       <div class="signup__box">
         <div class="signup__frame">
           <iframe src="https://subscribe-forms.beehiiv.com/de6efe08-01d5-49cb-bead-054f6265ac34" title="Subscribe to the Memento launch list" loading="lazy" scrolling="no"></iframe>
