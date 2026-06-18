@@ -162,6 +162,7 @@ section{ padding:64px 0; }
 .softcta:hover{ color:var(--text-hi); gap:10px; }
 .softcta:focus-visible{ outline:none; color:var(--text-hi); box-shadow:0 0 0 3px rgba(var(--accent-rgb),0.5); border-radius:6px; }
 .cta-row{ margin-top:30px; animation:rise 0.9s var(--ease-out) 0.42s both; }
+.cta-note{ margin:16px auto 0; max-width:34ch; font-size:13px; line-height:1.5; color:var(--text-lo); animation:rise 0.9s var(--ease-out) 0.5s both; }
 .btn{
   display:inline-flex; align-items:center; justify-content:center; gap:9px;
   min-height:52px; border:0; cursor:pointer; font-family:var(--font);
@@ -392,7 +393,7 @@ section{ padding:64px 0; }
 @media (prefers-reduced-motion: reduce){
   html{ scroll-behavior:auto; }
   .ambient__rays-source, .ambient__rays-beam-shaft, .logo-tile, .hero__mark,
-  .hero__line, .cta-row, .hero__soon, .hero__soon::before, .scrollcue,
+  .hero__line, .cta-row, .cta-note, .hero__soon, .hero__soon::before, .scrollcue,
   .ns-star, .ns-star-glow, .ns-star-blob{ animation:none !important; }
   .ambient__rays-beam-shaft{ opacity:var(--omax, 0.4); }
   .reveal{ opacity:1 !important; transform:none !important; filter:none !important; transition:none !important; }
@@ -436,10 +437,11 @@ section{ padding:64px 0; }
     <div class="hero__soon">Currently in private testing. Coming soon...</div>
     <div class="cta-row">
       <a class="btn" href="#signup">
-        Get First Access
+        Join the list
         <svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M12 5v14M5 12l7 7 7-7" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
       </a>
     </div>
+    <p class="cta-note">Updates now, plus a founder discount when it launches.</p>
     <a class="scrollcue" href="#about" aria-label="Read more">
       <svg viewBox="0 0 24 24" fill="none"><path d="M6 9l6 6 6-6" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
     </a>
@@ -549,7 +551,7 @@ section{ padding:64px 0; }
   <section class="signup" id="signup">
     <div class="reveal">
       <h2 class="h2">Be first when it's live 🫡</h2>
-      <p class="lead">Drop your email. You'll be first to know when it's live. No spam, ever.</p>
+      <p class="lead">Drop your email for updates, plus a founder discount when it launches. No spam, ever.</p>
       <div class="signup__box">
         <div class="signup__frame">
           <iframe src="https://subscribe-forms.beehiiv.com/de6efe08-01d5-49cb-bead-054f6265ac34" title="Subscribe to the Memento launch list" loading="lazy" scrolling="no"></iframe>
