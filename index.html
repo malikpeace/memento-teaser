@@ -351,9 +351,16 @@ section{ padding:64px 0; }
 .app__minirow{ display:grid; grid-template-columns:1fr 1fr; gap:9px; }
 .app__mini{ height:54px; border-radius:11px; background:rgba(var(--ink),0.045); box-shadow:var(--glass-highlight); }
 .app__hero{ height:220px; border-radius:18px; display:flex; align-items:center; justify-content:center; position:relative; overflow:hidden;
-  background:linear-gradient(180deg, rgba(255,255,255,0.34), transparent 28%), radial-gradient(95% 130% at 50% 26%, rgba(255,255,255,0.40), transparent 58%), linear-gradient(135deg, rgba(168,138,255,0.82), rgba(150,198,255,0.58) 47%, rgba(74,238,156,0.78));
-  box-shadow:inset 0 1px 0 rgba(255,255,255,0.55), inset 0 0 44px rgba(255,255,255,0.14), 0 0 80px rgba(150,120,255,0.55), 0 0 80px rgba(60,220,130,0.34); }
-.app__hero::before{ content:""; position:absolute; inset:0; background:linear-gradient(118deg, transparent 38%, rgba(255,255,255,0.30) 50%, transparent 62%); }
+  background:linear-gradient(180deg, rgba(255,255,255,0.30), transparent 26%), linear-gradient(135deg, rgba(120,96,210,0.42), rgba(70,110,170,0.30) 50%, rgba(50,160,110,0.40));
+  box-shadow:inset 0 1px 0 rgba(255,255,255,0.55), inset 0 0 44px rgba(255,255,255,0.12), 0 0 80px rgba(150,120,255,0.55), 0 0 80px rgba(60,220,130,0.34); }
+.app__orb{ position:absolute; width:150px; height:150px; border-radius:50%; filter:blur(22px); mix-blend-mode:screen; will-change:transform; }
+.app__orb--p{ background:radial-gradient(circle, rgba(172,140,255,0.95), transparent 68%); top:-6%; left:2%; animation:orbP 9s ease-in-out infinite; }
+.app__orb--b{ background:radial-gradient(circle, rgba(122,182,255,0.92), transparent 68%); top:30%; left:48%; animation:orbB 11s ease-in-out infinite; }
+.app__orb--g{ background:radial-gradient(circle, rgba(78,240,158,0.92), transparent 68%); top:42%; left:6%; animation:orbG 13s ease-in-out infinite; }
+@keyframes orbP{ 0%,100%{ transform:translate(0,0) } 33%{ transform:translate(46px,34px) } 66%{ transform:translate(24px,64px) } }
+@keyframes orbB{ 0%,100%{ transform:translate(0,0) } 50%{ transform:translate(-52px,28px) } }
+@keyframes orbG{ 0%,100%{ transform:translate(0,0) } 40%{ transform:translate(40px,-28px) } 70%{ transform:translate(-24px,22px) } }
+@media (prefers-reduced-motion: reduce){ .app__orb{ animation:none !important; } }
 .app__hero svg{ width:46px; height:46px; position:relative; filter:drop-shadow(0 0 14px rgba(255,255,255,0.85)); }
 .app__hero path{ fill:rgba(255,255,255,0.98); stroke:rgba(255,255,255,0.98); }
 .app__row{ border-radius:12px; background:rgba(var(--ink),0.045); box-shadow:var(--glass-highlight); padding:11px 12px; display:flex; flex-direction:column; gap:7px; }
@@ -472,6 +479,9 @@ section{ padding:64px 0; }
             <div class="app__mini"></div>
           </div>
           <div class="app__hero">
+            <span class="app__orb app__orb--p"></span>
+            <span class="app__orb app__orb--b"></span>
+            <span class="app__orb app__orb--g"></span>
             <svg viewBox="0 0 512 512"><path d="M150 146 L256 252 L362 146 L362 366 L150 366 Z" stroke-width="14" stroke-linejoin="round"/></svg>
           </div>
           <div class="app__row"><div class="app__label"></div><div class="app__line"></div><div class="app__line app__line--s"></div></div>
