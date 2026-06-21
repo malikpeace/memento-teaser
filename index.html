@@ -345,17 +345,11 @@ section{ padding:64px 0; }
 .phone__island{ position:absolute; top:18px; left:50%; transform:translateX(-50%); width:72px; height:20px; background:#000; border-radius:999px; z-index:5; }
 .phone__screen{ position:relative; width:100%; height:100%; border-radius:41px; overflow:hidden; background:radial-gradient(120% 60% at 20% 0%, rgba(138,114,255,0.10), transparent 60%), #0a0a0e; }
 .app{ height:100%; display:flex; flex-direction:column; gap:10px; padding:40px 14px 14px; text-align:left; }
-.app--cardonly{ justify-content:center; padding:14px; }
 .app__top{ display:flex; align-items:center; justify-content:space-between; margin-bottom:2px; }
 .app__logo{ width:18px; height:18px; border-radius:5px; background:#f5f5f7; }
 .app__date{ width:64px; height:7px; border-radius:999px; background:rgba(var(--ink),0.12); }
 .app__minirow{ display:grid; grid-template-columns:1fr 1fr; gap:9px; }
 .app__mini{ height:54px; border-radius:11px; background:rgba(var(--ink),0.045); }
-.app__stage{ position:relative; z-index:0; }
-/* Bloom: the SAME moving orbs sitting BEHIND the card, larger + unclipped, so the
-   color spills onto the surroundings and lights the card edges as it drifts. */
-.app__bloom{ position:absolute; inset:-12px; z-index:-1; pointer-events:none; border-radius:30px; overflow:hidden; filter:saturate(1.6); opacity:0.62; }
-.app__bloom .app__orb{ width:205px; height:205px; filter:blur(50px); }
 .app__hero{ height:220px; border-radius:18px; display:flex; align-items:center; justify-content:center; position:relative; z-index:1; overflow:hidden;
   background:linear-gradient(135deg, rgba(128,102,222,0.46), rgba(74,116,178,0.32) 50%, rgba(54,172,118,0.46));
   box-shadow:0 0 0 1px rgba(255,255,255,0.12), 0 0 90px rgba(150,120,255,0.55), 0 0 90px rgba(60,220,130,0.38); }
@@ -489,21 +483,24 @@ section{ padding:64px 0; }
     <div class="phone reveal" aria-hidden="true">
       <div class="phone__island"></div>
       <div class="phone__screen">
-        <div class="app app--cardonly">
-          <div class="app__stage">
-            <div class="app__bloom" aria-hidden="true">
-              <span class="app__orb app__orb--p"></span>
-              <span class="app__orb app__orb--b"></span>
-              <span class="app__orb app__orb--g"></span>
-            </div>
-            <div class="app__hero">
-              <span class="app__orb app__orb--p"></span>
-              <span class="app__orb app__orb--b"></span>
-              <span class="app__orb app__orb--g"></span>
-              <span class="app__core" aria-hidden="true"></span>
-              <svg viewBox="0 0 512 512"><path d="M150 146 L256 252 L362 146 L362 366 L150 366 Z" stroke-width="14" stroke-linejoin="round"/></svg>
-            </div>
+        <div class="app">
+          <div class="app__top">
+            <div class="app__date"></div>
           </div>
+          <div class="app__minirow">
+            <div class="app__mini"></div>
+            <div class="app__mini"></div>
+          </div>
+          <div class="app__hero">
+            <span class="app__orb app__orb--p"></span>
+            <span class="app__orb app__orb--b"></span>
+            <span class="app__orb app__orb--g"></span>
+            <span class="app__core" aria-hidden="true"></span>
+            <svg viewBox="0 0 512 512"><path d="M150 146 L256 252 L362 146 L362 366 L150 366 Z" stroke-width="14" stroke-linejoin="round"/></svg>
+          </div>
+          <div class="app__row"><div class="app__label"></div><div class="app__line"></div><div class="app__line app__line--s"></div></div>
+          <div class="app__row"><div class="app__label"></div><div class="app__line app__line--s"></div></div>
+          <div class="app__nav"><div class="app__navdot"></div><div class="app__navdot"></div><div class="app__navdot"></div><div class="app__navdot"></div></div>
         </div>
       </div>
     </div>
