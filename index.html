@@ -345,14 +345,17 @@ section{ padding:64px 0; }
    and floods the page with the Memento aurora. Driven by JS scroll progress. */
 .cinema{ position:relative; height:280vh; padding:0; }
 .cinema__pin{ position:sticky; top:0; height:100vh; display:flex; flex-direction:column; align-items:center; justify-content:center; overflow:hidden; }
-.cinema__pin .phone{ transform:scale(var(--cz,1)); transform-origin:center 41%; will-change:transform; }
-.cinema__cap{ position:absolute; bottom:8vh; margin:0; opacity:var(--capO,1); will-change:opacity; }
-.cinema__flood{ position:fixed; inset:0; z-index:-1; pointer-events:none; opacity:var(--floodO,0); transform:scale(var(--floodS,1.15)); will-change:opacity, transform;
+.cinema__pin .phone{ transform:translateZ(0) scale(1); transform-origin:center 41%; will-change:transform; backface-visibility:hidden; }
+.cinema__cap{ position:absolute; bottom:8vh; margin:0; will-change:opacity; }
+.cinema__flood{ position:fixed; inset:0; z-index:-1; pointer-events:none; opacity:0; transform:translateZ(0); backface-visibility:hidden; will-change:opacity;
   background:
     radial-gradient(58% 48% at 26% 22%, rgba(150,116,255,0.85), transparent 62%),
     radial-gradient(60% 52% at 80% 80%, rgba(56,236,150,0.80), transparent 62%),
     radial-gradient(48% 44% at 58% 52%, rgba(150,180,255,0.72), transparent 66%),
     #06060a; }
+/* While zooming, freeze the inner looping animations so the GPU caches the phone as
+   one texture and just scales it (this is what kills the choppiness). */
+.cinema-zooming .app__orb, .cinema-zooming .app__core, .cinema-zooming .app__hero::after, .cinema-zooming .app__hero svg{ animation-play-state:paused !important; }
 .cinema--off{ height:auto; }
 .cinema--off .cinema__pin{ position:static; height:auto; padding:64px 0; overflow:visible; }
 .cinema--off .cinema__cap{ position:static; bottom:auto; opacity:1; }
@@ -719,44 +722,52 @@ function initStarBlob(canvas, size){
 
 /* Cinematic scroll: as the mockup pins, zoom into the Memento and let its color
    flood the whole page (then settle behind the sections below). JS-driven so it
-   works on every iOS, not just the newest. Honors reduced-motion. */
+   works on every iOS, not just the newest. Honors reduced-motion.
+   Smoothness: no per-frame layout reads (uses scrollY + cached metrics), writes
+   only compositor props (transform/opacity) straight to the elements, and freezes
+   the inner blur loops while zooming so the GPU just scales a cached texture. */
 (function(){
   var cinema = document.getElementById('cinema');
   if(!cinema) return;
   var reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
   if(reduce){ cinema.classList.add('cinema--off'); return; }
+  var pin = cinema.querySelector('.cinema__pin');
   var phone = cinema.querySelector('.phone');
   var cap = cinema.querySelector('.cinema__cap');
-  var root = document.documentElement, body = document.body;
-  var ticking = false;
+  var flood = cinema.querySelector('.cinema__flood');
+  var top0 = 0, span = 1, ticking = false, zooming = false;
   function clamp(v,a,b){ return v<a?a:(v>b?b:v); }
   function lerp(a,b,t){ return a+(b-a)*t; }
+  function smooth(t){ return t*t*(3-2*t); }                        // smoothstep, buttery in/out
+  function measure(){
+    var y = window.pageYOffset || document.documentElement.scrollTop || 0;
+    top0 = cinema.getBoundingClientRect().top + y;                 // absolute top, measured rarely
+    span = Math.max(1, cinema.offsetHeight - window.innerHeight);
+  }
   function update(){
     ticking = false;
-    var r = cinema.getBoundingClientRect();
-    var span = cinema.offsetHeight - window.innerHeight;
-    if(span <= 0) return;
-    var p = clamp(-r.top / span, 0, 1);
-    var zp = clamp(p / 0.60, 0, 1);
-    var cz = lerp(1, 3.6, zp*zp);                                  // ease-in zoom into the card
-    var phoneO = 1 - clamp((p - 0.50) / 0.20, 0, 1);               // phone dissolves into the color
-    var capO = 1 - clamp(p / 0.22, 0, 1);                          // caption fades out early
+    var y = window.pageYOffset || document.documentElement.scrollTop || 0;
+    var p = clamp((y - top0) / span, 0, 1);
+    var cz = lerp(1, 3.5, smooth(clamp(p / 0.60, 0, 1)));          // smooth dive into the card
+    var phoneO = 1 - smooth(clamp((p - 0.50) / 0.20, 0, 1));       // phone dissolves into the color
+    var capO = 1 - clamp(p / 0.20, 0, 1);                          // caption fades out early
     var floodO;                                                    // color floods in, then settles
     if(p < 0.32) floodO = 0;
-    else if(p < 0.60) floodO = (p - 0.32) / 0.28;
+    else if(p < 0.60) floodO = smooth((p - 0.32) / 0.28);
     else floodO = lerp(1, 0.62, clamp((p - 0.60) / 0.40, 0, 1));
-    var floodS = lerp(1.18, 1.0, clamp(p / 0.60, 0, 1));
-    root.style.setProperty('--cz', cz.toFixed(3));
-    root.style.setProperty('--floodO', floodO.toFixed(3));
-    root.style.setProperty('--floodS', floodS.toFixed(3));
+    phone.style.transform = 'translateZ(0) scale(' + cz.toFixed(4) + ')';
     phone.style.opacity = phoneO.toFixed(3);
+    flood.style.opacity = floodO.toFixed(3);
     cap.style.opacity = capO.toFixed(3);
-    body.classList.toggle('flooded', p > 0.45);
+    var z = p > 0.012 && p < 0.992;                                // freeze inner loops mid-zoom
+    if(z !== zooming){ zooming = z; pin.classList.toggle('cinema-zooming', z); }
   }
   function onScroll(){ if(!ticking){ ticking = true; requestAnimationFrame(update); } }
+  function onResize(){ measure(); onScroll(); }
   window.addEventListener('scroll', onScroll, { passive:true });
-  window.addEventListener('resize', onScroll);
-  update();
+  window.addEventListener('resize', onResize);
+  window.addEventListener('load', onResize);
+  measure(); update();
 })();
 </script>
 
