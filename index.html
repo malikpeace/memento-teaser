@@ -340,6 +340,15 @@ section{ padding:64px 0; }
 
 /* ============ APP MOCKUP (blank dashboard, Memento card centered) ============ */
 .appmock{ text-align:center; }
+/* Ground reflection: a blurred, masked color echo of the card's light on the floor
+   beneath the phone (adapted from the app's .daycard-floor). */
+.appmock__floor{ width:60%; max-width:190px; height:88px; margin:-30px auto 0; pointer-events:none;
+  background:linear-gradient(105deg, rgba(150,116,255,0.85), rgba(120,150,255,0.6) 48%, rgba(56,236,150,0.8));
+  filter:blur(26px) saturate(1.4); opacity:0.5;
+  -webkit-mask-image:linear-gradient(to bottom, #000 0%, rgba(0,0,0,0.55) 42%, transparent 88%), linear-gradient(to right, transparent 0%, #000 24%, #000 76%, transparent 100%);
+  -webkit-mask-composite:source-in;
+  mask-image:linear-gradient(to bottom, #000 0%, rgba(0,0,0,0.55) 42%, transparent 88%), linear-gradient(to right, transparent 0%, #000 24%, #000 76%, transparent 100%);
+  mask-composite:intersect; }
 .mock-caption{ text-align:center; margin-top:20px; font-size:16px; font-weight:600; color:var(--text-hi); }
 .phone{ position:relative; width:266px; max-width:80vw; margin:0 auto; aspect-ratio:9/19.3; border-radius:46px; padding:5px; background:linear-gradient(165deg,#23232b,#0b0b0f); box-shadow:0 0 0 1.5px rgba(255,255,255,0.06), 0 44px 100px rgba(0,0,0,0.6); }
 .phone__island{ position:absolute; top:18px; left:50%; transform:translateX(-50%); width:72px; height:20px; background:#000; border-radius:999px; z-index:5; }
@@ -352,7 +361,7 @@ section{ padding:64px 0; }
 .app__mini{ height:54px; border-radius:11px; background:rgba(var(--ink),0.045); }
 .app__hero{ height:220px; border-radius:18px; display:flex; align-items:center; justify-content:center; position:relative; overflow:hidden;
   background:linear-gradient(135deg, rgba(120,96,210,0.42), rgba(70,110,170,0.30) 50%, rgba(50,160,110,0.40));
-  box-shadow:0 0 80px rgba(150,120,255,0.55), 0 0 80px rgba(60,220,130,0.34); }
+  box-shadow:0 0 0 1px rgba(255,255,255,0.55), 0 0 80px rgba(150,120,255,0.55), 0 0 80px rgba(60,220,130,0.34); }
 .app__orb{ position:absolute; width:185px; height:185px; border-radius:50%; filter:blur(46px); mix-blend-mode:screen; will-change:transform; }
 .app__orb--p{ background:radial-gradient(circle, rgba(172,140,255,0.95), transparent 68%); top:-6%; left:2%; animation:orbP 16s ease-in-out infinite; }
 .app__orb--b{ background:radial-gradient(circle, rgba(122,182,255,0.92), transparent 68%); top:30%; left:48%; animation:orbB 21s ease-in-out infinite; }
@@ -491,6 +500,7 @@ section{ padding:64px 0; }
         </div>
       </div>
     </div>
+    <div class="appmock__floor" aria-hidden="true"></div>
     <p class="mock-caption reveal">Build your memento.</p>
   </section>
 
