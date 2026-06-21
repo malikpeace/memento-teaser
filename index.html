@@ -349,13 +349,11 @@ section{ padding:64px 0; }
 .app__logo{ width:18px; height:18px; border-radius:5px; background:#f5f5f7; }
 .app__date{ width:64px; height:7px; border-radius:999px; background:rgba(var(--ink),0.12); }
 .app__minirow{ display:grid; grid-template-columns:1fr 1fr; gap:9px; }
-.app__mini{ height:54px; border-radius:11px; background:rgba(var(--ink),0.045); box-shadow:var(--glass-highlight); }
+.app__mini{ height:54px; border-radius:11px; background:rgba(var(--ink),0.045); }
 .app__hero{ height:220px; border-radius:18px; display:flex; align-items:center; justify-content:center; position:relative; overflow:hidden;
   background:linear-gradient(180deg, rgba(255,255,255,0.30), transparent 26%), linear-gradient(135deg, rgba(120,96,210,0.42), rgba(70,110,170,0.30) 50%, rgba(50,160,110,0.40));
-  box-shadow:inset 0 1px 0 rgba(255,255,255,0.55), inset 0 0 44px rgba(255,255,255,0.12), 0 0 80px rgba(150,120,255,0.55), 0 0 80px rgba(60,220,130,0.34); }
+  box-shadow:0 0 80px rgba(150,120,255,0.55), 0 0 80px rgba(60,220,130,0.34); }
 .app__orb{ position:absolute; width:185px; height:185px; border-radius:50%; filter:blur(46px); mix-blend-mode:screen; will-change:transform; }
-.app__shade{ position:absolute; width:210px; height:210px; border-radius:50%; filter:blur(50px); background:radial-gradient(circle, rgba(5,4,18,0.92), transparent 70%); top:24%; left:52%; will-change:transform; animation:shadeDrift 26s ease-in-out infinite; }
-@keyframes shadeDrift{ 0%{ transform:translate(0,0) scale(1) } 22%{ transform:translate(-64px,30px) scale(1.15) } 45%{ transform:translate(28px,-36px) scale(0.9) } 64%{ transform:translate(-40px,46px) scale(1.1) } 84%{ transform:translate(40px,18px) scale(0.95) } 100%{ transform:translate(0,0) scale(1) } }
 .app__orb--p{ background:radial-gradient(circle, rgba(172,140,255,0.95), transparent 68%); top:-6%; left:2%; animation:orbP 16s ease-in-out infinite; }
 .app__orb--b{ background:radial-gradient(circle, rgba(122,182,255,0.92), transparent 68%); top:30%; left:48%; animation:orbB 21s ease-in-out infinite; }
 .app__orb--g{ background:radial-gradient(circle, rgba(78,240,158,0.92), transparent 68%); top:42%; left:6%; animation:orbG 19s ease-in-out infinite; }
@@ -364,9 +362,9 @@ section{ padding:64px 0; }
 @keyframes orbG{ 0%{ transform:translate(0,0) scale(1) } 16%{ transform:translate(44px,-32px) scale(1.08) } 34%{ transform:translate(-28px,18px) scale(0.94) } 52%{ transform:translate(24px,54px) scale(1.16) } 70%{ transform:translate(-38px,-14px) scale(0.98) } 88%{ transform:translate(52px,28px) scale(1.04) } 100%{ transform:translate(0,0) scale(1) } }
 .app__hero svg{ width:46px; height:46px; position:relative; filter:drop-shadow(0 0 5px rgba(255,255,255,0.95)) drop-shadow(0 0 15px rgba(255,255,255,0.55)); animation:emberRim 4.5s ease-in-out infinite; }
 @keyframes emberRim{ 0%,100%{ filter:drop-shadow(0 0 4px rgba(255,255,255,0.9)) drop-shadow(0 0 12px rgba(255,255,255,0.45)) } 50%{ filter:drop-shadow(0 0 8px rgba(255,255,255,1)) drop-shadow(0 0 24px rgba(255,255,255,0.7)) } }
-@media (prefers-reduced-motion: reduce){ .app__orb, .app__shade, .app__hero svg{ animation:none !important; } }
+@media (prefers-reduced-motion: reduce){ .app__orb, .app__hero svg{ animation:none !important; } }
 .app__hero path{ fill:rgba(255,255,255,0.98); stroke:rgba(255,255,255,0.98); }
-.app__row{ border-radius:12px; background:rgba(var(--ink),0.045); box-shadow:var(--glass-highlight); padding:11px 12px; display:flex; flex-direction:column; gap:7px; }
+.app__row{ border-radius:12px; background:rgba(var(--ink),0.045); padding:11px 12px; display:flex; flex-direction:column; gap:7px; }
 .app__label{ width:42%; height:6px; border-radius:999px; background:rgba(var(--ink),0.13); }
 .app__line{ height:6px; border-radius:999px; background:rgba(var(--ink),0.06); }
 .app__line--s{ width:55%; }
@@ -482,7 +480,6 @@ section{ padding:64px 0; }
             <div class="app__mini"></div>
           </div>
           <div class="app__hero">
-            <span class="app__shade"></span>
             <span class="app__orb app__orb--p"></span>
             <span class="app__orb app__orb--b"></span>
             <span class="app__orb app__orb--g"></span>
