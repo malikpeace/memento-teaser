@@ -352,14 +352,14 @@ section{ padding:64px 0; }
 .app__mini{ height:54px; border-radius:11px; background:rgba(var(--ink),0.045); }
 .app__hero{ height:220px; border-radius:18px; display:flex; align-items:center; justify-content:center; position:relative; z-index:1; overflow:hidden; clip-path:inset(0 round 18px);
   background:linear-gradient(135deg, rgba(128,102,222,0.46), rgba(74,116,178,0.32) 50%, rgba(54,172,118,0.46));
-  box-shadow:0 0 0 1px rgba(255,255,255,0.12), 0 0 90px rgba(150,120,255,0.55), 0 0 90px rgba(60,220,130,0.38); }
+  box-shadow:inset 0 0 9px rgba(255,255,255,0.34), inset 0 0 2px rgba(255,255,255,0.18), 0 0 90px rgba(150,120,255,0.55), 0 0 90px rgba(60,220,130,0.38); }
 /* Burning edge: a crisp rim-light that catches the top-left + bottom-right corners
    only (Memento's real .daycard-ns__burn), masked to the 1.5px border, glimmering. */
 .app__hero::after{ content:""; position:absolute; inset:0; border-radius:inherit; z-index:2; pointer-events:none; padding:1.5px; mix-blend-mode:screen;
   background:conic-gradient(from 0deg, rgba(220,230,255,0) 0deg, rgba(220,230,255,0) 108deg, rgba(238,244,255,0.9) 135deg, rgba(220,230,255,0) 165deg, rgba(220,230,255,0) 288deg, rgba(238,244,255,0.9) 315deg, rgba(220,230,255,0) 345deg);
   -webkit-mask:linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0); -webkit-mask-composite:xor;
   mask:linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0); mask-composite:exclude;
-  animation:burnGlimmer 9s ease-in-out infinite; }
+  filter:blur(2.5px); animation:burnGlimmer 9s ease-in-out infinite; }
 @keyframes burnGlimmer{ 0%,100%{ opacity:0.32 } 50%{ opacity:0.62 } }
 .app__orb{ position:absolute; width:185px; height:185px; border-radius:50%; filter:blur(46px); mix-blend-mode:screen; will-change:transform; }
 .app__orb--p{ background:radial-gradient(circle, rgba(184,150,255,1), transparent 66%); top:-6%; left:2%; animation:orbP 16s ease-in-out infinite; }
