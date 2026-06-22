@@ -372,6 +372,9 @@ section{ padding:64px 0; }
 .app__orb, .app__core{ transition:opacity 0.4s ease; }
 .cinema-zooming .app__hero{ box-shadow:none; clip-path:none; background:transparent !important; }
 .cinema-zooming .app__orb, .cinema-zooming .app__core{ opacity:0 !important; }
+/* A filter (drop-shadow glow) rasterizes the M at small size, so scaling blurs it.
+   Drop the filter during the dive so the raw SVG vector scales razor-crisp. */
+.cinema-zooming .app__hero svg{ filter:none !important; animation:none !important; }
 .cinema-zooming .app__hero::after{ animation:none !important; opacity:0 !important; }
 .cinema--off{ height:auto; }
 .cinema--off .cinema__pin{ position:static; height:auto; padding:64px 0; overflow:visible; }
