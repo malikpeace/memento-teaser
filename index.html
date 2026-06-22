@@ -369,9 +369,9 @@ section{ padding:64px 0; }
 .cinema-zooming .app__row,
 .cinema-zooming .app__nav{ opacity:0; }
 .cinema-zooming .phone__screen{ background:transparent; }
-.cinema-zooming .app__hero{ box-shadow:0 0 90px rgba(150,120,255,0.55), 0 0 90px rgba(60,220,130,0.4); clip-path:none;
-  -webkit-mask-image:radial-gradient(135% 135% at 50% 45%, #000 58%, transparent 99%);
-  mask-image:radial-gradient(135% 135% at 50% 45%, #000 58%, transparent 99%); }
+.app__orb, .app__core{ transition:opacity 0.4s ease; }
+.cinema-zooming .app__hero{ box-shadow:none; clip-path:none; background:transparent !important; }
+.cinema-zooming .app__orb, .cinema-zooming .app__core{ opacity:0 !important; }
 .cinema-zooming .app__hero::after{ animation:none !important; opacity:0 !important; }
 .cinema--off{ height:auto; }
 .cinema--off .cinema__pin{ position:static; height:auto; padding:64px 0; overflow:visible; }
@@ -770,8 +770,8 @@ function initStarBlob(canvas, size){
     var phoneO = 1 - smooth(clamp((p - 0.68) / 0.16, 0, 1));       // card stays visible the whole zoom, then crossfades to the aurora
     var capO = 1 - clamp(p / 0.18, 0, 1);                          // caption fades out early
     var floodO;                                                    // matching aurora behind: fills the sides while the card grows, then persists
-    if(p < 0.15) floodO = 0;
-    else if(p < 0.55) floodO = smooth((p - 0.15) / 0.40);
+    if(p < 0.04) floodO = 0;
+    else if(p < 0.40) floodO = smooth((p - 0.04) / 0.36);        // full-screen color rises immediately as the card bg drops
     else floodO = lerp(1, 0.60, clamp((p - 0.80) / 0.20, 0, 1));  // hold full through the climax, then settle
     phone.style.transform = 'translateZ(0) scale(' + cz.toFixed(4) + ')';
     phone.style.opacity = phoneO.toFixed(3);
