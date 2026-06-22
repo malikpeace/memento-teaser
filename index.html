@@ -345,7 +345,7 @@ section{ padding:64px 0; }
    and floods the page with the Memento aurora. Driven by JS scroll progress. */
 .cinema{ position:relative; height:280vh; padding:0; }
 .cinema__pin{ position:sticky; top:0; height:100vh; display:flex; flex-direction:column; align-items:center; justify-content:center; overflow:hidden; }
-.cinema__pin .phone{ transform:translateZ(0) scale(1); transform-origin:center 41%; will-change:transform; backface-visibility:hidden; }
+.cinema__pin .phone{ transform:scale(1); transform-origin:center 41%; }
 .cinema__cap{ position:absolute; bottom:8vh; margin:0; will-change:opacity; }
 .cinema__flood{ position:fixed; inset:0; z-index:-1; pointer-events:none; opacity:0; transform:translateZ(0); backface-visibility:hidden; will-change:opacity;
   background:
@@ -773,7 +773,7 @@ function initStarBlob(canvas, size){
     if(p < 0.04) floodO = 0;
     else if(p < 0.40) floodO = smooth((p - 0.04) / 0.36);        // full-screen color rises immediately as the card bg drops
     else floodO = lerp(1, 0.60, clamp((p - 0.80) / 0.20, 0, 1));  // hold full through the climax, then settle
-    phone.style.transform = 'translateZ(0) scale(' + cz.toFixed(4) + ')';
+    phone.style.transform = 'scale(' + cz.toFixed(4) + ')';        // no translateZ/will-change: let the SVG re-render crisp at each scale
     phone.style.opacity = phoneO.toFixed(3);
     flood.style.opacity = floodO.toFixed(3);
     cap.style.opacity = capO.toFixed(3);
