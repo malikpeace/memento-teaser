@@ -355,13 +355,30 @@ section{ padding:64px 0; }
     #06060a; }
 /* While zooming, freeze the inner looping animations so the GPU caches the phone as
    one texture and just scales it (this is what kills the choppiness). */
-.cinema-zooming .app__orb, .cinema-zooming .app__core, .cinema-zooming .app__hero::after, .cinema-zooming .app__hero svg{ animation-play-state:paused !important; }
+.cinema-zooming .app__orb, .cinema-zooming .app__core, .cinema-zooming .app__hero svg{ animation-play-state:paused !important; }
+/* Diving: the moment you scroll in, fade the phone chrome (bezel/frame, island, and
+   the mini-boxes, rows, nav) so ONLY the glowing card remains and expands into the
+   full-screen color. No dark phone framing the zoom. */
+.phone__island, .app__top, .app__minirow, .app__row, .app__nav{ transition:opacity 0.45s ease; }
+.app__hero{ transition:box-shadow 0.45s ease; }
+.cinema-zooming .phone::before{ opacity:0; }
+.cinema-zooming .phone__island,
+.cinema-zooming .app__top,
+.cinema-zooming .app__minirow,
+.cinema-zooming .app__row,
+.cinema-zooming .app__nav{ opacity:0; }
+.cinema-zooming .phone__screen{ background:transparent; }
+.cinema-zooming .app__hero{ box-shadow:0 0 90px rgba(150,120,255,0.55), 0 0 90px rgba(60,220,130,0.4);
+  -webkit-mask-image:radial-gradient(120% 120% at 50% 45%, #000 30%, transparent 82%);
+  mask-image:radial-gradient(120% 120% at 50% 45%, #000 30%, transparent 82%); }
+.cinema-zooming .app__hero::after{ animation:none !important; opacity:0 !important; }
 .cinema--off{ height:auto; }
 .cinema--off .cinema__pin{ position:static; height:auto; padding:64px 0; overflow:visible; }
 .cinema--off .cinema__cap{ position:static; bottom:auto; opacity:1; }
-.phone{ position:relative; height:min(570px, 76vh); width:auto; max-width:88vw; margin:0 auto; aspect-ratio:9/19.3; border-radius:46px; padding:5px; background:linear-gradient(165deg,#23232b,#0b0b0f); box-shadow:0 0 0 1.5px rgba(255,255,255,0.06), 0 44px 100px rgba(0,0,0,0.6); }
+.phone{ position:relative; height:min(570px, 76vh); width:auto; max-width:88vw; margin:0 auto; aspect-ratio:9/19.3; border-radius:46px; padding:5px; }
+.phone::before{ content:""; position:absolute; inset:0; border-radius:46px; z-index:0; background:linear-gradient(165deg,#23232b,#0b0b0f); box-shadow:0 0 0 1.5px rgba(255,255,255,0.06), 0 44px 100px rgba(0,0,0,0.6); transition:opacity 0.45s ease; }
 .phone__island{ position:absolute; top:18px; left:50%; transform:translateX(-50%); width:72px; height:20px; background:#000; border-radius:999px; z-index:5; }
-.phone__screen{ position:relative; width:100%; height:100%; border-radius:41px; overflow:hidden; background:radial-gradient(120% 60% at 20% 0%, rgba(138,114,255,0.10), transparent 60%), #0a0a0e; }
+.phone__screen{ position:relative; z-index:1; width:100%; height:100%; border-radius:41px; overflow:hidden; background:radial-gradient(120% 60% at 20% 0%, rgba(138,114,255,0.10), transparent 60%), #0a0a0e; transition:background 0.45s ease; }
 .app{ height:100%; display:flex; flex-direction:column; gap:10px; padding:40px 14px 14px; text-align:left; }
 .app__top{ display:flex; align-items:center; justify-content:space-between; margin-bottom:2px; }
 .app__logo{ width:18px; height:18px; border-radius:5px; background:#f5f5f7; }
@@ -752,8 +769,8 @@ function initStarBlob(canvas, size){
     var phoneO = 1 - smooth(clamp((p - 0.44) / 0.18, 0, 1));       // phone dissolves into the color (gone by the climax)
     var capO = 1 - clamp(p / 0.18, 0, 1);                          // caption fades out early
     var floodO;                                                    // color fills the whole screen, then settles
-    if(p < 0.28) floodO = 0;
-    else if(p < 0.58) floodO = smooth((p - 0.28) / 0.30);         // fills early so wide screens have no black sides
+    if(p < 0.10) floodO = 0;
+    else if(p < 0.45) floodO = smooth((p - 0.10) / 0.35);         // rises as the chrome fades, so the card sits on aurora
     else floodO = lerp(1, 0.60, clamp((p - 0.72) / 0.28, 0, 1));  // hold full through the climax, then settle
     phone.style.transform = 'translateZ(0) scale(' + cz.toFixed(4) + ')';
     phone.style.opacity = phoneO.toFixed(3);
