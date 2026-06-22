@@ -349,9 +349,10 @@ section{ padding:64px 0; }
 .cinema__cap{ position:absolute; bottom:8vh; margin:0; will-change:opacity; }
 .cinema__flood{ position:fixed; inset:0; z-index:-1; pointer-events:none; opacity:0; transform:translateZ(0); backface-visibility:hidden; will-change:opacity;
   background:
-    radial-gradient(58% 48% at 26% 22%, rgba(150,116,255,0.85), transparent 62%),
-    radial-gradient(60% 52% at 80% 80%, rgba(56,236,150,0.80), transparent 62%),
-    radial-gradient(48% 44% at 58% 52%, rgba(150,180,255,0.72), transparent 66%),
+    radial-gradient(95% 80% at 18% 14%, rgba(150,116,255,0.88), transparent 74%),
+    radial-gradient(100% 85% at 86% 88%, rgba(56,236,150,0.82), transparent 74%),
+    radial-gradient(85% 75% at 55% 50%, rgba(140,170,255,0.62), transparent 76%),
+    linear-gradient(125deg, rgba(112,90,202,0.55) 0%, rgba(72,122,182,0.45) 48%, rgba(54,170,116,0.55) 100%),
     #06060a; }
 /* While zooming, freeze the inner looping animations so the GPU caches the phone as
    one texture and just scales it (this is what kills the choppiness). */
@@ -369,8 +370,8 @@ section{ padding:64px 0; }
 .cinema-zooming .app__nav{ opacity:0; }
 .cinema-zooming .phone__screen{ background:transparent; }
 .cinema-zooming .app__hero{ box-shadow:0 0 90px rgba(150,120,255,0.55), 0 0 90px rgba(60,220,130,0.4);
-  -webkit-mask-image:radial-gradient(120% 120% at 50% 45%, #000 30%, transparent 82%);
-  mask-image:radial-gradient(120% 120% at 50% 45%, #000 30%, transparent 82%); }
+  -webkit-mask-image:radial-gradient(circle closest-side at 50% 43%, #000 8%, transparent 62%);
+  mask-image:radial-gradient(circle closest-side at 50% 43%, #000 8%, transparent 62%); }
 .cinema-zooming .app__hero::after{ animation:none !important; opacity:0 !important; }
 .cinema--off{ height:auto; }
 .cinema--off .cinema__pin{ position:static; height:auto; padding:64px 0; overflow:visible; }
