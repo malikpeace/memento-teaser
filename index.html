@@ -375,8 +375,10 @@ section{ padding:64px 0; }
 /* During the dive, grow the phone's OWN M in place by its true SVG size (re-renders
    crisp at every size, no transform-scale blur) and let it spill past the card/screen,
    so it fills the screen from the exact spot it started: crisp AND seamless, no jump. */
-.cinema-zooming .app__hero svg{ filter:none !important; animation:none !important; flex-shrink:0; }
+.cinema-zooming .app__hero svg{ width:760px; height:760px; flex-shrink:0; transform-origin:center; will-change:transform; filter:none !important; animation:none !important; }
 .cinema-zooming .app__hero, .cinema-zooming .phone__screen{ overflow:visible !important; }
+/* While diving, the full-screen flood covers the background beams, so pause them to free up the mobile GPU. */
+body.diving .ambient__rays-beam-shaft, body.diving .ambient__rays-source{ animation-play-state:paused !important; }
 .cinema-zooming .app__hero::after{ animation:none !important; opacity:0 !important; }
 .cinema--off{ height:auto; }
 .cinema--off .cinema__pin{ position:static; height:auto; padding:64px 0; overflow:visible; }
@@ -780,11 +782,17 @@ function initStarBlob(canvas, size){
     phone.style.opacity = phoneO.toFixed(3);                       // no transform-scale on the phone: the M grows by SVG size, stays crisp
     flood.style.opacity = floodO.toFixed(3);
     cap.style.opacity = capO.toFixed(3);
-    // Grow the phone's own M in place by its true SVG size -> crisp at any size, same spot (seamless)
-    var mSize = lerp(46, 760, smooth(clamp(p / 0.72, 0, 1)));
-    innerM.style.width = innerM.style.height = mSize.toFixed(1) + 'px';
-    var z = p > 0.012 && p < 0.992;                                // freeze inner loops mid-zoom
-    if(z !== zooming){ zooming = z; pin.classList.toggle('cinema-zooming', z); }
+    var z = p > 0.012 && p < 0.992;                                // diving
+    if(z !== zooming){ zooming = z; pin.classList.toggle('cinema-zooming', z); document.body.classList.toggle('diving', z); }
+    // While diving the M is laid out at full 760px; grow it with a GPU transform
+    // (compositor, no per-frame layout = smooth on mobile) so it stays razor-crisp.
+    // At rest the M is its native 46px, so no scale.
+    if(z){
+      var mScale = lerp(46, 760, smooth(clamp(p / 0.72, 0, 1))) / 760;
+      innerM.style.transform = 'scale(' + mScale.toFixed(5) + ')';
+    } else {
+      innerM.style.transform = '';
+    }
   }
   function onScroll(){ if(!ticking){ ticking = true; requestAnimationFrame(update); } }
   function onResize(){ measure(); onScroll(); }
