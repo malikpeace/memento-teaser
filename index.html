@@ -784,7 +784,7 @@ function initStarBlob(canvas, size){
     var floodO;                                                    // matching aurora behind: fills the screen as the M grows, then persists
     if(p < 0.04) floodO = 0;
     else if(p < 0.40) floodO = smooth((p - 0.04) / 0.36);        // full-screen color rises immediately as the card bg drops
-    else floodO = lerp(1, 0.60, clamp((p - 0.80) / 0.20, 0, 1));  // hold full through the climax, then settle
+    else floodO = lerp(1, 0.30, clamp((p - 0.80) / 0.20, 0, 1));  // full through the climax, then settle to a subtle tint so the text below stays readable
     phone.style.opacity = phoneO.toFixed(3);                       // no transform-scale on the phone: the M grows by SVG size, stays crisp
     flood.style.opacity = floodO.toFixed(3);
     cap.style.opacity = capO.toFixed(3);
