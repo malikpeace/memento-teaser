@@ -372,9 +372,12 @@ section{ padding:64px 0; }
 .app__orb, .app__core{ transition:opacity 0.4s ease; }
 .cinema-zooming .app__hero{ box-shadow:none; clip-path:none; background:transparent !important; }
 .cinema-zooming .app__orb, .cinema-zooming .app__core{ opacity:0 !important; }
-/* A filter (drop-shadow glow) rasterizes the M at small size, so scaling blurs it.
-   Drop the filter during the dive so the raw SVG vector scales razor-crisp. */
-.cinema-zooming .app__hero svg{ filter:none !important; animation:none !important; }
+/* During the dive, hide the phone's inner M and show a viewport-centered overlay M
+   that grows by its true SVG size (re-renders crisp at every size) instead of being
+   transform-scaled (which would rasterize small then stretch = blur). */
+.cinema-zooming .app__hero svg{ opacity:0 !important; }
+.cinema__m{ position:fixed; left:50%; top:50%; transform:translate(-50%,-50%); width:46px; height:46px; opacity:0; pointer-events:none; z-index:4; will-change:width, height; }
+.cinema__m path{ fill:#fff; stroke:#fff; stroke-width:14; stroke-linejoin:round; }
 .cinema-zooming .app__hero::after{ animation:none !important; opacity:0 !important; }
 .cinema--off{ height:auto; }
 .cinema--off .cinema__pin{ position:static; height:auto; padding:64px 0; overflow:visible; }
@@ -545,6 +548,7 @@ section{ padding:64px 0; }
           </div>
         </div>
       </div>
+      <svg class="cinema__m" viewBox="0 0 512 512" aria-hidden="true"><path d="M150 146 L256 252 L362 146 L362 366 L150 366 Z" stroke-width="14" stroke-linejoin="round"/></svg>
       <p class="mock-caption cinema__cap">Build your memento.</p>
     </div>
   </section>
@@ -756,6 +760,7 @@ function initStarBlob(canvas, size){
   var phone = cinema.querySelector('.phone');
   var cap = cinema.querySelector('.cinema__cap');
   var flood = cinema.querySelector('.cinema__flood');
+  var bigM = cinema.querySelector('.cinema__m');
   var top0 = 0, span = 1, ticking = false, zooming = false;
   function clamp(v,a,b){ return v<a?a:(v>b?b:v); }
   function lerp(a,b,t){ return a+(b-a)*t; }
@@ -776,10 +781,14 @@ function initStarBlob(canvas, size){
     if(p < 0.04) floodO = 0;
     else if(p < 0.40) floodO = smooth((p - 0.04) / 0.36);        // full-screen color rises immediately as the card bg drops
     else floodO = lerp(1, 0.60, clamp((p - 0.80) / 0.20, 0, 1));  // hold full through the climax, then settle
-    phone.style.transform = 'scale(' + cz.toFixed(4) + ')';        // no translateZ/will-change: let the SVG re-render crisp at each scale
+    phone.style.transform = 'scale(' + cz.toFixed(4) + ')';
     phone.style.opacity = phoneO.toFixed(3);
     flood.style.opacity = floodO.toFixed(3);
     cap.style.opacity = capO.toFixed(3);
+    // Overlay M: grow by SVG size (crisp vector), centered on the viewport, fade into the aurora at the end
+    var mSize = lerp(48, 760, smooth(clamp(p / 0.72, 0, 1)));
+    bigM.style.width = bigM.style.height = mSize.toFixed(1) + 'px';
+    bigM.style.opacity = (p < 0.012 ? 0 : phoneO).toFixed(3);
     var z = p > 0.012 && p < 0.992;                                // freeze inner loops mid-zoom
     if(z !== zooming){ zooming = z; pin.classList.toggle('cinema-zooming', z); }
   }
