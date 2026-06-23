@@ -343,7 +343,7 @@ section{ padding:64px 0; }
 .mock-caption{ text-align:center; margin-top:20px; font-size:16px; font-weight:600; color:var(--text-hi); }
 /* Cinematic scroll stage: a tall section that pins the phone, zooms into the card,
    and floods the page with the Memento aurora. Driven by JS scroll progress. */
-.cinema{ position:relative; height:280vh; padding:0; }
+.cinema{ position:relative; height:200vh; padding:0; }
 .cinema__pin{ position:sticky; top:0; height:100vh; display:flex; flex-direction:column; align-items:center; justify-content:center; overflow:hidden; }
 .cinema__pin .phone{ transform:scale(1); transform-origin:center 41%; }
 .cinema__cap{ position:absolute; bottom:8vh; margin:0; will-change:opacity; }
@@ -766,7 +766,7 @@ function initStarBlob(canvas, size){
   var cap = cinema.querySelector('.cinema__cap');
   var flood = cinema.querySelector('.cinema__flood');
   var innerM = cinema.querySelector('.app__hero svg');
-  var top0 = 0, span = 1, ticking = false, zooming = false;
+  var top0 = 0, span = 1, ticking = false, zooming = false, maxMScale = 0.6;
   function clamp(v,a,b){ return v<a?a:(v>b?b:v); }
   function lerp(a,b,t){ return a+(b-a)*t; }
   function smooth(t){ return t*t*(3-2*t); }                        // smoothstep, buttery in/out
@@ -774,22 +774,23 @@ function initStarBlob(canvas, size){
     var y = window.pageYOffset || document.documentElement.scrollTop || 0;
     top0 = cinema.getBoundingClientRect().top + y;                 // absolute top, measured rarely
     span = Math.max(1, cinema.offsetHeight - window.innerHeight);
+    // The M settles at a MODERATE size, ~viewport width (a clean medium M), capped at 1.0 so it
+    // never scales past its 760px layout and stays crisp. Viewport-relative = right on phone + desktop.
+    maxMScale = Math.min(1, window.innerWidth / 760);
   }
   function update(){
     ticking = false;
     var y = window.pageYOffset || document.documentElement.scrollTop || 0;
     var p = clamp((y - top0) / span, 0, 1);
-    var phoneO = 1 - smooth(clamp((p - 0.68) / 0.16, 0, 1));       // the M stays visible the whole dive, then crossfades to the aurora
     var capO = 1 - clamp(p / 0.18, 0, 1);                          // caption fades out early
-    var floodO = 0;                                                // no color flood: the M just grows on the dark beams background
-    phone.style.opacity = phoneO.toFixed(3);                       // no transform-scale on the phone: the M grows by SVG size, stays crisp
-    flood.style.opacity = floodO.toFixed(3);
+    phone.style.opacity = '1';                                     // M stays fully visible the whole dive, then scrolls up at release (no fade)
+    flood.style.opacity = '0';                                     // no color flood
     cap.style.opacity = capO.toFixed(3);
-    var z = p > 0.012 && p < 0.992;                                // diving
+    var z = p > 0.012;                                             // stay in the dive through the end so the chrome never snaps back; the M just scrolls up with the page
     if(z !== zooming){ zooming = z; pin.classList.toggle('cinema-zooming', z); document.body.classList.toggle('diving', z); }
-    // The M is always laid out at 760px; drive its size purely by GPU transform:scale
-    // (rest = 0.06 -> ~46px). Compositor-only, nothing reflows = smooth on mobile.
-    var mScale = lerp(46, 760, smooth(clamp(p / 0.72, 0, 1))) / 760;
+    // The M is always laid out at 760px; drive its size purely by GPU transform:scale (rest ~0.06 -> ~46px).
+    // Grow to a MODERATE size by p=0.85, hold briefly, then the pin releases and the M scrolls up. Compositor-only.
+    var mScale = lerp(0.0605, maxMScale, smooth(clamp(p / 0.85, 0, 1)));
     innerM.style.transform = 'scale(' + mScale.toFixed(5) + ')';
   }
   function onScroll(){ if(!ticking){ ticking = true; requestAnimationFrame(update); } }
