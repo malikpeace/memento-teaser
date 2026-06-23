@@ -3,6 +3,8 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<script>/* Always open at the very top: stop Safari/Chrome restoring a scrolled position on reload (which made the hero look "cut off" under the status bar). */
+if('scrollRestoration' in history){ history.scrollRestoration='manual'; }</script>
 <title>Memento</title>
 <meta name="description" content="One goal, one daily action. A private life-direction system. Memento turns what you want into one clear direction and the single next move to get there. Coming soon.">
 
@@ -633,6 +635,14 @@ body.diving .ambient__rays-beam-shaft, body.diving .ambient__rays-source, body.d
   </footer>
 
 </div>
+
+<script>
+/* Force the page to open at the very top, every load and every back/forward restore
+   (iOS Safari otherwise drops you at the last scroll position, which clipped the hero). */
+window.scrollTo(0, 0);
+window.addEventListener('load', function(){ window.scrollTo(0, 0); });
+window.addEventListener('pageshow', function(){ window.scrollTo(0, 0); });
+</script>
 
 <script>
 /* ============================================================
