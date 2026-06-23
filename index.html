@@ -41,7 +41,7 @@
 }
 
 *{ box-sizing:border-box; margin:0; padding:0; }
-html{ scroll-behavior:smooth; }
+html{ scroll-behavior:smooth; overflow-x:hidden; }
 body{
   font-family:var(--font);
   background:var(--bg-deep);
@@ -52,7 +52,7 @@ body{
 }
 
 /* ============ LIGHT BEAMS (verbatim from dashboard.css), fixed behind ============ */
-.ambient{ position:fixed; top:0; left:0; width:100vw; height:100vh; height:100lvh; z-index:0; pointer-events:none; }
+.ambient{ position:fixed; top:0; left:0; width:100%; height:100vh; height:100lvh; z-index:0; pointer-events:none; }
 .ambient__rays{ position:absolute; inset:0; pointer-events:none; overflow:hidden; opacity:0.92; z-index:2; }
 .ambient__rays-source{
   position:absolute; top:-28%; left:-28%; width:70%; height:70%;
@@ -130,7 +130,7 @@ section{ padding:64px 0; }
 .reveal.in{ opacity:1; transform:none; filter:blur(0); will-change:auto; }
 
 /* ============ HERO ============ */
-.hero{ min-height:100vh; min-height:100dvh; display:flex; flex-direction:column; align-items:center; justify-content:center; text-align:center; padding:96px 0 64px; }
+.hero{ min-height:100vh; min-height:100lvh; display:flex; flex-direction:column; align-items:center; justify-content:safe center; text-align:center; padding:max(88px, env(safe-area-inset-top) + 56px) 0 max(56px, env(safe-area-inset-bottom) + 40px); }
 .logo-tile{
   width:62px; height:62px; border-radius:17px;
   background:rgba(255,255,255,0.07);
