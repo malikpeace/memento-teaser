@@ -379,9 +379,10 @@ section{ padding:64px 0; }
    crisp at every size, no transform-scale blur) and let it spill past the card/screen,
    so it fills the screen from the exact spot it started: crisp AND seamless, no jump. */
 .cinema-zooming .app__hero, .cinema-zooming .phone__screen{ overflow:visible !important; }
-/* While diving, the full-screen flood covers the background beams; fully drop the whole
-   ambient layer (12 blurred beams) off the compositor, the single biggest mobile GPU win. */
-body.diving .ambient{ display:none !important; }
+/* While diving, KEEP the top-left light beams visible, but pause their animation so they
+   don't re-rasterize their blur every frame (that re-raster is the costly part on mobile;
+   compositing the now-static beam textures is cheap). */
+body.diving .ambient__rays-beam-shaft, body.diving .ambient__rays-source, body.diving .ambient__bloom{ animation-play-state:paused !important; }
 .cinema-zooming .app__hero::after{ animation:none !important; opacity:0 !important; visibility:hidden; }
 .cinema--off{ height:auto; }
 .cinema--off .cinema__pin{ position:static; height:auto; padding:64px 0; overflow:visible; }
