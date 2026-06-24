@@ -99,11 +99,8 @@ body{
   z-index:1; filter:blur(20px);
 }
 .viewport-guard{
-  position:fixed; top:0; left:0; right:0; height:max(38px, calc(env(safe-area-inset-top, 0px) + 18px));
-  z-index:2; pointer-events:none; opacity:0; transition:opacity 180ms ease;
-  background:linear-gradient(180deg, rgba(4,4,6,0.42) 0%, rgba(4,4,6,0.22) 58%, rgba(4,4,6,0) 100%);
+  display:none;
 }
-body.is-scrolled .viewport-guard{ opacity:0.45; }
 
 /* ============ PAGE LAYOUT ============ */
 .page{ position:relative; z-index:1; max-width:760px; margin:0 auto; padding:0 calc(22px + env(safe-area-inset-right)) 0 calc(22px + env(safe-area-inset-left)); }
