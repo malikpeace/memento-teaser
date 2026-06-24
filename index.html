@@ -101,6 +101,7 @@ body{
 .viewport-guard{
   display:none;
 }
+.hero > *{ transition:opacity 80ms linear; }
 
 /* ============ PAGE LAYOUT ============ */
 .page{ position:relative; z-index:1; max-width:760px; margin:0 auto; padding:0 calc(22px + env(safe-area-inset-right)) 0 calc(22px + env(safe-area-inset-left)); }
@@ -662,10 +663,22 @@ window.addEventListener('pageshow', function(){ window.scrollTo(0, 0); });
 
 <script>
 (function(){
+  var heroFadeItems = Array.prototype.slice.call(document.querySelectorAll('.hero > *'));
+  function clamp(v, min, max){ return Math.max(min, Math.min(max, v)); }
+  function updateHeroTopFade(){
+    var scrolled = (window.pageYOffset || document.documentElement.scrollTop || 0) > 2;
+    heroFadeItems.forEach(function(el){
+      if(scrolled) el.style.animation = 'none';
+      var top = el.getBoundingClientRect().top;
+      el.style.opacity = clamp((top - 28) / 46, 0, 1).toFixed(3);
+    });
+  }
   function updateScrollState(){
     document.body.classList.toggle('is-scrolled', (window.pageYOffset || document.documentElement.scrollTop || 0) > 18);
+    updateHeroTopFade();
   }
   window.addEventListener('scroll', updateScrollState, { passive:true });
+  window.addEventListener('resize', updateHeroTopFade);
   window.addEventListener('load', updateScrollState);
   window.addEventListener('pageshow', updateScrollState);
   updateScrollState();
