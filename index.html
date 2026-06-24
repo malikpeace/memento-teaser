@@ -645,40 +645,6 @@ window.addEventListener('pageshow', function(){ window.scrollTo(0, 0); });
 </script>
 
 <script>
-/* ===== TEMP DIAGNOSTIC (remove after) ===== */
-(function(){
-  var red=document.createElement('div');
-  red.style.cssText='position:fixed;top:0;left:0;right:0;height:4px;background:#ff2d55;z-index:99999;pointer-events:none';
-  document.body.appendChild(red);
-  var green=document.createElement('div');
-  green.style.cssText='position:fixed;top:env(safe-area-inset-top);left:0;right:0;height:4px;background:#32d74b;z-index:99999;pointer-events:none';
-  document.body.appendChild(green);
-  var probe=document.createElement('div');
-  probe.style.cssText='position:fixed;top:0;left:0;width:1px;height:env(safe-area-inset-top);pointer-events:none';
-  document.body.appendChild(probe);
-  var box=document.createElement('div');
-  box.style.cssText='position:fixed;top:42%;left:8px;right:8px;z-index:99999;background:rgba(0,0,0,0.92);color:#39ff14;font:15px/1.7 monospace;padding:14px 14px;border-radius:12px;white-space:pre;pointer-events:none;text-align:left;border:2px solid #39ff14';
-  function upd(){
-    try{
-      var amb=document.querySelector('.ambient').getBoundingClientRect();
-      var vv=window.visualViewport;
-      box.textContent=
-        'RED=top:0  GREEN=safe-top\n'+
-        'inner: '+window.innerWidth+' x '+window.innerHeight+'\n'+
-        'visVP h: '+(vv?Math.round(vv.height):'n/a')+'  offTop '+(vv?Math.round(vv.offsetTop):'?')+'\n'+
-        'safe-top: '+Math.round(probe.getBoundingClientRect().height)+'\n'+
-        'beams top: '+Math.round(amb.top)+'  h: '+Math.round(amb.height)+'\n'+
-        'scrollY: '+Math.round(window.scrollY)+'  dpr '+window.devicePixelRatio;
-    }catch(e){ box.textContent='ERR: '+e.message; }
-  }
-  upd();
-  window.addEventListener('scroll',upd,{passive:true});
-  window.addEventListener('resize',upd);
-  if(window.visualViewport){ window.visualViewport.addEventListener('resize',upd); window.visualViewport.addEventListener('scroll',upd); }
-})();
-</script>
-
-<script>
 /* ============================================================
    NEUTRON STAR: the real Memento asset (WebGL shader), ported
    verbatim from memento-app/js/11-init.js initStarBlob(). This is
