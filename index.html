@@ -101,7 +101,7 @@ body{
 .viewport-guard{
   display:none;
 }
-.hero > *, .reveal > *, .divider, .footer > *{ transition:opacity 80ms linear; }
+.hero > *, .reveal > *, .divider, .footer > *{ will-change:opacity; }
 
 /* ============ PAGE LAYOUT ============ */
 .page{ position:relative; z-index:1; max-width:760px; margin:0 auto; padding:0 calc(22px + env(safe-area-inset-right)) 0 calc(22px + env(safe-area-inset-left)); }
@@ -664,21 +664,34 @@ window.addEventListener('pageshow', function(){ window.scrollTo(0, 0); });
 <script>
 (function(){
   var topFadeItems = Array.prototype.slice.call(document.querySelectorAll('.hero > *, .reveal > *, .divider, .footer > *'));
+  var topFadeTicking = false;
   function clamp(v, min, max){ return Math.max(min, Math.min(max, v)); }
   function updateTopEdgeFade(){
+    topFadeTicking = false;
     var scrolled = (window.pageYOffset || document.documentElement.scrollTop || 0) > 2;
+    if(!scrolled){
+      topFadeItems.forEach(function(el){ el.style.opacity = ''; });
+      return;
+    }
     topFadeItems.forEach(function(el){
       if(scrolled && el.closest('.hero')) el.style.animation = 'none';
       var top = el.getBoundingClientRect().top;
-      el.style.opacity = clamp((top - 28) / 46, 0, 1).toFixed(3);
+      var opacity = top > 118 ? 1 : clamp((top - 28) / 46, 0, 1);
+      el.style.opacity = opacity === 1 ? '' : opacity.toFixed(3);
     });
+  }
+  function scheduleTopEdgeFade(){
+    if(!topFadeTicking){
+      topFadeTicking = true;
+      requestAnimationFrame(updateTopEdgeFade);
+    }
   }
   function updateScrollState(){
     document.body.classList.toggle('is-scrolled', (window.pageYOffset || document.documentElement.scrollTop || 0) > 18);
-    updateTopEdgeFade();
+    scheduleTopEdgeFade();
   }
   window.addEventListener('scroll', updateScrollState, { passive:true });
-  window.addEventListener('resize', updateTopEdgeFade);
+  window.addEventListener('resize', scheduleTopEdgeFade);
   window.addEventListener('load', updateScrollState);
   window.addEventListener('pageshow', updateScrollState);
   updateScrollState();
