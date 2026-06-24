@@ -43,7 +43,7 @@ if('scrollRestoration' in history){ history.scrollRestoration='manual'; }</scrip
 }
 
 *{ box-sizing:border-box; margin:0; padding:0; }
-html{ scroll-behavior:smooth; }
+html{ scroll-behavior:smooth; scroll-padding-top:112px; background:var(--bg-deep); min-height:100%; }
 body{
   font-family:var(--font);
   background:var(--bg-deep);
@@ -51,10 +51,14 @@ body{
   -webkit-font-smoothing:antialiased;
   text-rendering:optimizeLegibility;
   overflow-x:hidden;
+  min-height:100%;
 }
 
 /* ============ LIGHT BEAMS (verbatim from dashboard.css), fixed behind ============ */
-.ambient{ position:fixed; top:calc(-1 * env(safe-area-inset-top, 0px)); left:0; width:100%; height:100vh; height:calc(100lvh + env(safe-area-inset-top, 0px) + env(safe-area-inset-bottom, 0px)); z-index:0; pointer-events:none; }
+.ambient{
+  position:fixed; inset:0 auto auto 0; width:100vw; height:100vh; height:100svh; height:100dvh;
+  z-index:0; pointer-events:none; overflow:hidden; transform:translateZ(0);
+}
 .ambient__rays{ position:absolute; inset:0; pointer-events:none; overflow:hidden; opacity:0.92; z-index:2; }
 .ambient__rays-source{
   position:absolute; top:-28%; left:-28%; width:70%; height:70%;
@@ -94,6 +98,12 @@ body{
   background:radial-gradient(closest-side, rgba(var(--accent-rgb),0.10), transparent 70%);
   z-index:1; filter:blur(20px);
 }
+.viewport-guard{
+  position:fixed; top:0; left:0; right:0; height:max(154px, calc(env(safe-area-inset-top, 0px) + 118px));
+  z-index:2; pointer-events:none; opacity:0; transition:opacity 180ms ease;
+  background:linear-gradient(180deg, var(--bg-deep) 0%, rgba(4,4,6,0.99) 58%, rgba(4,4,6,0.78) 78%, rgba(4,4,6,0) 100%);
+}
+body.is-scrolled .viewport-guard{ opacity:1; }
 
 /* ============ PAGE LAYOUT ============ */
 .page{ position:relative; z-index:1; max-width:760px; margin:0 auto; padding:0 calc(22px + env(safe-area-inset-right)) 0 calc(22px + env(safe-area-inset-left)); }
@@ -132,7 +142,7 @@ section{ padding:64px 0; }
 .reveal.in{ opacity:1; transform:none; filter:blur(0); will-change:auto; }
 
 /* ============ HERO ============ */
-.hero{ min-height:100vh; min-height:100lvh; display:flex; flex-direction:column; align-items:center; justify-content:safe center; text-align:center; padding:max(88px, env(safe-area-inset-top) + 56px) 0 max(56px, env(safe-area-inset-bottom) + 40px); }
+.hero{ min-height:100vh; min-height:100svh; min-height:100dvh; display:flex; flex-direction:column; align-items:center; justify-content:safe center; text-align:center; padding:max(88px, env(safe-area-inset-top) + 56px) 0 max(56px, env(safe-area-inset-bottom) + 40px); }
 .logo-tile{
   width:62px; height:62px; border-radius:17px;
   background:rgba(255,255,255,0.07);
@@ -354,7 +364,7 @@ section{ padding:64px 0; }
 /* Cinematic scroll stage: a tall section that pins the phone, zooms into the card,
    and floods the page with the Memento aurora. Driven by JS scroll progress. */
 .cinema{ position:relative; height:200vh; padding:0; }
-.cinema__pin{ position:sticky; top:0; height:100vh; display:flex; flex-direction:column; align-items:center; justify-content:center; overflow:hidden; }
+.cinema__pin{ position:sticky; top:0; height:100vh; height:100svh; height:100dvh; display:flex; flex-direction:column; align-items:center; justify-content:center; overflow:hidden; }
 .cinema__pin .phone{ transform:scale(1); transform-origin:center 41%; }
 .cinema__cap{ position:absolute; bottom:8vh; margin:0; will-change:opacity; }
 .cinema__flood{ position:fixed; inset:0; z-index:-1; pointer-events:none; opacity:0; transform:translateZ(0); backface-visibility:hidden; will-change:opacity;
@@ -483,6 +493,14 @@ body.diving .ambient__rays-beam-shaft, body.diving .ambient__rays-source, body.d
 .mock__card path{ fill:rgba(var(--ink),0.88); stroke:rgba(var(--ink),0.88); }
 .mock__cardline{ height:7px; width:96px; border-radius:999px; background:rgba(var(--ink),0.14); }
 
+@media (max-width:600px){
+  html{ scroll-padding-top:128px; }
+  .ambient__rays-source{ top:-34%; left:-42%; width:96%; height:96%; filter:blur(12px); }
+  .ambient__rays-beam{ top:-14%; left:-22%; width:285%; }
+  .ambient__bloom{ bottom:-18%; width:145vw; height:78vh; }
+  .hero{ padding:max(76px, env(safe-area-inset-top) + 54px) 0 max(66px, env(safe-area-inset-bottom) + 44px); }
+}
+
 /* ============ MOTION SAFETY ============ */
 @media (prefers-reduced-motion: reduce){
   html{ scroll-behavior:auto; }
@@ -516,6 +534,7 @@ body.diving .ambient__rays-beam-shaft, body.diving .ambient__rays-source, body.d
   </div>
   <div class="ambient__bloom"></div>
 </div>
+<div class="viewport-guard" aria-hidden="true"></div>
 
 <div class="page">
 
@@ -642,6 +661,18 @@ body.diving .ambient__rays-beam-shaft, body.diving .ambient__rays-source, body.d
 window.scrollTo(0, 0);
 window.addEventListener('load', function(){ window.scrollTo(0, 0); });
 window.addEventListener('pageshow', function(){ window.scrollTo(0, 0); });
+</script>
+
+<script>
+(function(){
+  function updateScrollState(){
+    document.body.classList.toggle('is-scrolled', (window.pageYOffset || document.documentElement.scrollTop || 0) > 18);
+  }
+  window.addEventListener('scroll', updateScrollState, { passive:true });
+  window.addEventListener('load', updateScrollState);
+  window.addEventListener('pageshow', updateScrollState);
+  updateScrollState();
+})();
 </script>
 
 <script>
