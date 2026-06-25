@@ -357,6 +357,9 @@ section{ padding:64px 0; }
 .signup__frame{ width:100%; }
 .signup__frame iframe{ width:100%; border:0; background:transparent; }
 .signup__fine{ margin-top:6px; font-size:12px; color:var(--text-faint); }
+.signup__fallback{ display:inline-block; margin-top:14px; font-size:13px; font-weight:500; color:var(--text-lo); text-decoration:none; transition:color 160ms var(--ease-out); }
+.signup__fallback:hover{ color:var(--text-hi); }
+.signup__fallback:focus-visible{ outline:none; color:var(--text-hi); box-shadow:0 0 0 3px rgba(var(--accent-rgb),0.5); border-radius:6px; }
 
 /* ============ FOOTER ============ */
 .footer{ text-align:center; padding:40px 0 calc(40px + env(safe-area-inset-bottom)); border-top:1px solid var(--hairline); margin-top:40px; }
@@ -646,6 +649,7 @@ body.diving .ambient__rays-beam-shaft, body.diving .ambient__rays-source, body.d
         <div class="signup__frame">
           <script async src="https://subscribe-forms.beehiiv.com/v3/loader.js" data-beehiiv-form="00d2e169-0ad8-422d-bf41-f7ccbf944ca5"></script>
         </div>
+        <a class="signup__fallback" href="https://maliks-newsletter-59a34c.beehiiv.com/" target="_blank" rel="noopener noreferrer">Can't see the form? Join here →</a>
         <div class="signup__fine">You can unsubscribe anytime.</div>
       </div>
       <a class="btn btn--discord" href="https://discord.gg/UNbPAUc3y4" target="_blank" rel="noopener noreferrer">
