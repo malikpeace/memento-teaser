@@ -150,25 +150,16 @@ section{ padding:64px 0; }
 
 /* ============ HERO ============ */
 .hero{ min-height:100vh; min-height:100svh; min-height:100dvh; display:flex; flex-direction:column; align-items:center; justify-content:safe center; text-align:center; padding:max(88px, env(safe-area-inset-top) + 56px) 0 max(56px, env(safe-area-inset-bottom) + 40px); }
-.logo-tile{
-  width:62px; height:62px; border-radius:17px;
-  background:rgba(255,255,255,0.07);
-  -webkit-backdrop-filter:blur(26px) saturate(1.4); backdrop-filter:blur(26px) saturate(1.4);
-  display:flex; align-items:center; justify-content:center; margin:0 auto 26px;
-  box-shadow:0 14px 36px rgba(0,0,0,0.45), inset 0 1px 0 rgba(255,255,255,0.22);
-  animation:rise 0.9s var(--ease-out) both;
-}
-.logo-tile svg{ width:33px; height:33px; display:block; }
-.logo-tile path{ fill:#f5f5f7; stroke:#f5f5f7; }
-@keyframes tileGlow{
-  0%, 100%{ box-shadow:0 14px 36px rgba(0,0,0,0.5), inset 0 1px 0 rgba(255,255,255,0.8); }
-  50%{ box-shadow:0 14px 42px rgba(var(--accent-rgb),0.32), 0 14px 36px rgba(0,0,0,0.5), inset 0 1px 0 rgba(255,255,255,0.8); }
-}
 @keyframes rise{ from{ opacity:0; transform:translateY(16px); } to{ opacity:1; transform:translateY(0); } }
+/* Official wordmark lockup (ported from the app splash): the square M-crown mark
+   stands in for the capital M, then "emento" follows in the light wordmark weight. */
 .hero__mark{
-  font-size:clamp(46px, 14vw, 76px); font-weight:500; letter-spacing:0.01em; line-height:1;
+  display:flex; align-items:baseline; justify-content:center; line-height:1;
+  font-size:clamp(46px, 14vw, 76px); font-weight:200; letter-spacing:-0.015em; color:var(--text-hi);
   margin-bottom:18px; animation:rise 0.9s var(--ease-out) 0.1s both;
 }
+.hero__mark-icon{ height:0.82em; width:auto; flex:none; margin-right:0.1em; transform:translateY(0.04em); }
+.hero__mark-word{ display:inline-block; }
 .hero__line{
   font-size:clamp(15px, 4vw, 17px); line-height:1.5; color:var(--text-mid);
   max-width:30ch; margin:0 auto; animation:rise 0.9s var(--ease-out) 0.26s both; text-wrap:balance;
@@ -550,12 +541,9 @@ body.diving .ambient__rays-beam-shaft, body.diving .ambient__rays-source, body.d
 
   <!-- ============ HERO ============ -->
   <header class="hero">
-    <div class="logo-tile" aria-hidden="true">
-      <svg viewBox="0 0 512 512" role="img" aria-label="Memento">
-        <path d="M150 146 L256 252 L362 146 L362 366 L150 366 Z" stroke-width="14" stroke-linejoin="round"/>
-      </svg>
-    </div>
-    <h1 class="hero__mark">Memento</h1>
+    <h1 class="hero__mark" aria-label="Memento">
+      <svg class="hero__mark-icon" viewBox="0 0 512 512" aria-hidden="true" focusable="false"><rect width="512" height="512" rx="44" fill="#f5f5f7"/><path d="M62 55 L256 249 L450 55 L450 457 L62 457 Z" fill="#040406"/></svg><span class="hero__mark-word" aria-hidden="true">emento</span>
+    </h1>
     <p class="hero__line">The personal system for those who <b>actually</b> want to lock in.</p>
     <div class="cta-row">
       <a class="btn" href="#signup">Join the list</a>
