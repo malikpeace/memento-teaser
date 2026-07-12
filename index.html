@@ -63,11 +63,10 @@ body{
 }
 
 /* ============ LIGHT BEAMS (verbatim from dashboard.css), fixed behind ============ */
-.ambient{
-  position:fixed; inset:0 auto auto 0; width:100vw; height:100vh; height:100svh; height:100dvh;
-  z-index:0; pointer-events:none; overflow:hidden; transform:translateZ(0);
-}
-.ambient__rays{ position:absolute; inset:0; pointer-events:none; overflow:hidden; opacity:0.92; z-index:2; }
+/* Page beams retired: the Memento card is now the page's only light source
+   (its own behind-card glow replaces them). Markup kept, hidden. */
+.ambient{ display:none; }
+.ambient__rays{ position:absolute; inset:0; pointer-events:none; overflow:hidden; opacity:0.30; z-index:2; }
 .ambient__rays-source{
   position:absolute; top:-28%; left:-28%; width:70%; height:70%;
   background:radial-gradient(circle at 22% 22%,
@@ -105,11 +104,6 @@ body{
   position:absolute; left:50%; bottom:-10%; width:120vw; height:70vh; transform:translateX(-50%);
   background:radial-gradient(closest-side, rgba(var(--accent-rgb),0.10), transparent 70%);
   z-index:1; filter:blur(20px);
-}
-.viewport-guard{
-  position:fixed; top:0; left:0; right:0; height:max(62px, calc(env(safe-area-inset-top, 0px) + 32px));
-  z-index:2; pointer-events:none;
-  background:linear-gradient(180deg, var(--bg-deep) 0%, rgba(4,4,6,0.92) 34%, rgba(4,4,6,0.54) 66%, rgba(4,4,6,0) 100%);
 }
 
 /* ============ PAGE LAYOUT ============ */
@@ -197,7 +191,7 @@ section{ padding:64px 0; }
   margin-top:18px; font-size:11px; letter-spacing:0.05em; color:var(--text-faint);
   display:inline-flex; align-items:center; gap:7px; animation:rise 0.9s var(--ease-out) 0.52s both;
 }
-.hero__soon::before{ content:''; width:6px; height:6px; border-radius:50%; background:var(--accent); box-shadow:0 0 10px rgba(var(--accent-rgb),0.8); animation:soonPulse 2.2s ease-in-out infinite; }
+.hero__soon::before{ content:''; width:6px; height:6px; border-radius:50%; background:#56c4ff; box-shadow:0 0 10px rgba(86,196,255,0.8); animation:soonPulse 2.2s ease-in-out infinite; }
 @keyframes soonPulse{
   0%, 100%{ transform:scale(1); opacity:0.8; box-shadow:0 0 8px rgba(var(--accent-rgb),0.65); }
   50%{ transform:scale(1.35); opacity:1; box-shadow:0 0 14px rgba(var(--accent-rgb),1); }
@@ -359,140 +353,160 @@ section{ padding:64px 0; }
 .footer a:focus-visible{ outline:none; color:var(--text-mid); box-shadow:0 0 0 3px rgba(var(--accent-rgb),0.5); border-radius:6px; }
 .footer__sub{ margin-top:10px; font-size:11.5px; color:var(--text-faint); }
 
-/* ============ APP MOCKUP (blank dashboard, Memento card centered) ============ */
-.appmock{ text-align:center; }
-.mock-caption{ text-align:center; margin-top:20px; font-size:16px; font-weight:600; color:var(--text-hi); }
-/* Cinematic scroll stage: a tall section that pins the phone, zooms into the card,
-   and floods the page with the Memento aurora. Driven by JS scroll progress. */
-.cinema{ position:relative; height:200vh; padding:0; }
-.cinema__pin{ position:sticky; top:0; height:100vh; height:100svh; height:100dvh; display:flex; flex-direction:column; align-items:center; justify-content:center; overflow:hidden; }
-.cinema__pin .phone{ transform:scale(1); transform-origin:center 41%; }
-.cinema__cap{ position:absolute; bottom:8vh; margin:0; will-change:opacity; }
-.cinema__flood{ position:fixed; inset:0; z-index:-1; pointer-events:none; opacity:0; transform:translateZ(0); backface-visibility:hidden; will-change:opacity;
-  background:
-    radial-gradient(95% 80% at 18% 14%, rgba(150,116,255,0.88), transparent 74%),
-    radial-gradient(100% 85% at 86% 88%, rgba(56,236,150,0.82), transparent 74%),
-    radial-gradient(85% 75% at 55% 50%, rgba(140,170,255,0.62), transparent 76%),
-    linear-gradient(125deg, rgba(112,90,202,0.55) 0%, rgba(72,122,182,0.45) 48%, rgba(54,170,116,0.55) 100%),
-    #06060a; }
-/* While zooming, freeze the inner looping animations so the GPU caches the phone as
-   one texture and just scales it (this is what kills the choppiness). */
-.cinema-zooming .app__orb, .cinema-zooming .app__core, .cinema-zooming .app__hero svg{ animation-play-state:paused !important; }
-/* Diving: the moment you scroll in, fade the phone chrome (bezel/frame, island, and
-   the mini-boxes, rows, nav) so ONLY the glowing card remains and expands into the
-   full-screen color. No dark phone framing the zoom. */
-/* Fade out, THEN visibility:hidden (transition keeps it visible through the fade).
-   visibility:hidden takes these blurred/heavy layers off the compositor for the rest
-   of the dive, so on mobile only the M + flood are left to composite = smooth. */
-.phone__island, .app__top, .app__minirow, .app__row, .app__nav{ transition:opacity 0.45s ease, visibility 0.45s; }
-.app__hero{ transition:box-shadow 0.45s ease; }
-.cinema-zooming .phone::before,
-.cinema-zooming .phone__island,
-.cinema-zooming .app__top,
-.cinema-zooming .app__minirow,
-.cinema-zooming .app__row,
-.cinema-zooming .app__nav{ opacity:0; visibility:hidden; }
-.cinema-zooming .phone__screen{ background:transparent; }
-.app__orb, .app__core{ transition:opacity 0.4s ease, visibility 0.4s; }
-.cinema-zooming .app__hero{ box-shadow:none; clip-path:none; background:transparent !important; }
-.cinema-zooming .app__orb, .cinema-zooming .app__core{ opacity:0 !important; visibility:hidden; }
-/* During the dive, grow the phone's OWN M in place by its true SVG size (re-renders
-   crisp at every size, no transform-scale blur) and let it spill past the card/screen,
-   so it fills the screen from the exact spot it started: crisp AND seamless, no jump. */
-.cinema-zooming .app__hero, .cinema-zooming .phone__screen{ overflow:visible !important; }
-/* While diving, KEEP the top-left light beams visible, but pause their animation so they
-   don't re-rasterize their blur every frame (that re-raster is the costly part on mobile;
-   compositing the now-static beam textures is cheap). */
-body.diving .ambient__rays-beam-shaft, body.diving .ambient__rays-source, body.diving .ambient__bloom{ animation-play-state:paused !important; }
-.cinema-zooming .app__hero::after{ animation:none !important; opacity:0 !important; visibility:hidden; }
-.cinema--off{ height:auto; }
-.cinema--off .cinema__pin{ position:static; height:auto; padding:64px 0; overflow:visible; }
-.cinema--off .cinema__cap{ position:static; bottom:auto; opacity:1; }
-.phone{ position:relative; height:min(570px, 76vh); width:auto; max-width:88vw; margin:0 auto; aspect-ratio:9/19.3; border-radius:46px; padding:5px; }
-.phone::before{ content:""; position:absolute; inset:0; border-radius:46px; z-index:0; background:linear-gradient(165deg,#23232b,#0b0b0f); box-shadow:0 0 0 1.5px rgba(255,255,255,0.06), 0 44px 100px rgba(0,0,0,0.6); transition:opacity 0.45s ease, visibility 0.45s; }
-.phone__island{ position:absolute; top:18px; left:50%; transform:translateX(-50%); width:72px; height:20px; background:#000; border-radius:999px; z-index:5; }
-.phone__screen{ position:relative; z-index:1; width:100%; height:100%; border-radius:41px; overflow:hidden; background:radial-gradient(120% 60% at 20% 0%, rgba(138,114,255,0.10), transparent 60%), #0a0a0e; transition:background 0.45s ease; }
-.app{ height:100%; display:flex; flex-direction:column; gap:10px; padding:40px 14px 14px; text-align:left; }
-.app__top{ display:flex; align-items:center; justify-content:space-between; margin-bottom:2px; }
-.app__logo{ width:18px; height:18px; border-radius:5px; background:#f5f5f7; }
-.app__date{ width:64px; height:7px; border-radius:999px; background:rgba(var(--ink),0.12); }
-.app__minirow{ display:grid; grid-template-columns:1fr 1fr; gap:9px; }
-.app__mini{ height:54px; border-radius:11px; background:rgba(var(--ink),0.045); }
-.app__hero{ height:220px; border-radius:12px; display:flex; align-items:center; justify-content:center; position:relative; z-index:1; overflow:hidden; clip-path:inset(0 round 12px);
-  background:linear-gradient(135deg, rgba(128,102,222,0.46), rgba(74,116,178,0.32) 50%, rgba(54,172,118,0.46));
-  box-shadow:0 0 0 1px rgba(255,255,255,0.12), 0 0 90px rgba(150,120,255,0.55), 0 0 90px rgba(60,220,130,0.38); }
-/* Burning edge: a crisp rim-light that catches the top-left + bottom-right corners
-   only (Memento's real .daycard-ns__burn), masked to the 1.5px border, glimmering. */
-.app__hero::after{ content:""; position:absolute; inset:0; border-radius:inherit; z-index:2; pointer-events:none; padding:1.5px; mix-blend-mode:screen;
-  background:conic-gradient(from 0deg, rgba(220,230,255,0) 0deg, rgba(220,230,255,0) 108deg, rgba(238,244,255,0.9) 135deg, rgba(220,230,255,0) 165deg, rgba(220,230,255,0) 288deg, rgba(238,244,255,0.9) 315deg, rgba(220,230,255,0) 345deg);
-  -webkit-mask:linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0); -webkit-mask-composite:xor;
-  mask:linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0); mask-composite:exclude;
-  animation:burnGlimmer 9s ease-in-out infinite; }
-@keyframes burnGlimmer{ 0%,100%{ opacity:0.32 } 50%{ opacity:0.62 } }
-.app__orb{ position:absolute; width:185px; height:185px; border-radius:50%; filter:blur(46px); mix-blend-mode:screen; will-change:transform; }
-.app__orb--p{ background:radial-gradient(circle, rgba(184,150,255,1), transparent 66%); top:-6%; left:2%; animation:orbP 16s ease-in-out infinite; }
-.app__orb--b{ background:radial-gradient(circle, rgba(132,194,255,1), transparent 66%); top:30%; left:48%; animation:orbB 21s ease-in-out infinite; }
-.app__orb--g{ background:radial-gradient(circle, rgba(88,248,166,1), transparent 66%); top:42%; left:6%; animation:orbG 19s ease-in-out infinite; }
-/* Hot core: a bright near-white drifting bloom for the luminous intensity. */
-.app__core{ position:absolute; width:140px; height:140px; border-radius:50%; filter:blur(36px); mix-blend-mode:screen; will-change:transform;
-  background:radial-gradient(circle, rgba(214,232,255,0.92), rgba(178,212,255,0.4) 42%, transparent 70%); top:28%; left:32%; animation:coreDrift 17s ease-in-out infinite; }
-@keyframes coreDrift{ 0%{ transform:translate(0,0) scale(1) } 25%{ transform:translate(36px,-20px) scale(1.12) } 50%{ transform:translate(-22px,28px) scale(0.9) } 75%{ transform:translate(24px,16px) scale(1.06) } 100%{ transform:translate(0,0) scale(1) } }
-@keyframes orbP{ 0%{ transform:translate(0,0) scale(1) } 18%{ transform:translate(58px,22px) scale(1.12) } 37%{ transform:translate(14px,66px) scale(0.92) } 55%{ transform:translate(72px,48px) scale(1.05) } 74%{ transform:translate(30px,12px) scale(1.15) } 90%{ transform:translate(-14px,40px) scale(0.96) } 100%{ transform:translate(0,0) scale(1) } }
-@keyframes orbB{ 0%{ transform:translate(0,0) scale(1) } 21%{ transform:translate(-56px,36px) scale(1.1) } 43%{ transform:translate(-10px,-30px) scale(0.9) } 60%{ transform:translate(-72px,6px) scale(1.06) } 80%{ transform:translate(-26px,52px) scale(1.14) } 100%{ transform:translate(0,0) scale(1) } }
-@keyframes orbG{ 0%{ transform:translate(0,0) scale(1) } 16%{ transform:translate(44px,-32px) scale(1.08) } 34%{ transform:translate(-28px,18px) scale(0.94) } 52%{ transform:translate(24px,54px) scale(1.16) } 70%{ transform:translate(-38px,-14px) scale(0.98) } 88%{ transform:translate(52px,28px) scale(1.04) } 100%{ transform:translate(0,0) scale(1) } }
-/* The M is ALWAYS laid out at full size and shown via transform:scale (rest = small).
-   It's absolutely positioned (out of flow) so its 760px size can't affect the card's
-   dimensions, and nothing reflows when the dive starts -> smooth, no squash. */
-.app__hero svg{ position:absolute; left:50%; top:50%; width:760px; height:760px; margin-left:-380px; margin-top:-380px; transform:scale(0.0605); transform-origin:center; will-change:transform; }
-@keyframes emberRim{ 0%,100%{ filter:drop-shadow(0 0 4px rgba(255,255,255,0.9)) drop-shadow(0 0 12px rgba(255,255,255,0.45)) } 50%{ filter:drop-shadow(0 0 8px rgba(255,255,255,1)) drop-shadow(0 0 24px rgba(255,255,255,0.7)) } }
-@media (prefers-reduced-motion: reduce){ .app__orb, .app__core, .app__hero::after, .app__hero svg{ animation:none !important; } }
-.app__hero path{ fill:rgba(255,255,255,0.98); stroke:rgba(255,255,255,0.98); }
-.app__row{ border-radius:12px; background:rgba(var(--ink),0.045); padding:11px 12px; display:flex; flex-direction:column; gap:7px; }
-.app__label{ width:42%; height:6px; border-radius:999px; background:rgba(var(--ink),0.13); }
-.app__line{ height:6px; border-radius:999px; background:rgba(var(--ink),0.06); }
-.app__line--s{ width:55%; }
-.app__nav{ margin-top:auto; display:flex; justify-content:space-around; padding-top:10px; }
-.app__navdot{ width:18px; height:18px; border-radius:6px; background:rgba(var(--ink),0.09); }
-.mock{ display:flex; justify-content:center; margin-top:10px; }
-.mock__frame{
-  position:relative; width:320px; max-width:88vw; border-radius:24px; padding:46px 16px 16px;
-  background:linear-gradient(180deg, rgba(var(--ink),0.05), rgba(var(--ink),0.02));
-  -webkit-backdrop-filter:blur(30px) saturate(140%); backdrop-filter:blur(30px) saturate(140%);
-  box-shadow:var(--glass-highlight), 0 30px 80px rgba(0,0,0,0.55);
+/* ============ THE FOLD (wordmark top, real Memento card, signup) ============ */
+.fold{
+  width:100vw; margin-left:calc(50% - 50vw);
+  min-height:100svh; min-height:100dvh;
+  display:grid; grid-template-rows:auto auto minmax(240px, 56vh) auto;
+  justify-items:center; align-items:center; align-content:center;
+  padding:calc(env(safe-area-inset-top, 0px) + 18px) 22px calc(env(safe-area-inset-bottom, 0px) + 24px);
+  row-gap:16px;
 }
-.mock__soon{
-  position:absolute; top:14px; left:14px; z-index:3;
-  font-size:10px; font-weight:600; letter-spacing:0.08em; text-transform:uppercase;
-  color:var(--text-mid); background:rgba(8,8,12,0.6); padding:6px 11px; border-radius:999px;
-  -webkit-backdrop-filter:blur(8px); backdrop-filter:blur(8px);
+.fold .hero__mark{ font-size:clamp(40px, 11vw, 78px); margin-bottom:0; }
+/* pull the private-testing line up snug under the wordmark (mobile) */
+.fold .hero__soon--fold{ margin-top:-8px; }
+.tease-stage{ position:relative; width:100%; height:100%; display:flex; align-items:center; justify-content:center; }
+.tease-wrap{
+  position:relative; height:100%; max-height:560px; min-height:300px;
+  aspect-ratio:33 / 43; width:auto; max-width:min(100%, 340px);
+  /* slow ambient tilt, the card + its reflection sway together */
+  animation:teaseTilt 14s ease-in-out infinite; will-change:transform;
 }
-.mock__bar{ height:7px; width:42%; border-radius:999px; background:rgba(var(--ink),0.10); margin:4px auto 14px; }
-.mock__grid{ display:grid; grid-template-columns:1fr 1fr; gap:10px; }
-.mock__tile{
-  height:74px; border-radius:13px; padding:13px;
-  background:rgba(var(--ink),0.035); box-shadow:var(--glass-highlight);
-  display:flex; flex-direction:column; gap:8px;
+@keyframes teaseTilt{
+  0%,100%{ transform:perspective(1100px) rotateY(-4.5deg); }
+  50%{ transform:perspective(1100px) rotateY(4.5deg); }
 }
-.mock__dot{ width:18px; height:18px; border-radius:6px; background:rgba(var(--ink),0.10); }
-.mock__dot--a{ background:rgba(138,114,255,0.55); }
-.mock__dot--b{ background:rgba(255,255,255,0.5); }
-.mock__dot--c{ background:rgba(48,209,88,0.5); }
-.mock__dot--d{ background:rgba(var(--ink),0.14); }
-.mock__cardline--s{ width:60px; margin-top:-4px; opacity:0.6; }
-.pillars-intro{ max-width:32ch; margin:0 auto; text-align:center; font-size:15px; line-height:1.55; color:var(--text-hi); font-weight:600; }
-.pillars-note{ margin-top:30px; }
-.build-line{ color:var(--text-hi); font-weight:600; margin-top:10px; }
-.mock__line{ height:6px; border-radius:999px; background:rgba(var(--ink),0.07); }
-.mock__line--s{ width:56%; }
-.mock__card{
-  grid-column:1 / -1; min-height:128px; border-radius:16px; position:relative;
-  background:linear-gradient(180deg, rgba(var(--ink),0.09), rgba(var(--ink),0.035));
-  box-shadow:var(--glass-highlight), 0 12px 34px rgba(0,0,0,0.45);
-  display:flex; flex-direction:column; align-items:center; justify-content:center; gap:12px;
+/* The real Memento card, ported from the app (dashboard.css .daycard-ns +
+   daycard-living.css blobs), tuned darker for the teaser. Colour is hard-clipped
+   inside the card (clip-path + contain:paint); the outside glow fades radially,
+   never a clipped rect. */
+.tease-card{
+  position:absolute; inset:0; border-radius:22px;
+  background:linear-gradient(165deg, rgba(255,255,255,0.03), rgba(255,255,255,0.006) 48%, rgba(255,255,255,0.01)), rgba(7,7,12,0.16);
+  box-shadow:inset 0 1px 0 rgba(255,255,255,0.16), 0 26px 60px rgba(0,0,0,0.45);
+  clip-path:inset(0 round 22px); contain:paint;
 }
-.mock__card svg{ width:46px; height:46px; display:block; filter:drop-shadow(0 2px 10px rgba(0,0,0,0.5)); }
-.mock__card path{ fill:rgba(var(--ink),0.88); stroke:rgba(var(--ink),0.88); }
-.mock__cardline{ height:7px; width:96px; border-radius:999px; background:rgba(var(--ink),0.14); }
+.tcard__liquid{ position:absolute; inset:-28%; pointer-events:none; filter:blur(46px) saturate(1.5); clip-path:inset(17.95% round 22px); }
+.tb{ position:absolute; border-radius:50%; mix-blend-mode:screen; will-change:transform; }
+.tb1{ width:110%; height:82%; left:-12%; top:-16%; background:radial-gradient(circle, rgba(80,205,255,1), transparent 66%); opacity:1; animation:tbDrift1 13s ease-in-out infinite; }
+.tb2{ width:80%; height:62%; right:-14%; top:2%; background:radial-gradient(circle, rgba(128,150,255,0.85), transparent 66%); opacity:0.34; animation:tbDrift2 16s ease-in-out infinite; }
+.tb3{ width:104%; height:78%; left:-8%; bottom:-18%; background:radial-gradient(circle, rgba(56,236,150,1), transparent 64%); opacity:0.85; animation:tbDrift3 14s ease-in-out infinite; }
+.tb4{ width:66%; height:54%; right:0%; bottom:24%; background:radial-gradient(circle, rgba(120,255,190,0.7), transparent 68%); opacity:0.20; animation:tbDrift2 19s ease-in-out infinite reverse; }
+@keyframes tbDrift1{ 0%,100%{ transform:translate(0,0) scale(1); } 50%{ transform:translate(5%,4%) scale(1.07); } }
+@keyframes tbDrift2{ 0%,100%{ transform:translate(0,0) scale(1); } 50%{ transform:translate(-4%,5%) scale(1.05); } }
+@keyframes tbDrift3{ 0%,100%{ transform:translate(0,0) scale(1); } 50%{ transform:translate(4%,-4%) scale(1.08); } }
+/* soft diagonal light through the glass (screen-blended, clipped inside) */
+.tcard__rays{
+  position:absolute; inset:0; pointer-events:none; mix-blend-mode:screen; opacity:0.9;
+  /* The element (and its clip) NEVER moves; only the oversized background drifts.
+     Soft-edged stops instead of a blur so nothing can paint a seam at the edge. */
+  background-image:linear-gradient(115deg,
+    transparent 6%,  rgba(210,240,255,0.15) 12%, transparent 19%,
+    transparent 25%, rgba(255,255,255,0.09) 31%, transparent 38%,
+    transparent 47%, rgba(190,235,255,0.11) 53%, transparent 60%,
+    transparent 69%, rgba(255,255,255,0.06) 74%, transparent 81%);
+  background-size:150% 150%; background-position:0% 0%;
+  clip-path:inset(0 round 22px);
+  animation:tcardRaySweep 18s ease-in-out infinite;
+}
+@keyframes tcardRaySweep{
+  0%,100%{ background-position:0% 0%; opacity:0.72; }
+  50%{ background-position:100% 100%; opacity:1; }
+}
+/* iridescence + top-edge catch, verbatim from the app card */
+.tcard__iri{
+  position:absolute; inset:-30%; pointer-events:none;
+  background:conic-gradient(from 210deg at 50% 40%,
+    rgba(220,225,255,0.10), rgba(120,200,255,0.07),
+    rgba(94,162,247,0.05), rgba(235,235,245,0.09), rgba(220,225,255,0.10));
+  filter:blur(22px); mix-blend-mode:screen; opacity:0.55; clip-path:inset(18.75% round 22px);
+}
+.tcard__sheen{
+  position:absolute; inset:0; border-radius:inherit; pointer-events:none;
+  background:radial-gradient(150% 45% at 50% -12%, rgba(255,255,255,0.10), transparent 56%);
+  mix-blend-mode:screen; opacity:0.6;
+}
+.tcard__emblem{
+  position:absolute; left:50%; top:44%; transform:translate(-50%,-50%);
+  width:96px; height:96px; fill:rgba(255,255,255,0.20);
+  filter:drop-shadow(0 1.5px 0 rgba(255,255,255,0.32)) drop-shadow(0 -1px 1px rgba(0,0,0,0.42)) drop-shadow(0 0 22px rgba(205,218,255,0.30));
+}
+/* liquid-glass rim: the card edge catching light (gradient ring via mask, not a border) */
+.tcard__rim{
+  position:absolute; inset:0; border-radius:inherit; padding:2px; pointer-events:none; z-index:2;
+  /* full, even ring like the render: never fades out mid-edge, just breathes
+     slightly brighter at the top-left where the light comes from */
+  background:linear-gradient(140deg,
+    rgba(255,255,255,0.52), rgba(255,255,255,0.30) 30%, rgba(255,255,255,0.24) 55%,
+    rgba(255,255,255,0.30) 78%, rgba(255,255,255,0.44));
+  -webkit-mask:linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+  -webkit-mask-composite:xor;
+          mask:linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+          mask-composite:exclude;
+}
+/* soft light behind the card (replaces the page beams; radial fade, edge-safe) */
+.tease-beams{
+  position:absolute; inset:-26%; z-index:-1; pointer-events:none;
+  background:radial-gradient(52% 48% at 40% 32%, rgba(120,210,255,0.15), rgba(120,210,255,0.05) 55%, transparent 74%);
+  filter:blur(10px);
+}
+/* ground reflection, ported from the app (daycard-living.css .daycard-floor):
+   a vertical MIRROR of the card's color layer, blurred, double-masked so it
+   fades down and toward the ends. */
+.tease-floor{
+  position:absolute; left:50%; top:100%;
+  transform:translateX(-50%) scaleY(-1); transform-origin:center center;
+  width:116%; height:38%; z-index:-1; pointer-events:none; overflow:hidden;
+  border-radius:22px; opacity:0.5;
+  filter:blur(22px) saturate(1.5);
+  -webkit-mask-image:
+    linear-gradient(to top, transparent 0%, #000 9%, rgba(0,0,0,0.45) 54%, transparent 90%),
+    linear-gradient(to right, transparent 0%, #000 20%, #000 80%, transparent 100%);
+  -webkit-mask-composite:source-in;
+  mask-image:
+    linear-gradient(to top, transparent 0%, #000 9%, rgba(0,0,0,0.45) 54%, transparent 90%),
+    linear-gradient(to right, transparent 0%, #000 20%, #000 80%, transparent 100%);
+  mask-composite:intersect;
+}
+.tease-floor .tb{ animation:none; }
+/* green bleed under the bottom edge: an OUTSIDE glow, radial fade by construction */
+.tease-glow{
+  position:absolute; left:50%; bottom:-40px; transform:translateX(-50%);
+  width:min(88%, 330px); height:120px; pointer-events:none; z-index:-1;
+  background:radial-gradient(50% 52% at 50% 36%, rgba(56,236,150,0.5), rgba(56,236,150,0.15) 55%, transparent 76%);
+  filter:blur(14px);
+}
+/* signup cluster in the fold */
+.fold__signup{ width:min(100%, 380px); text-align:center; --bh-inset:19px; }
+.fold__note{ font-size:12.5px; font-weight:600; letter-spacing:0.22em; text-transform:uppercase; color:var(--text-hi); margin:14px 0 16px; }
+/* Beehiiv's form has fixed internal side padding, so its visible field is inset
+   from the iframe box. Widen the frame by exactly that inset on both sides so the
+   VISIBLE field fills the column and lines up flush with the Discord button. */
+.fold__signup .signup__frame{ width:calc(100% + var(--bh-inset) * 2); margin-left:calc(-1 * var(--bh-inset)); }
+.fold__signup .btn--discord{ width:100%; margin-top:12px; }
+.fold__signup .signup__fallback{ margin-top:12px; }
+.fold__signup .signup__fine{ margin-top:4px; }
+/* bottom repeat CTA after the story */
+.endcta{ text-align:center; }
+
+/* desktop: card left, wordmark + signup right (Malik's mockup) */
+@media (min-width:900px){
+  .fold{
+    grid-template-columns:430px 360px; grid-template-rows:auto auto auto;
+    align-content:center; justify-content:center; column-gap:88px; row-gap:0;
+    padding:60px 48px;
+  }
+  .fold .hero__mark{ grid-column:2; grid-row:1; align-self:end; justify-self:start; }
+  .fold .hero__soon--fold{ grid-column:2; grid-row:2; justify-self:start; margin:6px 0 110px; }
+  .fold__signup .btn--discord{ margin-top:14px; }
+  .tease-stage{ grid-column:1; grid-row:1 / span 3; width:430px; height:580px; }
+  .tease-wrap{ width:100%; max-height:none; }
+  .fold__signup{ grid-column:2; grid-row:3; align-self:start; justify-self:start; width:360px; text-align:left; }
+  .fold__signup .signup__fallback{ display:inline-block; }
+}
+@media (prefers-reduced-motion: reduce){
+  .tb, .tcard__rays, .tease-wrap{ animation:none !important; }
+}
 
 @media (max-width:600px){
   html{ scroll-padding-top:128px; }
@@ -535,62 +549,50 @@ body.diving .ambient__rays-beam-shaft, body.diving .ambient__rays-source, body.d
   </div>
   <div class="ambient__bloom"></div>
 </div>
-<div class="viewport-guard" aria-hidden="true"></div>
 
 <div class="page">
 
   <!-- ============ HERO ============ -->
-  <header class="hero">
+  <!-- ============ THE FOLD: wordmark, the real Memento card, signup ============ -->
+  <header class="fold">
     <h1 class="hero__mark" aria-label="Memento">
       <svg class="hero__mark-icon" viewBox="0 0 512 512" aria-hidden="true" focusable="false"><rect width="512" height="512" rx="44" fill="#f5f5f7"/><path d="M62 55 L256 249 L450 55 L450 457 L62 457 Z" fill="#040406"/></svg><span class="hero__mark-word" aria-hidden="true">emento</span>
     </h1>
-    <p class="hero__line">The personal system for those who <b>actually</b> want to lock in.</p>
-    <div class="cta-row">
-      <a class="btn" href="#signup">Join the list</a>
-    </div>
-    <p class="cta-note">Updates + Discount at Launch</p>
-    <div class="hero__soon">Currently in private testing. Coming soon...</div>
-    <a class="scrollcue" href="#about" aria-label="Read more">
-      <svg viewBox="0 0 24 24" fill="none"><path d="M6 9l6 6 6-6" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
-    </a>
-  </header>
-
-  <!-- ============ APP MOCKUP (cinematic scroll: pin -> zoom in -> color floods the page) ============ -->
-  <section class="cinema" id="cinema">
-    <div class="cinema__flood" aria-hidden="true"></div>
-    <div class="cinema__pin">
-      <div class="phone" aria-hidden="true">
-        <div class="phone__island"></div>
-        <div class="phone__screen">
-          <div class="app">
-            <div class="app__top">
-              <div class="app__date"></div>
-            </div>
-            <div class="app__minirow">
-              <div class="app__mini"></div>
-              <div class="app__mini"></div>
-            </div>
-            <div class="app__hero">
-              <span class="app__orb app__orb--p"></span>
-              <span class="app__orb app__orb--b"></span>
-              <span class="app__orb app__orb--g"></span>
-              <span class="app__core" aria-hidden="true"></span>
-              <svg viewBox="0 0 512 512"><path d="M150 146 L256 252 L362 146 L362 366 L150 366 Z" stroke-width="14" stroke-linejoin="round"/></svg>
-            </div>
-            <div class="app__row"><div class="app__label"></div><div class="app__line"></div><div class="app__line app__line--s"></div></div>
-            <div class="app__row"><div class="app__label"></div><div class="app__line app__line--s"></div></div>
-            <div class="app__nav"><div class="app__navdot"></div><div class="app__navdot"></div><div class="app__navdot"></div><div class="app__navdot"></div></div>
-          </div>
+    <div class="hero__soon hero__soon--fold">Currently in private testing. Coming soon...</div>
+    <div class="tease-stage" aria-hidden="true">
+      <div class="tease-wrap">
+        <span class="tease-beams" aria-hidden="true"></span>
+        <div class="tease-card">
+          <span class="tcard__liquid"><i class="tb tb1"></i><i class="tb tb2"></i><i class="tb tb3"></i><i class="tb tb4"></i></span>
+          <span class="tcard__rays"></span>
+          <span class="tcard__iri"></span>
+          <span class="tcard__sheen"></span>
+          <svg class="tcard__emblem" viewBox="0 0 512 512"><path d="M150 146 L256 252 L362 146 L362 366 L150 366 Z"/></svg>
+          <span class="tcard__rim"></span>
         </div>
+        <span class="tease-floor" aria-hidden="true"><i class="tb tb1"></i><i class="tb tb2"></i><i class="tb tb3"></i><i class="tb tb4"></i></span>
+        <span class="tease-glow"></span>
       </div>
-      <p class="mock-caption cinema__cap">Build your memento.</p>
     </div>
-  </section>
+    <div class="fold__signup" id="signup">
+      <p class="fold__note">Updates + Discount at Launch</p>
+      <div class="signup__frame">
+        <script async src="https://subscribe-forms.beehiiv.com/v3/loader.js" data-beehiiv-form="00d2e169-0ad8-422d-bf41-f7ccbf944ca5"></script>
+      </div>
+      <a class="btn btn--discord" href="https://discord.gg/UNbPAUc3y4" target="_blank" rel="noopener noreferrer">
+        <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M20.317 4.369a19.79 19.79 0 0 0-4.885-1.515.074.074 0 0 0-.079.037c-.211.375-.444.864-.608 1.249a18.27 18.27 0 0 0-5.487 0 12.64 12.64 0 0 0-.617-1.25.077.077 0 0 0-.079-.036A19.736 19.736 0 0 0 3.677 4.37a.07.07 0 0 0-.032.027C.533 9.046-.32 13.58.099 18.057a.082.082 0 0 0 .031.057 19.9 19.9 0 0 0 5.993 3.03.078.078 0 0 0 .084-.028c.462-.63.874-1.295 1.226-1.994a.076.076 0 0 0-.041-.106 13.107 13.107 0 0 1-1.872-.892.077.077 0 0 1-.008-.128 10.2 10.2 0 0 0 .372-.291.074.074 0 0 1 .077-.01c3.928 1.793 8.18 1.793 12.062 0a.074.074 0 0 1 .078.009c.12.099.246.198.373.292a.077.077 0 0 1-.006.127 12.3 12.3 0 0 1-1.873.891.077.077 0 0 0-.041.107c.36.698.772 1.362 1.225 1.993a.076.076 0 0 0 .084.028 19.84 19.84 0 0 0 6.002-3.03.077.077 0 0 0 .032-.054c.5-5.177-.838-9.674-3.549-13.66a.061.061 0 0 0-.031-.03zM8.02 15.331c-1.183 0-2.157-1.085-2.157-2.419 0-1.333.956-2.419 2.157-2.419 1.21 0 2.176 1.096 2.157 2.42 0 1.333-.956 2.418-2.157 2.418zm7.975 0c-1.183 0-2.157-1.085-2.157-2.419 0-1.333.955-2.419 2.157-2.419 1.21 0 2.176 1.096 2.157 2.42 0 1.333-.946 2.418-2.157 2.418z"/></svg>
+        Discord
+      </a>
+      <a class="signup__fallback" href="https://maliks-newsletter-59a34c.beehiiv.com/" target="_blank" rel="noopener noreferrer">Can't see the form? Join here →</a>
+      <div class="signup__fine">You can unsubscribe anytime.</div>
+    </div>
+  </header>
 
   <!-- ============ WHAT IS MEMENTO ============ -->
   <section class="note" id="about">
     <div class="reveal">
       <h2 class="h2">So, what is Memento?</h2>
+      <p class="lead" style="margin-bottom:18px;">The personal system for those who <b>actually</b> want to lock in.</p>
       <p>Memento is something I've been building in the background for months, to help you beyond just videos.</p>
       <p>Over the years, as I've continued to learn more about why or why not people achieve their goals, I've realized the common denominator between everyone who makes it is this equation: Focused Action x Consistency.</p>
       <p>While this sounds really simple, most never do this. I've learned that most don't do this because they don't know what they want, what tangible actions to take, and how to keep going until they hit a positive feedback loop to make achievement automatic. So, I built this to help.</p>
@@ -628,22 +630,10 @@ body.diving .ambient__rays-beam-shaft, body.diving .ambient__rays-source, body.d
 
   <div class="divider"></div>
 
-  <!-- ============ SIGNUP ============ -->
-  <section class="signup" id="signup">
+  <!-- ============ END CTA ============ -->
+  <section class="endcta">
     <div class="reveal">
-      <h2 class="h2">Be first when it's live 🫡</h2>
-      <p class="lead">Drop your email for updates, and you'll also get a discount at launch. Join Discord for more direct updates.</p>
-      <div class="signup__box">
-        <div class="signup__frame">
-          <script async src="https://subscribe-forms.beehiiv.com/v3/loader.js" data-beehiiv-form="00d2e169-0ad8-422d-bf41-f7ccbf944ca5"></script>
-        </div>
-        <a class="signup__fallback" href="https://maliks-newsletter-59a34c.beehiiv.com/" target="_blank" rel="noopener noreferrer">Can't see the form? Join here →</a>
-        <div class="signup__fine">You can unsubscribe anytime.</div>
-      </div>
-      <a class="btn btn--discord" href="https://discord.gg/UNbPAUc3y4" target="_blank" rel="noopener noreferrer">
-        <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M20.317 4.369a19.79 19.79 0 0 0-4.885-1.515.074.074 0 0 0-.079.037c-.211.375-.444.864-.608 1.249a18.27 18.27 0 0 0-5.487 0 12.64 12.64 0 0 0-.617-1.25.077.077 0 0 0-.079-.036A19.736 19.736 0 0 0 3.677 4.37a.07.07 0 0 0-.032.027C.533 9.046-.32 13.58.099 18.057a.082.082 0 0 0 .031.057 19.9 19.9 0 0 0 5.993 3.03.078.078 0 0 0 .084-.028c.462-.63.874-1.295 1.226-1.994a.076.076 0 0 0-.041-.106 13.107 13.107 0 0 1-1.872-.892.077.077 0 0 1-.008-.128 10.2 10.2 0 0 0 .372-.291.074.074 0 0 1 .077-.01c3.928 1.793 8.18 1.793 12.062 0a.074.074 0 0 1 .078.009c.12.099.246.198.373.292a.077.077 0 0 1-.006.127 12.3 12.3 0 0 1-1.873.891.077.077 0 0 0-.041.107c.36.698.772 1.362 1.225 1.993a.076.076 0 0 0 .084.028 19.84 19.84 0 0 0 6.002-3.03.077.077 0 0 0 .032-.054c.5-5.177-.838-9.674-3.549-13.66a.061.061 0 0 0-.031-.03zM8.02 15.331c-1.183 0-2.157-1.085-2.157-2.419 0-1.333.956-2.419 2.157-2.419 1.21 0 2.176 1.096 2.157 2.42 0 1.333-.956 2.418-2.157 2.418zm7.975 0c-1.183 0-2.157-1.085-2.157-2.419 0-1.333.955-2.419 2.157-2.419 1.21 0 2.176 1.096 2.157 2.42 0 1.333-.946 2.418-2.157 2.418z"/></svg>
-        Discord
-      </a>
+      <a class="btn" href="#signup">Join the list</a>
     </div>
   </section>
 
@@ -798,56 +788,6 @@ function initStarBlob(canvas, size){
   items.forEach(function(el){ io.observe(el); });
 })();
 
-/* Cinematic scroll: as the mockup pins, zoom into the Memento and let its color
-   flood the whole page (then settle behind the sections below). JS-driven so it
-   works on every iOS, not just the newest. Honors reduced-motion.
-   Smoothness: no per-frame layout reads (uses scrollY + cached metrics), writes
-   only compositor props (transform/opacity) straight to the elements, and freezes
-   the inner blur loops while zooming so the GPU just scales a cached texture. */
-(function(){
-  var cinema = document.getElementById('cinema');
-  if(!cinema) return;
-  var reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-  if(reduce){ cinema.classList.add('cinema--off'); return; }
-  var pin = cinema.querySelector('.cinema__pin');
-  var phone = cinema.querySelector('.phone');
-  var cap = cinema.querySelector('.cinema__cap');
-  var flood = cinema.querySelector('.cinema__flood');
-  var innerM = cinema.querySelector('.app__hero svg');
-  var top0 = 0, span = 1, ticking = false, zooming = false, maxMScale = 0.6;
-  function clamp(v,a,b){ return v<a?a:(v>b?b:v); }
-  function lerp(a,b,t){ return a+(b-a)*t; }
-  function smooth(t){ return t*t*(3-2*t); }                        // smoothstep, buttery in/out
-  function measure(){
-    var y = window.pageYOffset || document.documentElement.scrollTop || 0;
-    top0 = cinema.getBoundingClientRect().top + y;                 // absolute top, measured rarely
-    span = Math.max(1, cinema.offsetHeight - window.innerHeight);
-    // The M settles at a MODERATE size, ~viewport width (a clean medium M), capped at 1.0 so it
-    // never scales past its 760px layout and stays crisp. Viewport-relative = right on phone + desktop.
-    maxMScale = Math.min(1, window.innerWidth / 760);
-  }
-  function update(){
-    ticking = false;
-    var y = window.pageYOffset || document.documentElement.scrollTop || 0;
-    var p = clamp((y - top0) / span, 0, 1);
-    var capO = 1 - clamp(p / 0.18, 0, 1);                          // caption fades out early
-    phone.style.opacity = '1';                                     // M stays fully visible the whole dive, then scrolls up at release (no fade)
-    flood.style.opacity = '0';                                     // no color flood
-    cap.style.opacity = capO.toFixed(3);
-    var z = p > 0.012;                                             // stay in the dive through the end so the chrome never snaps back; the M just scrolls up with the page
-    if(z !== zooming){ zooming = z; pin.classList.toggle('cinema-zooming', z); document.body.classList.toggle('diving', z); }
-    // The M is always laid out at 760px; drive its size purely by GPU transform:scale (rest ~0.06 -> ~46px).
-    // Grow to a MODERATE size by p=0.85, hold briefly, then the pin releases and the M scrolls up. Compositor-only.
-    var mScale = lerp(0.0605, maxMScale, smooth(clamp(p / 0.85, 0, 1)));
-    innerM.style.transform = 'scale(' + mScale.toFixed(5) + ')';
-  }
-  function onScroll(){ if(!ticking){ ticking = true; requestAnimationFrame(update); } }
-  function onResize(){ measure(); onScroll(); }
-  window.addEventListener('scroll', onScroll, { passive:true });
-  window.addEventListener('resize', onResize);
-  window.addEventListener('load', onResize);
-  measure(); update();
-})();
 </script>
 
 </body>
