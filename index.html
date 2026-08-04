@@ -380,102 +380,149 @@ section{ padding:64px 0; }
    daycard-living.css blobs), tuned darker for the teaser. Colour is hard-clipped
    inside the card (clip-path + contain:paint); the outside glow fades radially,
    never a clipped rect. */
+/* ============================================================================
+   THE MEMENTO CARD - ported from the app's fully-evolved living card
+   (memento-app/css/daycard-living.css + dashboard.css), at act=1, clar=1,
+   cons=1, lit=1: the platinum reward state. Layer order and values are the
+   app's, not re-invented. Edge-safety law honoured: colour INSIDE is
+   clip-path + contain:paint, glow OUTSIDE fades radially, never a clipped rect.
+   ========================================================================== */
 .tease-card{
   position:absolute; inset:0; border-radius:22px;
-  background:linear-gradient(165deg, rgba(255,255,255,0.03), rgba(255,255,255,0.006) 48%, rgba(255,255,255,0.01)), rgba(7,7,12,0.16);
-  box-shadow:inset 0 1px 0 rgba(255,255,255,0.16), 0 26px 60px rgba(0,0,0,0.45);
+  background:linear-gradient(165deg, rgba(255,255,255,0.13), rgba(255,255,255,0.02) 48%, rgba(255,255,255,0.06));
+  box-shadow:inset 0 1px 0 rgba(255,255,255,0.22);
   clip-path:inset(0 round 22px); contain:paint;
 }
-.tcard__liquid{ position:absolute; inset:-28%; pointer-events:none; filter:blur(46px) saturate(1.5); clip-path:inset(17.95% round 22px); }
+/* liquid colour layer: the earned pillar hues (app blob positions + colours) */
+.tcard__liquid{ position:absolute; inset:-28%; pointer-events:none; z-index:0; filter:blur(46px) saturate(1.5); }
 .tb{ position:absolute; border-radius:50%; mix-blend-mode:screen; will-change:transform; }
-.tb1{ width:110%; height:82%; left:-12%; top:-16%; background:radial-gradient(circle, rgba(80,205,255,1), transparent 66%); opacity:1; animation:tbDrift1 13s ease-in-out infinite; }
-.tb2{ width:80%; height:62%; right:-14%; top:2%; background:radial-gradient(circle, rgba(128,150,255,0.85), transparent 66%); opacity:0.34; animation:tbDrift2 16s ease-in-out infinite; }
-.tb3{ width:104%; height:78%; left:-8%; bottom:-18%; background:radial-gradient(circle, rgba(56,236,150,1), transparent 64%); opacity:0.85; animation:tbDrift3 14s ease-in-out infinite; }
-.tb4{ width:66%; height:54%; right:0%; bottom:24%; background:radial-gradient(circle, rgba(120,255,190,0.7), transparent 68%); opacity:0.20; animation:tbDrift2 19s ease-in-out infinite reverse; }
+/* b1 clarity cyan */
+.tb1{ width:94%; height:72%; left:-12%; top:-14%;
+  background:radial-gradient(circle, rgba(116,234,255,1), transparent 66%); opacity:1;
+  animation:tbDrift1 13s ease-in-out infinite; }
+/* b2 action white */
+.tb2{ width:150%; height:120%; left:-25%; top:-8%;
+  background:radial-gradient(circle, rgba(236,239,255,0.98), transparent 66%); opacity:0.82;
+  animation:tbDrift2 16s ease-in-out infinite; }
+/* b3 consistency green */
+.tb3{ width:98%; height:76%; right:-14%; bottom:-16%;
+  background:radial-gradient(circle, rgba(56,236,71,1), transparent 64%); opacity:1;
+  animation:tbDrift3 14s ease-in-out infinite; }
+/* b5 the softer green echo */
+.tb5{ width:66%; height:54%; right:4%; top:28%;
+  background:radial-gradient(circle, rgba(120,255,131,0.7), transparent 68%); opacity:0.5;
+  animation:tbDrift2 19s ease-in-out infinite reverse; }
 @keyframes tbDrift1{ 0%,100%{ transform:translate(0,0) scale(1); } 50%{ transform:translate(5%,4%) scale(1.07); } }
 @keyframes tbDrift2{ 0%,100%{ transform:translate(0,0) scale(1); } 50%{ transform:translate(-4%,5%) scale(1.05); } }
 @keyframes tbDrift3{ 0%,100%{ transform:translate(0,0) scale(1); } 50%{ transform:translate(4%,-4%) scale(1.08); } }
-/* soft diagonal light through the glass (screen-blended, clipped inside) */
-.tcard__rays{
-  position:absolute; inset:0; pointer-events:none; mix-blend-mode:screen; opacity:0.9;
-  /* The element (and its clip) NEVER moves; only the oversized background drifts.
-     Soft-edged stops instead of a blur so nothing can paint a seam at the edge. */
-  background-image:linear-gradient(115deg,
-    transparent 6%,  rgba(210,240,255,0.15) 12%, transparent 19%,
-    transparent 25%, rgba(255,255,255,0.09) 31%, transparent 38%,
-    transparent 47%, rgba(190,235,255,0.11) 53%, transparent 60%,
-    transparent 69%, rgba(255,255,255,0.06) 74%, transparent 81%);
-  background-size:150% 150%; background-position:0% 0%;
-  clip-path:inset(0 round 22px);
-  animation:tcardRaySweep 18s ease-in-out infinite;
-}
-@keyframes tcardRaySweep{
-  0%,100%{ background-position:0% 0%; opacity:0.72; }
-  50%{ background-position:100% 100%; opacity:1; }
-}
-/* iridescence + top-edge catch, verbatim from the app card */
+/* iridescence drifting inside the glass (app __iri) */
 .tcard__iri{
-  position:absolute; inset:-30%; pointer-events:none;
+  position:absolute; inset:-30%; pointer-events:none; z-index:1;
   background:conic-gradient(from 210deg at 50% 40%,
-    rgba(220,225,255,0.10), rgba(120,200,255,0.07),
+    rgba(220,225,255,0.10), rgba(167,139,250,0.07),
     rgba(94,162,247,0.05), rgba(235,235,245,0.09), rgba(220,225,255,0.10));
-  filter:blur(22px); mix-blend-mode:screen; opacity:0.55; clip-path:inset(18.75% round 22px);
+  filter:blur(22px); mix-blend-mode:screen; opacity:0.55;
 }
+/* top-edge catch (app __sheen) */
 .tcard__sheen{
-  position:absolute; inset:0; border-radius:inherit; pointer-events:none;
+  position:absolute; inset:0; border-radius:inherit; pointer-events:none; z-index:2;
   background:radial-gradient(150% 45% at 50% -12%, rgba(255,255,255,0.10), transparent 56%);
-  mix-blend-mode:screen; opacity:0.6;
+  mix-blend-mode:screen; opacity:0.9;
 }
-.tcard__emblem{
-  position:absolute; left:50%; top:44%; transform:translate(-50%,-50%);
-  width:96px; height:96px; fill:rgba(255,255,255,0.20);
-  filter:drop-shadow(0 1.5px 0 rgba(255,255,255,0.32)) drop-shadow(0 -1px 1px rgba(0,0,0,0.42)) drop-shadow(0 0 22px rgba(205,218,255,0.30));
-}
-/* liquid-glass rim: the card edge catching light (gradient ring via mask, not a border) */
-.tcard__rim{
-  position:absolute; inset:0; border-radius:inherit; padding:2px; pointer-events:none; z-index:2;
-  /* full, even ring like the render: never fades out mid-edge, just breathes
-     slightly brighter at the top-left where the light comes from */
-  background:linear-gradient(140deg,
-    rgba(255,255,255,0.52), rgba(255,255,255,0.30) 30%, rgba(255,255,255,0.24) 55%,
-    rgba(255,255,255,0.30) 78%, rgba(255,255,255,0.44));
+/* corner edge-burn, TL + BR only, gated at the app's --ring 0.3 (app __burn) */
+.tcard__burn{
+  position:absolute; inset:0; border-radius:inherit; z-index:3; pointer-events:none;
+  mix-blend-mode:screen; padding:1.5px;
+  background:conic-gradient(from 0deg,
+    rgba(212,224,255,0)    0deg,
+    rgba(212,224,255,0)    70deg,
+    rgba(234,240,255,0.98) 135deg,
+    rgba(212,224,255,0)    200deg,
+    rgba(212,224,255,0)    250deg,
+    rgba(234,240,255,0.98) 315deg,
+    rgba(212,224,255,0)    360deg);
   -webkit-mask:linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
   -webkit-mask-composite:xor;
           mask:linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
           mask-composite:exclude;
+  animation:tcardGlimmer 10.8s ease-in-out infinite;
 }
-/* soft light behind the card (replaces the page beams; radial fade, edge-safe) */
-.tease-beams{
-  position:absolute; inset:-26%; z-index:-1; pointer-events:none;
-  background:radial-gradient(52% 48% at 40% 32%, rgba(120,210,255,0.15), rgba(120,210,255,0.05) 55%, transparent 74%);
-  filter:blur(10px);
+@keyframes tcardGlimmer{ 0%,100%{ opacity:0.216; } 50%{ opacity:0.3; } }
+/* A - THE PLATINUM WASH: what makes the centre read as metal, not just brighter
+   colour. App __plat at act * --plat-k (0.85). */
+.tcard__plat{
+  position:absolute; inset:-12%; z-index:4; pointer-events:none; opacity:0.85;
+  background:radial-gradient(58% 52% at 50% 42%,
+    rgba(255,255,255,0.92) 0%, rgba(226,236,248,0.62) 46%,
+    rgba(190,208,228,0.26) 78%, rgba(190,208,228,0) 100%);
+  filter:blur(20px) saturate(1.04);
 }
-/* ground reflection, ported from the app (daycard-living.css .daycard-floor):
-   a vertical MIRROR of the card's color layer, blurred, double-masked so it
-   fades down and toward the ends. */
+/* B - colour reassert: the earned hues restated ON TOP of the wash so it does
+   not drown them (app __tint, self-limiting at act^2 * plat-k^2 * pop-k). */
+.tcard__tint{
+  position:absolute; inset:0; border-radius:inherit; z-index:5; pointer-events:none; opacity:0.217;
+  background:
+    radial-gradient(58% 50% at 26% 16%, rgba(58,217,245,0.85) 0%, rgba(58,217,245,0) 70%),
+    radial-gradient(58% 50% at 76% 84%, rgba(63,217,78,0.85) 0%, rgba(63,217,78,0) 70%);
+}
+/* C - THE RIM: action moved out to the perimeter as a burning edge. Built from
+   INSET shadows so it follows the radius exactly and can never render as a box.
+   Every layer blurred: a 0-blur ring would draw a literal border. App __rim. */
+.tcard__rim{
+  position:absolute; inset:0; border-radius:inherit; z-index:6; pointer-events:none;
+  box-shadow:
+    inset 0 0 0 4.2px rgba(255,255,255,1),
+    inset 0 0 16px 3px rgba(255,255,255,1),
+    inset 0 0 38px rgba(226,244,255,0.78),
+    inset 0 0 78px rgba(170,212,255,0.46),
+    inset 0 0 150px rgba(140,190,255,0.24);
+}
+/* the mark rides ABOVE the reward layers (app v932 fix), pressed and DARK
+   because the platinum flood drives the card bright (app .daycard--bright). */
+.tcard__body{
+  position:absolute; inset:0; z-index:7; display:flex; align-items:center; justify-content:center;
+  transform:perspective(520px); pointer-events:none;
+}
+.tcard__emblem{
+  width:42%; height:auto; display:block;
+  fill:rgba(20,29,40,0.62);
+  filter:drop-shadow(0 1.5px 0 rgba(255,255,255,0.75)) drop-shadow(0 -1.5px 1.5px rgba(0,0,0,0.30));
+}
+/* The rim's escaping light. It CANNOT live on the card (clip-path + contain:paint
+   would clip an outer shadow away entirely), so it goes on the wrap, exactly as
+   the app puts it on the stage. App values, act-scaled at 1. */
+.tease-wrap{
+  border-radius:22px;
+  /* the throw is scaled back from the app's dashboard values: on a black page
+     with nothing else lit, the full 200px layer floods the whole fold. Same
+     shape, tighter falloff, so it reads as a halo on the card, not page light. */
+  box-shadow:
+    0 12px 38px rgba(0,0,0,0.28),
+    0 0 10px rgba(255,255,255,0.46),
+    0 0 32px rgba(232,246,255,0.27),
+    0 0 72px rgba(180,218,255,0.15),
+    0 0 140px rgba(140,190,255,0.07);
+}
+/* ground reflection: a true vertical MIRROR of the colour layer AND the rim, so
+   the reward shows in the reflection too (app .daycard-floor). Already flipped,
+   blurred and double-masked, so the rim inside inherits all of it for free. */
 .tease-floor{
   position:absolute; left:50%; top:100%;
   transform:translateX(-50%) scaleY(-1); transform-origin:center center;
-  width:116%; height:38%; z-index:-1; pointer-events:none; overflow:hidden;
-  border-radius:22px; opacity:0.5;
-  filter:blur(22px) saturate(1.5);
+  width:120%; height:42%; z-index:-1; pointer-events:none; overflow:hidden;
+  border-radius:22px; opacity:1;
+  filter:blur(20px) saturate(1.6) brightness(1.18);
   -webkit-mask-image:
-    linear-gradient(to top, transparent 0%, #000 9%, rgba(0,0,0,0.45) 54%, transparent 90%),
-    linear-gradient(to right, transparent 0%, #000 20%, #000 80%, transparent 100%);
+    linear-gradient(to top, transparent 0%, #000 14%, rgba(0,0,0,0.48) 52%, transparent 82%),
+    linear-gradient(to right, transparent 3%, #000 30%, #000 70%, transparent 97%);
   -webkit-mask-composite:source-in;
   mask-image:
-    linear-gradient(to top, transparent 0%, #000 9%, rgba(0,0,0,0.45) 54%, transparent 90%),
-    linear-gradient(to right, transparent 0%, #000 20%, #000 80%, transparent 100%);
+    linear-gradient(to top, transparent 0%, #000 14%, rgba(0,0,0,0.48) 52%, transparent 82%),
+    linear-gradient(to right, transparent 3%, #000 30%, #000 70%, transparent 97%);
   mask-composite:intersect;
 }
 .tease-floor .tb{ animation:none; }
-/* green bleed under the bottom edge: an OUTSIDE glow, radial fade by construction */
-.tease-glow{
-  position:absolute; left:50%; bottom:-40px; transform:translateX(-50%);
-  width:min(88%, 330px); height:120px; pointer-events:none; z-index:-1;
-  background:radial-gradient(50% 52% at 50% 36%, rgba(56,236,150,0.5), rgba(56,236,150,0.15) 55%, transparent 76%);
-  filter:blur(14px);
-}
+.tease-floor .tcard__rim{ z-index:1; }
 /* signup cluster in the fold */
 .fold__signup{ width:min(100%, 380px); text-align:center; --bh-inset:19px; }
 .fold__note{ font-size:12.5px; font-weight:600; letter-spacing:0.22em; text-transform:uppercase; color:var(--text-hi); margin:14px 0 16px; }
@@ -505,7 +552,8 @@ section{ padding:64px 0; }
   .fold__signup .signup__fallback{ display:inline-block; }
 }
 @media (prefers-reduced-motion: reduce){
-  .tb, .tcard__rays, .tease-wrap{ animation:none !important; }
+  .tb, .tease-wrap{ animation:none !important; }
+  .tcard__burn{ animation:none !important; opacity:0.18; }
 }
 
 @media (max-width:600px){
@@ -561,17 +609,17 @@ section{ padding:64px 0; }
     <div class="hero__soon hero__soon--fold">Currently in private testing. Coming soon...</div>
     <div class="tease-stage" aria-hidden="true">
       <div class="tease-wrap">
-        <span class="tease-beams" aria-hidden="true"></span>
         <div class="tease-card">
-          <span class="tcard__liquid"><i class="tb tb1"></i><i class="tb tb2"></i><i class="tb tb3"></i><i class="tb tb4"></i></span>
-          <span class="tcard__rays"></span>
+          <span class="tcard__liquid"><i class="tb tb1"></i><i class="tb tb2"></i><i class="tb tb3"></i><i class="tb tb5"></i></span>
           <span class="tcard__iri"></span>
           <span class="tcard__sheen"></span>
-          <svg class="tcard__emblem" viewBox="0 0 512 512"><path d="M150 146 L256 252 L362 146 L362 366 L150 366 Z"/></svg>
+          <span class="tcard__burn"></span>
+          <span class="tcard__plat"></span>
+          <span class="tcard__tint"></span>
           <span class="tcard__rim"></span>
+          <div class="tcard__body"><svg class="tcard__emblem" viewBox="0 0 512 512" aria-hidden="true"><path d="M150 146 L256 252 L362 146 L362 366 L150 366 Z"/></svg></div>
         </div>
-        <span class="tease-floor" aria-hidden="true"><i class="tb tb1"></i><i class="tb tb2"></i><i class="tb tb3"></i><i class="tb tb4"></i></span>
-        <span class="tease-glow"></span>
+        <span class="tease-floor" aria-hidden="true"><i class="tb tb1"></i><i class="tb tb2"></i><i class="tb tb3"></i><i class="tb tb5"></i><span class="tcard__rim"></span></span>
       </div>
     </div>
     <div class="fold__signup" id="signup">
