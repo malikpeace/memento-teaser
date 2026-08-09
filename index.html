@@ -51,14 +51,23 @@ if('scrollRestoration' in history){ history.scrollRestoration='manual'; }</scrip
 }
 
 *{ box-sizing:border-box; margin:0; padding:0; }
-html{ scroll-behavior:smooth; scroll-padding-top:112px; background:var(--bg-deep); min-height:100%; }
+html{
+  scroll-behavior:smooth; scroll-padding-top:112px; background:var(--bg-deep); min-height:100%;
+  /* No sideways swipe. The card's glow, blur and reflection layers are wider
+     than the card on purpose, so they used to push the page ~190px wide on a
+     phone and it could be dragged left/right. `clip` is used over `hidden`
+     because hidden makes the element a scroll container, which is what
+     silently killed position:sticky here once before; clip does not.
+     (hidden first as the fallback for older Safari.) */
+  overflow-x:hidden; overflow-x:clip;
+}
 body{
   font-family:var(--font);
   background:var(--bg-deep);
   color:var(--text-hi);
   -webkit-font-smoothing:antialiased;
   text-rendering:optimizeLegibility;
-  overflow-x:hidden;
+  overflow-x:hidden; overflow-x:clip;
   min-height:100%;
 }
 
@@ -181,7 +190,8 @@ section{ padding:64px 0; }
 .btn:focus-visible{ outline:none; box-shadow:inset 0 1px 0 rgba(255,255,255,0.85), 0 0 0 3px rgba(var(--accent-rgb),0.6); }
 /* Discord button - solid Discord blurple, not glassy */
 .btn--discord{
-  color:#fff; background:#5865f2;
+  color:var(--btn-ink, #fff); background:var(--btn-bg, #5865f2);
+  transition:background 1.1s cubic-bezier(0.4, 0, 0.2, 1), color 1.1s cubic-bezier(0.4, 0, 0.2, 1), filter 160ms var(--ease-out);
   box-shadow:inset 0 1px 0 rgba(255,255,255,0.20);
 }
 .btn--discord svg{ width:21px; height:21px; }
@@ -389,28 +399,29 @@ section{ padding:64px 0; }
    ========================================================================== */
 .tease-card{
   position:absolute; inset:0; border-radius:22px;
-  background:linear-gradient(165deg, rgba(255,255,255,0.13), rgba(255,255,255,0.02) 48%, rgba(255,255,255,0.06));
+  background:var(--face, linear-gradient(165deg, rgba(255,255,255,0.13), rgba(255,255,255,0.02) 48%, rgba(255,255,255,0.06)));
   box-shadow:inset 0 1px 0 rgba(255,255,255,0.22);
+  transition:background 1.1s cubic-bezier(0.4, 0, 0.2, 1);
   clip-path:inset(0 round 22px); contain:paint;
 }
 /* liquid colour layer: the earned pillar hues (app blob positions + colours) */
-.tcard__liquid{ position:absolute; inset:-28%; pointer-events:none; z-index:0; filter:blur(46px) saturate(1.5); }
-.tb{ position:absolute; border-radius:50%; mix-blend-mode:screen; will-change:transform; }
+.tcard__liquid{ position:absolute; inset:-28%; pointer-events:none; z-index:0; filter:blur(46px) saturate(1.5) hue-rotate(var(--mm-hue, 0deg)); }
+.tb{ position:absolute; border-radius:50%; mix-blend-mode:screen; will-change:transform; transition:background 1.1s cubic-bezier(0.4, 0, 0.2, 1), opacity 1.1s cubic-bezier(0.4, 0, 0.2, 1); }
 /* b1 clarity cyan */
 .tb1{ width:94%; height:72%; left:-12%; top:-14%;
-  background:radial-gradient(circle, rgba(116,234,255,1), transparent 66%); opacity:1;
+  background:radial-gradient(circle, var(--sk1, rgba(116,234,255,1)), transparent 66%); opacity:1;
   animation:tbDrift1 13s ease-in-out infinite; }
 /* b2 action white */
 .tb2{ width:150%; height:120%; left:-25%; top:-8%;
-  background:radial-gradient(circle, rgba(236,239,255,0.98), transparent 66%); opacity:0.82;
+  background:radial-gradient(circle, var(--sk2, rgba(236,239,255,0.98)), transparent 66%); opacity:0.82;
   animation:tbDrift2 16s ease-in-out infinite; }
 /* b3 consistency green */
 .tb3{ width:98%; height:76%; right:-14%; bottom:-16%;
-  background:radial-gradient(circle, rgba(56,236,71,1), transparent 64%); opacity:1;
+  background:radial-gradient(circle, var(--sk3, rgba(56,236,71,1)), transparent 64%); opacity:1;
   animation:tbDrift3 14s ease-in-out infinite; }
 /* b5 the softer green echo */
 .tb5{ width:66%; height:54%; right:4%; top:28%;
-  background:radial-gradient(circle, rgba(120,255,131,0.7), transparent 68%); opacity:0.5;
+  background:radial-gradient(circle, var(--sk4, rgba(120,255,131,0.7)), transparent 68%); opacity:0.5;
   animation:tbDrift2 19s ease-in-out infinite reverse; }
 @keyframes tbDrift1{ 0%,100%{ transform:translate(0,0) scale(1); } 50%{ transform:translate(5%,4%) scale(1.07); } }
 @keyframes tbDrift2{ 0%,100%{ transform:translate(0,0) scale(1); } 50%{ transform:translate(-4%,5%) scale(1.05); } }
@@ -451,7 +462,7 @@ section{ padding:64px 0; }
 /* A - THE PLATINUM WASH: what makes the centre read as metal, not just brighter
    colour. App __plat at act * --plat-k (0.85). */
 .tcard__plat{
-  position:absolute; inset:-12%; z-index:4; pointer-events:none; opacity:0.85;
+  position:absolute; inset:-12%; z-index:4; pointer-events:none; opacity:var(--plat-op, 0.85); transition:opacity 1.1s cubic-bezier(0.4, 0, 0.2, 1);
   background:radial-gradient(58% 52% at 50% 42%,
     rgba(255,255,255,0.92) 0%, rgba(226,236,248,0.62) 46%,
     rgba(190,208,228,0.26) 78%, rgba(190,208,228,0) 100%);
@@ -470,12 +481,18 @@ section{ padding:64px 0; }
    Every layer blurred: a 0-blur ring would draw a literal border. App __rim. */
 .tcard__rim{
   position:absolute; inset:0; border-radius:inherit; z-index:6; pointer-events:none;
+  /* THE COLOUR-MATCHED RING (the app's data-skin-ring rider, at the intensity
+     Malik tuned): the burning edge burns in the MATERIAL's light, not white.
+     The innermost core stays near-white so a dark material still reads as a
+     hot edge instead of a flat coloured border. Defaults to the platinum
+     whites when no material is chosen. */
   box-shadow:
-    inset 0 0 0 4.2px rgba(255,255,255,1),
-    inset 0 0 16px 3px rgba(255,255,255,1),
-    inset 0 0 38px rgba(226,244,255,0.78),
-    inset 0 0 78px rgba(170,212,255,0.46),
-    inset 0 0 150px rgba(140,190,255,0.24);
+    inset 0 0 0 4.2px rgba(var(--rim-core, 255,255,255), 1),
+    inset 0 0 16px 3px rgba(var(--rim-core, 255,255,255), 1),
+    inset 0 0 38px rgba(var(--rim-rgb, 226,244,255), 0.78),
+    inset 0 0 78px rgba(var(--rim-rgb, 170,212,255), 0.46),
+    inset 0 0 150px rgba(var(--rim-rgb, 140,190,255), 0.24);
+  transition:box-shadow 1.1s cubic-bezier(0.4, 0, 0.2, 1);
 }
 /* the mark rides ABOVE the reward layers (app v932 fix), pressed and DARK
    because the platinum flood drives the card bright (app .daycard--bright). */
@@ -485,8 +502,9 @@ section{ padding:64px 0; }
 }
 .tcard__emblem{
   width:42%; height:auto; display:block;
-  fill:rgba(20,29,40,0.62);
+  fill:var(--mark, rgba(20,29,40,0.62));
   filter:drop-shadow(0 1.5px 0 rgba(255,255,255,0.75)) drop-shadow(0 -1.5px 1.5px rgba(0,0,0,0.30));
+  transition:fill 1.1s cubic-bezier(0.4, 0, 0.2, 1);
 }
 /* The rim's escaping light. It CANNOT live on the card (clip-path + contain:paint
    would clip an outer shadow away entirely), so it goes on the wrap, exactly as
@@ -500,9 +518,21 @@ section{ padding:64px 0; }
     0 12px 38px rgba(0,0,0,0.28),
     0 0 10px rgba(255,255,255,0.46),
     0 0 32px rgba(232,246,255,0.27),
-    0 0 72px rgba(180,218,255,0.15),
-    0 0 140px rgba(140,190,255,0.07);
+    0 0 72px rgba(var(--skin-rgb, 180,218,255),0.20),
+    0 0 140px rgba(var(--skin-rgb, 140,190,255),0.10);
+  transition:box-shadow 1.1s cubic-bezier(0.4, 0, 0.2, 1);
 }
+/* the engraved name, ported verbatim from the app's tap-the-card view
+   (#mementoFull .daycard-ns__name): pressed into the material, tiny, tracked,
+   in the material's own ink. Empty until someone names their Memento. */
+.tcard__name{
+  position:absolute; left:8.5%; bottom:5.2%; z-index:7; pointer-events:none;
+  font-size:10.5px; font-weight:700; letter-spacing:0.15em; text-transform:uppercase;
+  color:var(--ink, rgba(24,28,36,0.78));
+  text-shadow:0 -0.5px 0.6px rgba(0,0,0,0.5), 0 1px 0.6px rgba(255,255,255,0.26);
+  opacity:0; transition:opacity 0.8s ease, color 1.1s cubic-bezier(0.4, 0, 0.2, 1);
+}
+.tcard__name.is-on{ opacity:1; }
 /* ground reflection: a true vertical MIRROR of the colour layer AND the rim, so
    the reward shows in the reflection too (app .daycard-floor). Already flipped,
    blurred and double-masked, so the rim inside inherits all of it for free. */
@@ -510,8 +540,10 @@ section{ padding:64px 0; }
   position:absolute; left:50%; top:100%;
   transform:translateX(-50%) scaleY(-1); transform-origin:center center;
   width:120%; height:42%; z-index:-1; pointer-events:none; overflow:hidden;
-  border-radius:22px; opacity:1;
-  filter:blur(20px) saturate(1.6) brightness(1.18);
+  border-radius:22px; opacity:0.62;
+  /* a reflection is always dimmer than what casts it; at full strength the
+     mirror washed straight over the label beneath it on mobile. */
+  filter:blur(20px) saturate(1.5) brightness(0.92);
   -webkit-mask-image:
     linear-gradient(to top, transparent 0%, #000 14%, rgba(0,0,0,0.48) 52%, transparent 82%),
     linear-gradient(to right, transparent 3%, #000 30%, #000 70%, transparent 97%);
@@ -522,7 +554,47 @@ section{ padding:64px 0; }
   mask-composite:intersect;
 }
 .tease-floor .tb{ animation:none; }
-.tease-floor .tcard__rim{ z-index:1; }
+/* A real mirror: the floor now contains a full reconstruction of the card
+   (face + liquid + wash + tint + rim), not just its blobs. The copy is card-
+   sized inside the oversized floor box and anchored to the floor's local
+   BOTTOM, which after the scaleY(-1) flip is the edge touching the real card,
+   so what you see reflected is genuinely the card's bottom. */
+.tfloor__card{
+  position:absolute; left:8.333%; right:8.333%; bottom:0;
+  height:238%;   /* floor is 42% of the card, so 100/42 restores card height */
+  border-radius:22px; overflow:hidden;
+  background:var(--face, linear-gradient(165deg, rgba(255,255,255,0.13), rgba(255,255,255,0.02) 48%, rgba(255,255,255,0.06)));
+  transition:background 1.1s cubic-bezier(0.4, 0, 0.2, 1);
+}
+/* the material's own light filling the room behind the card. Radial fade by
+   construction (glow-edge law): it can never print a box. */
+.tease-room{
+  position:absolute; left:50%; top:50%; transform:translate(-50%,-50%);
+  width:210%; height:170%; z-index:-2; pointer-events:none; contain:layout;
+  background:radial-gradient(50% 50% at 50% 50%,
+    rgba(var(--skin-rgb, 140,190,255), 0.20) 0%,
+    rgba(var(--skin-rgb, 140,190,255), 0.07) 42%,
+    rgba(var(--skin-rgb, 140,190,255), 0) 72%);
+  filter:blur(26px); opacity:0; transition:opacity 1.1s ease, background 1.1s cubic-bezier(0.4, 0, 0.2, 1);
+}
+.tease-room.is-on{ opacity:1; }
+/* "See what your Memento would look like" */
+.namer{ width:min(100%, 380px); text-align:center; margin:0 auto; }
+.namer__label{ display:block; font-size:13px; color:var(--text-mid); margin-bottom:9px; }
+.namer__row{ display:flex; gap:8px; align-items:stretch; }
+.namer__input{
+  flex:1; min-width:0; min-height:46px; padding:12px 15px;
+  font-family:var(--font); font-size:16px; color:var(--text-hi);   /* 16px exactly: any smaller and iOS zooms the page on focus */
+  background:rgba(255,255,255,0.05); border:0; border-radius:11px;
+  box-shadow:inset 0 1px 0 rgba(255,255,255,0.08);
+  -webkit-backdrop-filter:blur(20px) saturate(1.3); backdrop-filter:blur(20px) saturate(1.3);
+  transition:background 160ms var(--ease-out), box-shadow 160ms var(--ease-out);
+}
+.namer__input::placeholder{ color:var(--text-lo); }
+.namer__input:focus{
+  outline:none; background:rgba(255,255,255,0.08);
+  box-shadow:inset 0 1px 0 rgba(255,255,255,0.12), 0 0 0 2px rgba(var(--skin-rgb, 140,190,255),0.45);
+}
 /* signup cluster in the fold */
 .fold__signup{ width:min(100%, 380px); text-align:center; --bh-inset:19px; }
 .fold__note{ font-size:12.5px; font-weight:600; letter-spacing:0.22em; text-transform:uppercase; color:var(--text-hi); margin:14px 0 16px; }
@@ -535,20 +607,27 @@ section{ padding:64px 0; }
 .fold__signup .signup__fine{ margin-top:4px; }
 /* bottom repeat CTA after the story */
 .endcta{ text-align:center; }
+/* the bottom CTA takes the material too (its default is the white button) */
+.endcta .btn{
+  background:var(--btn-bg, #f5f5f7); color:var(--btn-ink, #0a0a0e);
+  transition:background 1.1s cubic-bezier(0.4, 0, 0.2, 1), color 1.1s cubic-bezier(0.4, 0, 0.2, 1), filter 160ms var(--ease-out);
+}
 
 /* desktop: card left, wordmark + signup right (Malik's mockup) */
 @media (min-width:900px){
   .fold{
-    grid-template-columns:430px 360px; grid-template-rows:auto auto auto;
+    grid-template-columns:430px 360px; grid-template-rows:auto auto auto auto;
     align-content:center; justify-content:center; column-gap:88px; row-gap:0;
     padding:60px 48px;
   }
   .fold .hero__mark{ grid-column:2; grid-row:1; align-self:end; justify-self:start; }
-  .fold .hero__soon--fold{ grid-column:2; grid-row:2; justify-self:start; margin:6px 0 110px; }
+  .fold .hero__soon--fold{ grid-column:2; grid-row:2; justify-self:start; margin:6px 0 64px; }
+  /* the namer sits in the right column ABOVE the signup, per the fold order */
+  .fold .namer{ grid-column:2; grid-row:3; justify-self:start; width:360px; text-align:left; margin:0 0 30px; }
   .fold__signup .btn--discord{ margin-top:14px; }
-  .tease-stage{ grid-column:1; grid-row:1 / span 3; width:430px; height:580px; }
+  .tease-stage{ grid-column:1; grid-row:1 / span 4; width:430px; height:580px; }
   .tease-wrap{ width:100%; max-height:none; }
-  .fold__signup{ grid-column:2; grid-row:3; align-self:start; justify-self:start; width:360px; text-align:left; }
+  .fold__signup{ grid-column:2; grid-row:4; align-self:start; justify-self:start; width:360px; text-align:left; }
   .fold__signup .signup__fallback{ display:inline-block; }
 }
 @media (prefers-reduced-motion: reduce){
@@ -608,6 +687,7 @@ section{ padding:64px 0; }
     </h1>
     <div class="hero__soon hero__soon--fold">Currently in private testing. Coming soon...</div>
     <div class="tease-stage" aria-hidden="true">
+      <span class="tease-room" aria-hidden="true"></span>
       <div class="tease-wrap">
         <div class="tease-card">
           <span class="tcard__liquid"><i class="tb tb1"></i><i class="tb tb2"></i><i class="tb tb3"></i><i class="tb tb5"></i></span>
@@ -617,9 +697,24 @@ section{ padding:64px 0; }
           <span class="tcard__plat"></span>
           <span class="tcard__tint"></span>
           <span class="tcard__rim"></span>
+          <span class="tcard__name" id="tcardName" aria-hidden="true"></span>
           <div class="tcard__body"><svg class="tcard__emblem" viewBox="0 0 512 512" aria-hidden="true"><path d="M150 146 L256 252 L362 146 L362 366 L150 366 Z"/></svg></div>
         </div>
-        <span class="tease-floor" aria-hidden="true"><i class="tb tb1"></i><i class="tb tb2"></i><i class="tb tb3"></i><i class="tb tb5"></i><span class="tcard__rim"></span></span>
+        <span class="tease-floor" aria-hidden="true">
+          <span class="tfloor__card">
+            <span class="tcard__liquid"><i class="tb tb1"></i><i class="tb tb2"></i><i class="tb tb3"></i><i class="tb tb5"></i></span>
+            <span class="tcard__plat"></span>
+            <span class="tcard__tint"></span>
+            <span class="tcard__rim"></span>
+          </span>
+        </span>
+      </div>
+    </div>
+    <div class="namer">
+      <label class="namer__label" for="nameInput">Wanna see what your Memento would look like?</label>
+      <div class="namer__row">
+        <input class="namer__input" id="nameInput" type="text" placeholder="Your name" autocomplete="given-name" autocapitalize="words" enterkeyhint="done"
+               maxlength="24" spellcheck="false">
       </div>
     </div>
     <div class="fold__signup" id="signup">
@@ -836,6 +931,266 @@ function initStarBlob(canvas, size){
   items.forEach(function(el){ io.observe(el); });
 })();
 
+</script>
+
+
+<script>
+/* ============================================================================
+   NAME-CODED MATERIALS - the app's own skin system, ported verbatim from
+   memento-app/js/08-cards-grid-share.js (CARD_SKINS, _skHash, skinForName,
+   skinTintRgb). Same name always yields the same material, exactly as in the
+   product; this page is a preview of it, nothing is invented here.
+
+   ONE deliberate deviation, Malik's call: the app's 12 `flat` materials kill
+   the glow entirely (matte slabs). Here the luminous chassis (rim, bloom,
+   ground reflection) is kept for EVERY material so the landing page never
+   turns dull on a visitor. Materials drive colour, face, mark and ink only.
+   ========================================================================== */
+const CARD_SKINS = [
+ /* ── tier one ─────────────────────────────────────────────── */
+ {n:'Solar Flare', sk1:'rgba(255,170,0,1)', sk2:'rgba(255,230,120,1)', sk3:'rgba(255,120,0,1)', sk4:'rgba(255,200,60,.95)',
+  plat:'.22', face:'linear-gradient(165deg,#3a2003,#1d0f01)', mark:'rgba(255,248,232,.97)', ink:'rgba(255,240,214,.9)'},
+ {n:'Voltage',     sk1:'rgba(255,238,0,1)',   sk2:'rgba(190,255,60,.95)', sk3:'rgba(255,196,0,1)',  sk4:'rgba(230,255,120,.85)',
+  plat:'.16', face:'linear-gradient(165deg,#1d1e04,#0d0e02)', mark:'rgba(255,253,230,.95)', ink:'rgba(252,255,214,.9)'},
+ {n:'Obsidian Violet', sk1:'rgba(120,40,220,.9)', sk2:'rgba(40,10,90,.9)', sk3:'rgba(170,80,255,.75)', sk4:'rgba(20,6,40,.95)',
+  plat:'.02', face:'linear-gradient(165deg,#08040e,#030106)', mark:'rgba(240,230,255,.95)', ink:'rgba(226,208,255,.8)'},
+ {n:'Gold', sk1:'rgba(255,208,60,1)', sk2:'rgba(255,246,200,1)', sk3:'rgba(220,160,20,1)', sk4:'rgba(255,228,130,.95)',
+  plat:'.52', face:'linear-gradient(165deg,#imagined,#000)'.replace('#imagined','#4a3608').replace('#000','#241a03'),
+  mark:'rgba(40,28,2,.92)', ink:'rgba(58,42,6,.8)'},
+ {n:'Matte Black', sk1:'none',sk2:'none',sk3:'none',sk4:'none',
+  plat:'0', face:'linear-gradient(168deg,#1c1d20 0%,#141518 55%,#101113 100%)',
+  mark:'rgba(244,246,250,.97)', ink:'rgba(226,231,240,.75)', cls:'flat',
+  edge:'rgba(255,255,255,.92)', halo:'rgba(238,244,255,.40)', lift:'rgba(255,255,255,.05)'},
+ {n:'Matte White', sk1:'none',sk2:'none',sk3:'none',sk4:'none',
+  plat:'0', face:'linear-gradient(168deg,#f0f1f2 0%,#e7e8e9 55%,#dfe0e2 100%)',
+  mark:'rgba(62,67,74,.95)', ink:'rgba(52,57,64,.7)', cls:'flat',
+  edge:'rgba(255,255,255,.95)', halo:'rgba(240,244,252,.42)', lift:'rgba(255,255,255,.5)'},
+ {n:'Pure Glass', sk1:'rgba(255,255,255,.5)', sk2:'rgba(255,255,255,.35)', sk3:'rgba(210,240,255,.45)', sk4:'rgba(255,255,255,.3)',
+  plat:'.30', face:'linear-gradient(165deg,rgba(232,244,252,.55),rgba(206,226,242,.42))',
+  mark:'rgba(96,120,140,.75)', ink:'rgba(48,72,92,.65)', cls:'glass',
+  edge:'rgba(255,255,255,1)', halo:'rgba(210,238,255,.5)'},
+ {n:'Void', sk1:'none',sk2:'none',sk3:'none',sk4:'none',
+  plat:'0', face:'#000000',
+  mark:'rgba(244,246,250,.97)', ink:'rgba(150,155,164,.62)', cls:'flat void',
+  edge:'rgba(0,0,0,1)', halo:'rgba(0,0,0,1)', haloR:'70px', lift:'rgba(0,0,0,0)'},
+ {n:'Emerald',     sk1:'rgba(0,220,130,1)',   sk2:'rgba(120,255,200,.9)', sk3:'rgba(0,150,90,1)',   sk4:'rgba(40,255,160,.85)',
+  plat:'.12', face:'linear-gradient(165deg,#03150e,#010806)', mark:'rgba(232,255,246,.95)', ink:'rgba(214,255,238,.9)'},
+ {n:'Crimson',     sk1:'rgba(255,30,70,1)',   sk2:'rgba(255,110,120,.9)', sk3:'rgba(150,0,40,1)',   sk4:'rgba(255,70,90,.9)',
+  plat:'.10', face:'linear-gradient(165deg,#1c0308,#0b0103)', mark:'rgba(255,228,232,.95)', ink:'rgba(255,220,226,.85)'},
+ {n:'Ice', sk1:'rgba(60,190,255,1)', sk2:'rgba(220,248,255,.9)', sk3:'rgba(0,140,220,.95)', sk4:'rgba(140,225,255,.9)',
+  plat:'.46', face:'linear-gradient(165deg,#dff1fb,#c9e5f5)', mark:'rgba(20,58,80,.9)', ink:'rgba(14,48,68,.78)'},
+ {n:'Magenta',     sk1:'rgba(255,0,170,1)',   sk2:'rgba(255,120,215,.9)', sk3:'rgba(170,0,140,1)',  sk4:'rgba(255,70,190,.9)',
+  plat:'.10', face:'linear-gradient(165deg,#1a0316,#0a010a)', mark:'rgba(255,224,246,.95)', ink:'rgba(255,214,242,.85)'},
+ /* ── tier two, behind View more ───────────────────────────── */
+ {n:'Cobalt', sk1:'rgba(0,120,255,1)', sk2:'rgba(120,200,255,.95)', sk3:'rgba(0,60,220,1)', sk4:'rgba(60,160,255,.95)',
+  plat:'.28', face:'linear-gradient(165deg,#031a4d,#010c26)', mark:'rgba(232,242,255,.96)', ink:'rgba(220,234,255,.88)'},
+ {n:'Copper', sk1:'rgba(212,106,58,1)', sk2:'rgba(150,64,30,.95)', sk3:'rgba(240,150,100,.85)', sk4:'rgba(120,50,24,.9)',
+  plat:'.34', face:'linear-gradient(165deg,#4a2415,#2a130a)', mark:'rgba(255,236,222,.95)', ink:'rgba(255,226,208,.85)'},
+ {n:'Jade Gold',   sk1:'rgba(0,200,160,1)',   sk2:'rgba(255,215,90,.85)', sk3:'rgba(0,140,120,1)',  sk4:'rgba(120,255,210,.8)',
+  plat:'.16', face:'linear-gradient(165deg,#04140f,#010706)', mark:'rgba(224,255,244,.95)', ink:'rgba(210,255,238,.85)'},
+ {n:'Aurora',      sk1:'rgba(0,255,190,.95)', sk2:'rgba(150,90,255,.85)', sk3:'rgba(40,200,255,.9)', sk4:'rgba(255,90,200,.7)',
+  plat:'.08', face:'linear-gradient(165deg,#050b12,#02040a)', mark:'rgba(238,246,255,.95)', ink:'rgba(222,238,255,.85)'},
+ {n:'Sunset', sk1:'rgba(255,150,40,1)', sk2:'rgba(255,110,120,.95)', sk3:'rgba(255,200,90,.9)', sk4:'rgba(230,70,90,.9)',
+  plat:'.40', face:'linear-gradient(165deg,#40130c,#1d0705)', mark:'rgba(255,244,234,.97)', ink:'rgba(255,232,216,.9)'},
+ {n:'Sapphire', sk1:'rgba(20,40,180,1)', sk2:'rgba(60,20,150,.9)', sk3:'rgba(0,20,120,1)', sk4:'rgba(40,60,200,.9)',
+  plat:'.05', face:'linear-gradient(165deg,#050726,#020310)', mark:'rgba(226,232,255,.95)', ink:'rgba(210,220,255,.82)'},
+ {n:'Bone', sk1:'none',sk2:'none',sk3:'none',sk4:'none',
+  plat:'0', face:'linear-gradient(168deg,#f4f0e8 0%,#ece7dc 55%,#e3ddd0 100%)',
+  mark:'rgba(78,71,60,.94)', ink:'rgba(66,60,50,.72)', cls:'flat',
+  edge:'rgba(255,253,246,.9)', halo:'rgba(246,238,222,.38)', lift:'rgba(255,255,255,.45)'},
+ {n:'Toxic',       sk1:'rgba(180,255,0,1)',   sk2:'rgba(0,255,140,.9)', sk3:'rgba(120,200,0,1)',  sk4:'rgba(220,255,80,.85)',
+  plat:'.10', face:'linear-gradient(165deg,#0f1603,#050801)', mark:'rgba(246,255,224,.95)', ink:'rgba(238,255,200,.9)'},
+ {n:'Titanium', sk1:'rgba(226,232,240,.9)', sk2:'rgba(255,255,255,.95)', sk3:'rgba(150,162,178,.85)', sk4:'rgba(200,210,224,.8)',
+  plat:'.80', face:'linear-gradient(165deg,#c9cfd8,#b3bac4)', mark:'rgba(52,58,66,.92)', ink:'rgba(44,50,58,.75)', cls:'glass'},
+ {n:'Blush',       sk1:'rgba(255,180,200,.95)', sk2:'rgba(255,225,235,.9)', sk3:'rgba(240,140,175,.9)', sk4:'rgba(255,205,220,.85)',
+  plat:'.58', face:'linear-gradient(165deg,#fbeef2,#f4e2e8)', mark:'#6b4a55', ink:'rgba(70,44,52,.75)'},
+ {n:'Ultraviolet', sk1:'rgba(160,60,255,1)', sk2:'rgba(220,160,255,1)', sk3:'rgba(120,0,255,1)', sk4:'rgba(190,110,255,.95)',
+  plat:'.30', face:'linear-gradient(165deg,#1d0640,#0c0220)', mark:'rgba(248,240,255,.97)', ink:'rgba(240,224,255,.9)'},
+ {n:'Matte Clay', sk1:'none',sk2:'none',sk3:'none',sk4:'none', plat:'0',
+  face:'linear-gradient(168deg,#6d3a2c,#5c3024 55%,#4c261c)', mark:'rgba(255,238,230,.95)', ink:'rgba(252,230,220,.75)',
+  cls:'flat', edge:'rgba(255,226,212,.42)', halo:'rgba(220,140,110,.16)'},
+ {n:'Matte Forest', sk1:'none',sk2:'none',sk3:'none',sk4:'none', plat:'0',
+  face:'linear-gradient(168deg,#14311f,#0e2617 55%,#091c11)', mark:'rgba(236,250,240,.96)', ink:'rgba(222,242,228,.7)',
+  cls:'flat', edge:'rgba(180,232,196,.4)', halo:'rgba(100,200,140,.14)'},
+ {n:'Matte Navy', sk1:'none',sk2:'none',sk3:'none',sk4:'none', plat:'0',
+  face:'linear-gradient(168deg,#3a5a94,#2f4a7d 55%,#264066)', mark:'rgba(240,246,255,.96)', ink:'rgba(228,238,255,.78)',
+  cls:'flat', edge:'rgba(226,238,255,.6)', halo:'rgba(150,190,255,.24)'},
+ {n:'Matte Sand', sk1:'none',sk2:'none',sk3:'none',sk4:'none',
+  plat:'0', face:'linear-gradient(168deg,#dccBa8 0%,#d2c09a 55%,#c7b48d 100%)',
+  mark:'rgba(52,44,30,.92)', ink:'rgba(48,40,26,.72)', cls:'flat',
+  edge:'rgba(255,250,238,.7)', halo:'rgba(244,228,196,.3)', lift:'rgba(255,255,255,.28)'},
+ {n:'Midnight',    sk1:'rgba(30,60,140,.9)',  sk2:'rgba(70,110,190,.8)', sk3:'rgba(10,25,70,.9)', sk4:'rgba(50,90,170,.8)',
+  plat:'.08', face:'linear-gradient(165deg,#060a16,#02030a)', mark:'rgba(226,234,250,.92)', ink:'rgba(212,224,246,.8)'},
+ /* ── tier three: 20 more ──────────────────────────────────── */
+ {n:'Nebula', sk1:'rgba(80,40,200,1)', sk2:'rgba(30,14,70,.98)', sk3:'rgba(210,60,255,.85)', sk4:'rgba(20,10,50,.98)',
+  plat:'.03', face:'linear-gradient(165deg,#07051a,#02010a)', mark:'rgba(238,232,255,.96)', ink:'rgba(220,208,255,.8)'},
+ {n:'Oil Slick', sk1:'rgba(0,190,140,.95)', sk2:'rgba(180,140,40,.85)', sk3:'rgba(60,40,140,.8)', sk4:'rgba(0,140,150,.85)',
+  plat:'.04', face:'linear-gradient(165deg,#080a09,#020303)', mark:'rgba(236,244,240,.96)', ink:'rgba(214,232,226,.8)'},
+ {n:'Blood Orange', sk1:'rgba(255,40,10,1)', sk2:'rgba(190,0,30,.95)', sk3:'rgba(255,90,0,.9)', sk4:'rgba(140,0,20,.95)',
+  plat:'.06', face:'linear-gradient(165deg,#160203,#070001)', mark:'rgba(255,232,226,.96)', ink:'rgba(255,214,206,.85)'},
+ {n:'Moss', sk1:'none',sk2:'none',sk3:'none',sk4:'none', plat:'0',
+  face:'linear-gradient(168deg,#8a9a52,#7a8946 55%,#6c7a3c)', mark:'rgba(30,34,16,.9)', ink:'rgba(34,38,18,.75)',
+  cls:'flat', edge:'rgba(244,250,220,.6)', halo:'rgba(200,222,140,.24)'},
+ {n:'Porcelain', sk1:'rgba(255,255,255,.95)', sk2:'rgba(255,255,255,1)', sk3:'rgba(250,250,252,.9)', sk4:'rgba(255,255,255,.9)',
+  plat:'.99', face:'linear-gradient(165deg,#ffffff,#fafbfc)', mark:'rgba(120,126,134,.85)', ink:'rgba(88,94,104,.7)'},
+ {n:'Graphite', sk1:'none',sk2:'none',sk3:'none',sk4:'none', plat:'0',
+  face:'linear-gradient(168deg,#8a9098,#787e86 55%,#686e76)', mark:'rgba(28,32,38,.9)', ink:'rgba(30,34,40,.72)',
+  cls:'flat', edge:'rgba(255,255,255,.75)', halo:'rgba(226,232,240,.3)', lift:'rgba(255,255,255,.18)'},
+ {n:'Neon Noir', sk1:'rgba(255,0,120,1)', sk2:'rgba(0,0,0,0)', sk3:'rgba(0,240,255,1)', sk4:'rgba(0,0,0,0)',
+  plat:'0', face:'linear-gradient(165deg,#050506,#010102)', mark:'rgba(255,255,255,.98)', ink:'rgba(255,220,240,.9)',
+  edge:'rgba(255,60,160,.5)', halo:'rgba(255,0,120,.2)'},
+ {n:'Champagne', sk1:'rgba(226,192,120,.95)', sk2:'rgba(250,234,196,.9)', sk3:'rgba(198,158,86,.9)', sk4:'rgba(238,214,160,.85)',
+  plat:'.44', face:'linear-gradient(165deg,#efe2c8,#e2d0ad)', mark:'rgba(84,66,38,.9)', ink:'rgba(70,54,30,.75)'},
+ {n:'Storm', sk1:'rgba(40,60,90,.95)', sk2:'rgba(90,120,160,.6)', sk3:'rgba(10,18,32,.95)', sk4:'rgba(60,86,124,.7)',
+  plat:'.04', face:'linear-gradient(165deg,#0d1219,#05070b)', mark:'rgba(226,236,250,.95)', ink:'rgba(204,220,242,.75)'},
+ {n:'Coral', sk1:'rgba(255,140,120,.95)', sk2:'rgba(255,210,196,.9)', sk3:'rgba(255,110,90,.85)', sk4:'rgba(255,180,164,.85)',
+  plat:'.62', face:'linear-gradient(165deg,#ffeae4,#ffd9cf)', mark:'rgba(120,54,42,.9)', ink:'rgba(102,44,34,.75)'},
+ {n:'Deep Sea', sk1:'rgba(0,180,170,.95)', sk2:'rgba(0,90,110,.9)', sk3:'rgba(0,230,200,.7)', sk4:'rgba(0,60,80,.95)',
+  plat:'.04', face:'linear-gradient(165deg,#01100f,#000606)', mark:'rgba(220,248,244,.95)', ink:'rgba(200,242,236,.8)'},
+ {n:'Terracotta', sk1:'none',sk2:'none',sk3:'none',sk4:'none', plat:'0',
+  face:'linear-gradient(168deg,#c9764f,#b56541 55%,#a25835)', mark:'rgba(255,246,240,.96)', ink:'rgba(255,238,230,.8)',
+  cls:'flat', edge:'rgba(255,242,232,.65)', halo:'rgba(255,196,160,.26)'},
+ {n:'Prism', sk1:'rgba(255,0,80,.95)', sk2:'rgba(255,230,0,.9)', sk3:'rgba(0,220,120,.9)', sk4:'rgba(60,90,255,.95)',
+  plat:'.30', face:'linear-gradient(165deg,#fbfcff,#eef1f7)', mark:'rgba(50,56,68,.9)', ink:'rgba(36,42,54,.78)', cls:'glass'},
+ {n:'Ink', sk1:'none',sk2:'none',sk3:'none',sk4:'none', plat:'0',
+  face:'linear-gradient(168deg,#0d1426,#08101e 55%,#050a15)', mark:'rgba(232,240,255,.96)', ink:'rgba(206,222,250,.72)',
+  cls:'flat', edge:'rgba(150,190,255,.4)', halo:'rgba(90,140,255,.16)'},
+ {n:'Peach',       sk1:'rgba(255,180,140,.95)', sk2:'rgba(255,224,200,.9)', sk3:'rgba(255,140,170,.85)', sk4:'rgba(255,200,170,.85)',
+  plat:'.6', face:'linear-gradient(165deg,#fdf0e8,#f8e2d6)', mark:'rgba(110,72,58,.9)', ink:'rgba(90,58,46,.72)'},
+ {n:'Volcanic', sk1:'rgba(255,90,0,1)', sk2:'rgba(40,10,6,.95)', sk3:'rgba(255,180,40,.85)', sk4:'rgba(20,6,4,.98)',
+  plat:'0', face:'linear-gradient(168deg,#0d0403,#050101 60%,#020101)', mark:'rgba(255,226,200,.95)', ink:'rgba(255,200,164,.8)',
+  edge:'rgba(255,140,60,.45)', halo:'rgba(255,110,20,.22)'},
+ {n:'Mint', sk1:'rgba(80,255,200,1)', sk2:'rgba(200,255,236,.9)', sk3:'rgba(0,200,150,.95)', sk4:'rgba(140,255,220,.85)',
+  plat:'.40', face:'linear-gradient(165deg,#d8f7ec,#c2eddd)', mark:'rgba(16,72,56,.9)', ink:'rgba(12,62,48,.78)'},
+ {n:'Oxblood',     sk1:'none',sk2:'none',sk3:'none',sk4:'none', plat:'0',
+  face:'linear-gradient(168deg,#5c1a20,#4a1419 55%,#3c0f14)', mark:'rgba(255,238,238,.96)', ink:'rgba(250,224,224,.75)',
+  cls:'flat', edge:'rgba(255,224,224,.5)', halo:'rgba(255,150,150,.18)'},
+ {n:'Solar Wind', sk1:'rgba(255,236,180,.95)', sk2:'rgba(255,180,90,.9)', sk3:'rgba(255,255,240,.8)', sk4:'rgba(255,210,140,.85)',
+  plat:'.50', face:'linear-gradient(165deg,#2a2013,#140f08)', mark:'rgba(255,250,240,.97)', ink:'rgba(255,244,224,.88)'},
+ {n:'Pearl', sk1:'rgba(255,170,215,.85)', sk2:'rgba(170,225,255,.85)', sk3:'rgba(255,240,170,.8)', sk4:'rgba(200,180,255,.85)',
+  plat:'.52', face:'linear-gradient(165deg,#fbf7ff,#eef4fb)', mark:'rgba(92,84,106,.9)', ink:'rgba(70,62,86,.72)', cls:'glass'},
+ {n:'Thermal',     sk1:'rgba(30,60,255,1)', sk2:'rgba(0,220,255,.95)', sk3:'rgba(255,230,0,1)', sk4:'rgba(255,110,0,1)',
+  plat:'.06', face:'linear-gradient(165deg,#04061a,#01020a)', mark:'rgba(240,246,255,.97)', ink:'rgba(226,238,255,.88)',
+  edge:'rgba(120,180,255,.5)', halo:'rgba(60,120,255,.26)'},
+ {n:'Heat Rise',   sk1:'rgba(255,150,0,1)', sk2:'rgba(255,60,0,.9)', sk3:'rgba(255,230,140,.85)', sk4:'rgba(10,6,4,.98)',
+  plat:'0', face:'linear-gradient(0deg,#f08a10 -18%,#3a1200 16%,#0a0503 44%,#050303 100%)',
+  mark:'rgba(255,248,240,.97)', ink:'rgba(255,232,204,.85)', edge:'rgba(255,180,90,.32)', halo:'rgba(255,140,20,.2)'},
+ {n:'Density',     sk1:'rgba(60,40,255,1)', sk2:'rgba(20,10,120,.95)', sk3:'rgba(120,220,255,.95)', sk4:'rgba(10,4,60,.98)',
+  plat:'.04', face:'linear-gradient(165deg,#04021a,#010008)', mark:'rgba(232,240,255,.96)', ink:'rgba(190,214,255,.85)',
+  edge:'rgba(120,160,255,.45)', halo:'rgba(60,60,255,.22)'},
+ {n:'Elevation',   sk1:'rgba(255,190,90,.9)', sk2:'rgba(150,200,235,.85)', sk3:'rgba(120,205,175,.85)', sk4:'rgba(240,120,110,.8)',
+  plat:'.46', face:'linear-gradient(165deg,#e9e6dc,#dcd8cc)', mark:'rgba(70,74,86,.9)', ink:'rgba(56,60,72,.78)'},
+];
+
+function _skHash(s){ let h=2166136261; for(let i=0;i<s.length;i++){ h^=s.charCodeAt(i); h=Math.imul(h,16777619); } return h>>>0; }
+function skinForName(name){
+  const h=_skHash(String(name||'memento').trim().toLowerCase());
+  const sk=CARD_SKINS[h % CARD_SKINS.length];
+  return Object.assign({}, sk, { rot: ((h>>>7) % 22) - 11 });
+}
+function skinTintRgb(sk){
+  const pick=[sk&&sk.sk1, sk&&sk.edge, sk&&sk.sk2].find(v=>v&&v!=='none');
+  const m=String(pick||'').match(/(\d+)\s*,\s*(\d+)\s*,\s*(\d+)/);
+  return m ? (m[1]+','+m[2]+','+m[3]) : '226,232,240';
+}
+
+(function(){
+  var input = document.getElementById('nameInput');
+  if(!input) return;
+  var card  = document.querySelector('.tease-wrap');   /* the shared parent of the card AND its reflection, so both inherit the material */
+  var room  = document.querySelector('.tease-room');
+  var mark  = document.getElementById('tcardName');
+  var root  = document.documentElement;
+  var VARS  = ['--sk1','--sk2','--sk3','--sk4','--plat-op','--face','--mark','--ink','--mm-hue','--rim-rgb','--rim-core'];
+
+  /* Button legibility, done properly. A fixed light/dark threshold fails on
+     mid-tone materials (Coral landed at 2.26:1), so instead: measure the real
+     WCAG contrast for BOTH inks, take the better one, and if even that misses
+     4.5:1 push the material's own colour darker until it clears. The button
+     still wears the material, it just never becomes unreadable. */
+  function _lin(v){ v = (parseInt(v,10)||0)/255; return v <= 0.03928 ? v/12.92 : Math.pow((v+0.055)/1.055, 2.4); }
+  function _lum(rgb){ var p = String(rgb).split(','); return 0.2126*_lin(p[0]) + 0.7152*_lin(p[1]) + 0.0722*_lin(p[2]); }
+  function _ratio(bgRgb, inkRgb){
+    var a = _lum(bgRgb), b = _lum(inkRgb);
+    return (Math.max(a,b) + 0.05) / (Math.min(a,b) + 0.05);
+  }
+  var INK_DARK = '10,10,14', INK_LIGHT = '255,255,255';
+  function buttonPair(tint){
+    var bg = tint;
+    for (var i = 0; i < 24; i++) {
+      var dr = _ratio(bg, INK_DARK), lr = _ratio(bg, INK_LIGHT);
+      if (Math.max(dr, lr) >= 4.5) {
+        return { bg: bg, ink: dr >= lr ? '#0a0a0e' : '#ffffff' };
+      }
+      /* still short: deepen the material toward its own shadow and retry */
+      bg = String(bg).split(',').map(function(n){ return Math.round((parseInt(n,10)||0) * 0.88); }).join(',');
+    }
+    return { bg: bg, ink: '#ffffff' };
+  }
+  /* mix a tint toward white so the rim's core stays hot on dark materials */
+  function lighten(rgb, t){
+    var p = String(rgb).split(',').map(function(n){ return parseInt(n,10)||0; });
+    return p.map(function(n){ return Math.round(n + (255 - n) * t); }).join(',');
+  }
+
+  function clear(){
+    VARS.forEach(function(v){ card.style.removeProperty(v); });
+    root.style.removeProperty('--skin-rgb');
+    root.style.removeProperty('--btn-bg');
+    root.style.removeProperty('--btn-ink');
+    room.classList.remove('is-on');
+    mark.textContent = ''; mark.classList.remove('is-on');
+  }
+
+  function apply(name){
+    var n = String(name||'').trim();
+    if(!n){ clear(); return; }
+    var sk = skinForName(n);
+    var S = card.style;
+    /* a flat material has no blobs of its own; fall back to its face colours so
+       the kept-glow chassis still has something to light. */
+    S.setProperty('--sk1', sk.sk1 && sk.sk1!=='none' ? sk.sk1 : (sk.edge || 'rgba(255,255,255,0.9)'));
+    S.setProperty('--sk2', sk.sk2 && sk.sk2!=='none' ? sk.sk2 : (sk.halo || 'rgba(236,239,255,0.9)'));
+    S.setProperty('--sk3', sk.sk3 && sk.sk3!=='none' ? sk.sk3 : (sk.edge || 'rgba(255,255,255,0.8)'));
+    S.setProperty('--sk4', sk.sk4 && sk.sk4!=='none' ? sk.sk4 : (sk.sk1 && sk.sk1!=='none' ? sk.sk1 : (sk.halo || 'rgba(255,255,255,0.7)')));
+    /* respect the material's own wash; only lift it off zero so the flat ones
+       still catch a little light (the kept-glow rule). A heavy floor here
+       greys every material out, which is the opposite of showing it off. */
+    S.setProperty('--plat-op', Math.max(0.10, parseFloat(sk.plat || '0') || 0).toFixed(2));
+    S.setProperty('--face', sk.face || 'linear-gradient(165deg,#0b0d12,#05070c)');
+    S.setProperty('--mark', sk.mark || 'rgba(20,29,40,0.62)');
+    S.setProperty('--ink',  sk.ink  || 'rgba(24,28,36,0.78)');
+    S.setProperty('--mm-hue', (sk.rot||0) + 'deg');
+    var tint = skinTintRgb(sk);
+    root.style.setProperty('--skin-rgb', tint);
+    /* the ring burns in the material's own colour; its core is lifted toward
+       white so even Ink or Oxblood still reads as a burning edge. */
+    S.setProperty('--rim-rgb', tint);
+    S.setProperty('--rim-core', lighten(tint, 0.62));
+    /* the CTAs wear the material; the label flips black/white on luminance so
+       it can never end up unreadable on a pale or neon material. */
+    var btn = buttonPair(tint);
+    root.style.setProperty('--btn-bg', 'rgb(' + btn.bg + ')');
+    root.style.setProperty('--btn-ink', btn.ink);
+    room.classList.add('is-on');
+    mark.textContent = n; mark.classList.add('is-on');
+    try{ localStorage.setItem('mementoName', n); }catch(e){}
+  }
+
+  var t=null;
+  input.addEventListener('input', function(){
+    clearTimeout(t);
+    var v=this.value;
+    if(!v.trim()){ try{ localStorage.removeItem('mementoName'); }catch(e){} clear(); return; }
+    t=setTimeout(function(){ apply(v); }, 250);
+  });
+
+  /* returning visitors land straight on their own Memento */
+  try{
+    var saved = localStorage.getItem('mementoName');
+    if(saved){ input.value = saved; apply(saved); }
+  }catch(e){}
+})();
 </script>
 
 </body>
