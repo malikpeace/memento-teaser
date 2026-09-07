@@ -533,6 +533,37 @@ section{ padding:64px 0; }
   opacity:0; transition:opacity 0.8s ease, color 1.1s cubic-bezier(0.4, 0, 0.2, 1);
 }
 .tcard__name.is-on{ opacity:1; }
+/* THE DOPAMINE EGG: Codex's "Cortex" material (option 01, Malik's pick),
+   rendered live by WebGL in .tcard__cortex. Everything that could wash or
+   blur it (liquid, platinum, tint, iridescence, sheen, corner burn, the
+   burning rim, the room glow) is off in this state; the card is #000 with
+   the mock's subtle edge, and the sway runs at 5.6s (14s / 2.5). */
+.tcard__cortex, .tfloor__cortex{ position:absolute; inset:0; width:100%; height:100%; display:block; z-index:0; }
+.tease-wrap.is-egg{ animation-duration:5.6s;
+  box-shadow: 0 12px 38px rgba(0,0,0,0.28), 0 0 0 1px rgba(255,255,255,0.04),
+              0 0 26px rgba(40,110,255,0.32), 0 0 70px rgba(200,60,255,0.20), 0 0 130px rgba(0,238,186,0.12); }
+/* the aura: the card's live frame behind the card, soft by upscaling, radial fade */
+.tease-aura{
+  position:absolute; left:50%; top:50%; transform:translate(-50%,-50%);
+  width:165%; height:150%; z-index:-1; pointer-events:none; contain:layout;
+  image-rendering:auto; opacity:0; transition:opacity 1.4s ease; filter:blur(22px) saturate(1.25);   /* not a rotating layer, blur is safe here */
+  -webkit-mask:radial-gradient(50% 50% at 50% 50%, #000 0%, rgba(0,0,0,0.55) 40%, rgba(0,0,0,0) 70%);
+          mask:radial-gradient(50% 50% at 50% 50%, #000 0%, rgba(0,0,0,0.55) 40%, rgba(0,0,0,0) 70%);
+}
+.tease-aura.is-on{ opacity:0.9; }
+/* the page background: the Fissure field, fixed behind the page */
+.page-fx{ position:fixed; inset:0; width:100%; height:100%; z-index:0; pointer-events:none; display:block; opacity:0; transition:opacity 1.6s ease; }
+.page-fx.is-on{ opacity:1; }
+.tease-wrap.is-egg .tcard__liquid, .tease-wrap.is-egg .tcard__plat, .tease-wrap.is-egg .tcard__tint,
+.tease-wrap.is-egg .tcard__iri, .tease-wrap.is-egg .tcard__sheen, .tease-wrap.is-egg .tcard__burn{ display:none; }
+.tease-wrap.is-egg .tease-card{ background:#000;
+  box-shadow: inset 0 0 0 1px rgba(118,123,130,0.56), inset 0 1px 0 rgba(255,255,255,0.48); }
+.tease-wrap.is-egg .tcard__rim{ box-shadow: inset 0 0 0 1px rgba(216,245,255,0.31), inset 0 0 5px rgba(114,201,245,0.15); transition:none; }
+.tease-wrap.is-egg .tcard__emblem{ fill:#eef6fa; opacity:0.94; filter:drop-shadow(0 1px 2px #000); }
+.tease-wrap.is-egg .tcard__name{ font-size:10px; font-weight:500; color:rgba(237,244,245,0.8); text-shadow:0 1px 3px #000; max-width:83%; overflow:hidden; white-space:nowrap; text-overflow:ellipsis; }
+.tease-wrap.is-egg .tfloor__card{ background:#000; }
+.tease-wrap.is-egg .tfloor__card .tcard__liquid, .tease-wrap.is-egg .tfloor__card .tcard__plat,
+.tease-wrap.is-egg .tfloor__card .tcard__tint, .tease-wrap.is-egg .tfloor__card .tcard__rim{ display:none; }
 /* ground reflection: a true vertical MIRROR of the colour layer AND the rim, so
    the reward shows in the reflection too (app .daycard-floor). Already flipped,
    blurred and double-masked, so the rim inside inherits all of it for free. */
@@ -1088,6 +1119,144 @@ function skinForName(name){
   const sk=CARD_SKINS[h % CARD_SKINS.length];
   return Object.assign({}, sk, { rot: ((h>>>7) % 22) - 11 });
 }
+/* the hidden material for the name "dopamine": the dopamine video's thumbnail
+   palette in the ordinary skin shape (electric blue, orange tissue, magenta
+   core, green cortex). Reached by name only; it lives outside the 52. */
+const DOPAMINE_SKIN =
+ {n:'Dopamine', sk1:'none', sk2:'none', sk3:'none', sk4:'none', plat:'0', face:'#000',
+  mark:'#eef6fa', ink:'rgba(237,244,245,.8)', edge:'rgba(40,110,255,.5)', halo:'rgba(40,110,255,.26)', tint:'40,110,255', egg:true};
+/* ---- Cortex (Codex, memento-dopamine-studies/src/material.js), shaders verbatim ---- */
+const CORTEX_VERT=`attribute vec2 position; varying vec2 uv; void main(){uv=position*.5+.5;gl_Position=vec4(position,0.,1.);}`;
+const CORTEX_FRAG=`precision highp float;
+varying vec2 uv; uniform float time; uniform float kind; uniform float darkness;
+float hash(vec2 p){return fract(sin(dot(p,vec2(127.1,311.7)))*43758.5453);}
+float noise(vec2 p){vec2 i=floor(p),f=fract(p);f=f*f*(3.-2.*f);return mix(mix(hash(i),hash(i+vec2(1.,0.)),f.x),mix(hash(i+vec2(0.,1.)),hash(i+vec2(1.,1.)),f.x),f.y);}
+float fbm(vec2 p){float v=0.,a=.5;mat2 r=mat2(.8,.6,-.6,.8);for(int i=0;i<4;i++){v+=a*noise(p);p=r*p*2.03+13.1;a*=.5;}return v;}
+vec3 spectrum(float t){
+ t=clamp(t,0.,1.);vec3 b=vec3(.025,.12,.96),c=vec3(0.,.8,1.),g=vec3(0.,.94,.39),y=vec3(.81,.9,.08),o=vec3(1.,.35,.05),m=vec3(.89,.055,.60),v=vec3(.45,.055,.88);
+ if(t<.16)return mix(b,c,t/.16);if(t<.34)return mix(c,g,(t-.16)/.18);if(t<.49)return mix(g,y,(t-.34)/.15);if(t<.65)return mix(y,o,(t-.49)/.16);if(t<.83)return mix(o,m,(t-.65)/.18);return mix(m,v,(t-.83)/.17);
+}
+void main(){
+ vec2 p=vec2((uv.x-.5)*1.52,(uv.y-.5)*2.);float t=time*.095;
+ vec2 q=vec2(fbm(p*2.2+vec2(t*.6,0.)),fbm(p*2.2+vec2(4.8,-t*.45)));
+ vec2 w=p+1.05*(q-.5);float f=fbm(w*4.0+vec2(t*.22,-t*.3));
+ float small=fbm(w*12.3+2.1);float light=0.,color=0.;
+ if(kind<-.5){float a=fbm(p*1.6+vec2(t,4.));gl_FragColor=vec4(vec3(.24,.31,.37)*smoothstep(.18,.8,a),1.);return;}
+ if(kind<.5){
+  float lobes=max(1.-length((w-vec2(-.36,.27))*vec2(1.28,1.02)),1.-length((w-vec2(.47,-.43))*vec2(1.35,1.12)));
+  float fissure=abs(w.x+.31*sin(w.y*3.+t*.22));float tissue=lobes+f*.40-.16;
+  light=smoothstep(.24+darkness*.23,.52+darkness*.2,tissue)*smoothstep(.028,.14,fissure);
+  color=fract(f*2.5+small*.32);light*=.7+.3*smoothstep(.17,.6,small);
+ }else if(kind<1.5){
+  float edge=max(abs(p.x)/.76,abs(p.y));float wave=.07*sin(p.y*8.+q.x*5.+t)+.05*sin(p.x*8.-t);
+  light=smoothstep(.57+darkness*.25,.85+darkness*.07,edge+wave);
+  color=fract(f*1.6+atan(p.y,p.x)*.23+t*.05);light*=.65+.35*sin(f*18.)*sin(f*18.);
+ }else if(kind<2.5){
+  float river=abs(w.x*.95+w.y*.6+.15*sin(w.y*4.+t));
+  light=(1.-smoothstep(.10+(1.-darkness)*.10,.24+(1.-darkness)*.18,river))*(.68+.32*small);
+  color=fract(f*1.8+w.y*.20);float echo=exp(-abs(river-.42)*75.);light=max(light,echo*.65);
+ }else if(kind<3.5){
+  float a=length((w-vec2(-.40,.60))*vec2(1.45,1.4));float b=length((w-vec2(.48,.05))*vec2(1.7,1.5));float c=length((w-vec2(-.24,-.73))*vec2(1.55,1.8));
+  float pools=min(a,min(b,c))-.10*sin(f*28.);light=1.-smoothstep(.26+(1.-darkness)*.12,.54+(1.-darkness)*.14,pools);
+  color=fract(f*2.1+small*.25);light*=.75+.25*small;
+ }else{
+  float bands=sin((w.x*.6+w.y*.2+f*.65)*32.+t*.32);float region=1.-smoothstep(.52,.85,length(w*vec2(1.,.8)));
+  light=pow(max(0.,bands),2.+darkness*5.)*region;color=fract(f*1.7+w.y*.26+.13);light*=.85;
+ }
+ light=smoothstep(.055,.91,light);vec3 rgb=spectrum(color)*light;
+ float grain=(hash(gl_FragCoord.xy)-.5)*.07;rgb*=1.+grain;
+ float boundary=min(min(uv.x,1.-uv.x),min(uv.y,1.-uv.y));float rim=exp(-boundary*270.);rgb+=spectrum(fract(uv.y*.7+uv.x*.5+t*.04))*.7*rim;
+ gl_FragColor=vec4(clamp(rgb,0.,1.),1.);
+}`;
+function createMaterial(canvas){
+ const gl=canvas.getContext('webgl',{alpha:false,antialias:false,powerPreference:'low-power',preserveDrawingBuffer:true});if(!gl)throw Error('WebGL unavailable');
+ const shaders=[];function compile(type,source){const s=gl.createShader(type);gl.shaderSource(s,source);gl.compileShader(s);if(!gl.getShaderParameter(s,gl.COMPILE_STATUS))throw Error(gl.getShaderInfoLog(s));shaders.push(s);return s;}
+ const program=gl.createProgram();gl.attachShader(program,compile(gl.VERTEX_SHADER,CORTEX_VERT));gl.attachShader(program,compile(gl.FRAGMENT_SHADER,CORTEX_FRAG));gl.linkProgram(program);if(!gl.getProgramParameter(program,gl.LINK_STATUS))throw Error(gl.getProgramInfoLog(program));gl.useProgram(program);
+ const buffer=gl.createBuffer();gl.bindBuffer(gl.ARRAY_BUFFER,buffer);gl.bufferData(gl.ARRAY_BUFFER,new Float32Array([-1,-1,1,-1,-1,1,-1,1,1,-1,1,1]),gl.STATIC_DRAW);const pos=gl.getAttribLocation(program,'position');gl.enableVertexAttribArray(pos);gl.vertexAttribPointer(pos,2,gl.FLOAT,false,0,0);
+ const uniforms={time:gl.getUniformLocation(program,'time'),kind:gl.getUniformLocation(program,'kind'),darkness:gl.getUniformLocation(program,'darkness')};
+ let state={variant:0,speed:2.5,paused:true,dim:.5},elapsed=7,last=0,frame,dirty=true,visible=true,destroyed=false;
+ const resize=new ResizeObserver(()=>{const r=canvas.getBoundingClientRect(),ratio=Math.min(devicePixelRatio||1,1.5);canvas.width=Math.max(1,Math.round(r.width*ratio));canvas.height=Math.max(1,Math.round(r.height*ratio));dirty=true});resize.observe(canvas);
+ const observer=new IntersectionObserver(entries=>{visible=entries[0].isIntersecting;dirty=true});observer.observe(canvas);
+ /* the floor reflection is drawn from the real frame, a few times a second */
+ let mirrors=[],ticks=0;
+ function tick(now){if(destroyed)return;frame=requestAnimationFrame(tick);if(document.hidden||!visible){last=now;return}if(now-last<32&&!dirty)return;const dt=Math.min((now-last)/1000,.05);last=now;if(!state.paused){elapsed+=dt*state.speed;dirty=true}if(!dirty)return;dirty=false;gl.viewport(0,0,canvas.width,canvas.height);gl.uniform1f(uniforms.time,elapsed);gl.uniform1f(uniforms.kind,state.variant);gl.uniform1f(uniforms.darkness,state.dim);gl.drawArrays(gl.TRIANGLES,0,6);
+  if(mirrors.length&&(ticks++%4)===0&&canvas.width){for(const m of mirrors){m.ctx.drawImage(canvas,0,0,m.c.width,m.c.height)}}}
+ frame=requestAnimationFrame(tick);
+ return{update(next){state={...state,...next};dirty=true},mirrorTo(c,w,h){c.width=w;c.height=h;mirrors.push({c:c,ctx:c.getContext('2d')})},destroy(){destroyed=true;cancelAnimationFrame(frame);resize.disconnect();observer.disconnect();gl.deleteBuffer(buffer);gl.deleteProgram(program);shaders.forEach(s=>gl.deleteShader(s));const lose=gl.getExtension('WEBGL_lose_context');if(lose)lose.loseContext()}};
+}
+/* ---- the dopamine page background: "Fissure", hero-clear, preset B (denser).
+   A fixed half-res WebGL canvas behind the page; veins and colour masses in
+   Cortex's own band palette, darkened around the card so the copy reads,
+   with a true-black floor. Lives only while the dopamine card is up. ---- */
+function createFissure(canvas, getCard){
+  var VERT = 'attribute vec2 a;void main(){gl_Position=vec4(a,0.,1.);}';
+  var FRAG = [
+    'precision highp float;',
+    'uniform vec2 u_res; uniform float u_time; uniform vec2 u_card; uniform float u_cardR;',
+    'uniform float u_scale; uniform float u_thin; uniform float u_glow; uniform float u_speed; uniform float u_bright; uniform float u_clear; uniform float u_beat; uniform float u_warp; uniform float u_tissue;',
+    'float hash(vec2 p){return fract(sin(dot(p,vec2(127.1,311.7)))*43758.5453);}',
+    'float noise(vec2 p){vec2 i=floor(p),f=fract(p);f=f*f*(3.-2.*f);return mix(mix(hash(i),hash(i+vec2(1.,0.)),f.x),mix(hash(i+vec2(0.,1.)),hash(i+vec2(1.,1.)),f.x),f.y);}',
+    'float fbm(vec2 p){float v=0.,a=.5;mat2 r=mat2(.8,.6,-.6,.8);for(int i=0;i<5;i++){v+=a*noise(p);p=r*p*2.03+13.1;a*=.5;}return v;}',
+    'vec3 spectrum(float t){',
+    ' t=clamp(t,0.,1.);vec3 b=vec3(.025,.12,.96),c=vec3(0.,.8,1.),g=vec3(0.,.94,.39),y=vec3(.81,.9,.08),o=vec3(1.,.35,.05),m=vec3(.89,.055,.60),v=vec3(.45,.055,.88);',
+    ' if(t<.16)return mix(b,c,t/.16);if(t<.34)return mix(c,g,(t-.16)/.18);if(t<.49)return mix(g,y,(t-.34)/.15);if(t<.65)return mix(y,o,(t-.49)/.16);if(t<.83)return mix(o,m,(t-.65)/.18);return mix(m,v,(t-.83)/.17);',
+    '}',
+    'void main(){',
+    '  vec2 fc=gl_FragCoord.xy; vec2 uv=fc/u_res; float t=u_time*u_speed;',
+    '  vec2 p=(fc-.5*u_res)/u_res.y;',
+    '  vec2 rel=(fc-u_card)/u_res.y; float rc=length(rel); float cardR=u_cardR/u_res.y;',
+    /* domain-warped ridges: the veins are where the noise folds over itself */
+    '  vec2 q=vec2(fbm(p*1.8+vec2(t*.04,0.)),fbm(p*1.8+vec2(5.2,-t*.03)));',
+    '  vec2 w=p*u_scale+u_warp*(q-.5); float f=fbm(w);',
+    '  float ridge=1.-abs(2.*f-1.);',
+    '  float vein=smoothstep(u_thin,.997,ridge);',
+    '  float glow=pow(max(0.,ridge-.78)/.22,3.)*u_glow;',
+    /* colour the way the card colours itself: Cortex's folded bands */
+    '  float small=fbm(w*3.1+2.1);',
+    '  vec3 col=spectrum(fract(f*2.5+small*.32+t*.02));',
+    /* heartbeat: the veins brighten together, then relax */
+    '  float beat=1.+u_beat*pow(max(0.,sin(t*2.4)),6.);',
+    '  vec3 rgb=col*(vein*1.25*u_bright*beat+glow);',
+    /* tissue: the card\'s own colour masses, faint, between the veins */
+    '  float mass=smoothstep(.56,.78,f+small*.14)*(.7+.3*smoothstep(.17,.6,small));',
+    '  rgb+=col*mass*u_tissue*beat;',
+    /* keep the hero column readable: darken toward the card/text, veins survive at the edges */
+    '  float clear=1.-u_clear*(1.-smoothstep(cardR*.9,cardR*2.6,rc));',
+    '  rgb*=clear;',
+    '  rgb*=smoothstep(cardR*.92,cardR*1.02,rc);',
+    /* OLED floor: anything faint snaps to true black, and the whole field sits lower than the card */
+    '  rgb=max(rgb-vec3(.035),0.)*.62;',
+    '  gl_FragColor=vec4(clamp(rgb,0.,1.),1.);',
+    '}'
+  ].join('\n');
+  var P = { scale:2.4, thin:.975, glow:.16, speed:1.0, bright:.70, clear:.85, beat:0, warp:1.2, tissue:.42 };
+  var gl = canvas.getContext('webgl', { antialias:false, alpha:false, powerPreference:'low-power' });
+  if(!gl) throw Error('WebGL unavailable');
+  function sh(type, src){ var s = gl.createShader(type); gl.shaderSource(s, src); gl.compileShader(s); if(!gl.getShaderParameter(s, gl.COMPILE_STATUS)) throw Error(gl.getShaderInfoLog(s)); return s; }
+  var vs = sh(gl.VERTEX_SHADER, VERT), fs = sh(gl.FRAGMENT_SHADER, FRAG);
+  var prog = gl.createProgram(); gl.attachShader(prog, vs); gl.attachShader(prog, fs); gl.linkProgram(prog); gl.useProgram(prog);
+  var buf = gl.createBuffer(); gl.bindBuffer(gl.ARRAY_BUFFER, buf); gl.bufferData(gl.ARRAY_BUFFER, new Float32Array([-1,-1, 3,-1, -1,3]), gl.STATIC_DRAW);
+  var a = gl.getAttribLocation(prog, 'a'); gl.enableVertexAttribArray(a); gl.vertexAttribPointer(a, 2, gl.FLOAT, false, 0, 0);
+  var U = {}; ['u_res','u_time','u_card','u_cardR','u_scale','u_thin','u_glow','u_speed','u_bright','u_clear','u_beat','u_warp','u_tissue'].forEach(function(n){ U[n] = gl.getUniformLocation(prog, n); });
+  gl.uniform1f(U.u_scale, P.scale); gl.uniform1f(U.u_thin, P.thin); gl.uniform1f(U.u_glow, P.glow); gl.uniform1f(U.u_speed, P.speed); gl.uniform1f(U.u_bright, P.bright); gl.uniform1f(U.u_clear, P.clear); gl.uniform1f(U.u_beat, P.beat); gl.uniform1f(U.u_warp, P.warp); gl.uniform1f(U.u_tissue, P.tissue);
+  var SCALE = 0.5, t0 = performance.now(), frame, dead = false, paused = false, last = 0, elapsed = 0;
+  function size(){ var w = Math.max(1, Math.round(innerWidth * SCALE)), h = Math.max(1, Math.round(innerHeight * SCALE)); if(canvas.width !== w || canvas.height !== h){ canvas.width = w; canvas.height = h; gl.viewport(0,0,w,h); gl.uniform2f(U.u_res, w, h); } }
+  function tick(now){
+    if(dead) return; frame = requestAnimationFrame(tick);
+    if(document.hidden){ last = now; return; }
+    if(now - last < 32) return;                       /* ~30fps is plenty for a background */
+    var dt = Math.min((now - last) / 1000, .05); last = now; if(!paused) elapsed += dt;
+    size();
+    var r = getCard();
+    gl.uniform2f(U.u_card, (r.left + r.width/2) * SCALE, (innerHeight - (r.top + r.height/2)) * SCALE);
+    gl.uniform1f(U.u_cardR, r.height * .5 * SCALE);
+    gl.uniform1f(U.u_time, elapsed);
+    gl.drawArrays(gl.TRIANGLES, 0, 3);
+  }
+  frame = requestAnimationFrame(tick);
+  return { update:function(o){ if(o && 'paused' in o) paused = !!o.paused; },
+           destroy:function(){ dead = true; cancelAnimationFrame(frame); gl.deleteBuffer(buf); gl.deleteProgram(prog); gl.deleteShader(vs); gl.deleteShader(fs); var lose = gl.getExtension('WEBGL_lose_context'); if(lose) lose.loseContext(); } };
+}
 function skinTintRgb(sk){
   const pick=[sk&&sk.sk1, sk&&sk.edge, sk&&sk.sk2].find(v=>v&&v!=='none');
   const m=String(pick||'').match(/(\d+)\s*,\s*(\d+)\s*,\s*(\d+)/);
@@ -1133,8 +1302,50 @@ function skinTintRgb(sk){
     return p.map(function(n){ return Math.round(n + (255 - n) * t); }).join(',');
   }
 
+  /* ---- the Cortex lifecycle: one renderer, fresh canvas per activation,
+     destroyed (context released) the moment another name arrives ---- */
+  var cortex = null, cortexCanvas = null, cortexMirror = null, cortexAura = null, cortexPage = null, fissure = null;
+  var reduce = window.matchMedia('(prefers-reduced-motion: reduce)');
+  function cortexSettings(){ return { variant:0, speed:2.5, dim:0.5, paused:reduce.matches }; }
+  function mountCortex(){
+    if(cortex) return true;
+    var face = card.querySelector('.tease-card'), floor = card.querySelector('.tfloor__card');
+    var cv = document.createElement('canvas'); cv.className = 'tcard__cortex'; cv.setAttribute('aria-hidden','true');
+    face.insertBefore(cv, face.firstChild);
+    try{ cortex = createMaterial(cv); }
+    catch(e){ cv.remove(); cortex = null; return false; }   /* no WebGL: the plain dark skin below still applies */
+    cortexCanvas = cv;
+    if(floor){ cortexMirror = document.createElement('canvas'); cortexMirror.className = 'tfloor__cortex'; floor.insertBefore(cortexMirror, floor.firstChild); cortex.mirrorTo(cortexMirror, 165, 215); }
+    /* the glow is the card's own frame, drawn tiny and upscaled (soft with no
+       blur filter), radially masked so it can never read as a box, and kept
+       outside the rotating wrap. The page wash is the same frame, fainter,
+       fixed behind everything, so the whole screen turns with the card. */
+    var stage = card.parentNode;
+    cortexAura = document.createElement('canvas'); cortexAura.className = 'tease-aura'; cortexAura.setAttribute('aria-hidden','true');
+    stage.insertBefore(cortexAura, card); cortex.mirrorTo(cortexAura, 22, 28);
+    cortexPage = document.createElement('canvas'); cortexPage.className = 'page-fx'; cortexPage.setAttribute('aria-hidden','true');
+    document.body.appendChild(cortexPage);
+    try{ fissure = createFissure(cortexPage, function(){ return card.getBoundingClientRect(); }); fissure.update({ paused:reduce.matches }); }
+    catch(e){ cortexPage.remove(); cortexPage = null; fissure = null; }   /* no background is fine; the card still works */
+    requestAnimationFrame(function(){ requestAnimationFrame(function(){ if(cortexAura) cortexAura.classList.add('is-on'); if(cortexPage) cortexPage.classList.add('is-on'); }); });
+    cv.addEventListener('webglcontextlost', function(e){ e.preventDefault(); }, false);
+    cv.addEventListener('webglcontextrestored', function(){ unmountCortex(); if(card.classList.contains('is-egg')) mountCortex(); }, false);
+    cortex.update(cortexSettings());
+    return true;
+  }
+  function unmountCortex(){
+    if(cortex){ try{ cortex.destroy(); }catch(e){} cortex = null; }
+    if(cortexCanvas){ cortexCanvas.remove(); cortexCanvas = null; }
+    if(cortexMirror){ cortexMirror.remove(); cortexMirror = null; }
+    if(cortexAura){ cortexAura.remove(); cortexAura = null; }
+    if(fissure){ try{ fissure.destroy(); }catch(e){} fissure = null; }
+    if(cortexPage){ cortexPage.remove(); cortexPage = null; }
+  }
+  if(reduce.addEventListener) reduce.addEventListener('change', function(){ if(cortex) cortex.update({ paused:reduce.matches }); if(fissure) fissure.update({ paused:reduce.matches }); });
+
   function clear(){
     VARS.forEach(function(v){ card.style.removeProperty(v); });
+    card.classList.remove('is-egg'); unmountCortex();
     root.style.removeProperty('--skin-rgb');
     root.style.removeProperty('--btn-bg');
     root.style.removeProperty('--btn-ink');
@@ -1145,7 +1356,10 @@ function skinTintRgb(sk){
   function apply(name){
     var n = String(name||'').trim();
     if(!n){ clear(); return; }
-    var sk = skinForName(n);
+    var sk = n.toLowerCase() === 'dopamine' ? DOPAMINE_SKIN : skinForName(n);
+    var egg = !!sk.egg;
+    if(egg){ egg = mountCortex(); } else { unmountCortex(); }
+    card.classList.toggle('is-egg', egg);
     var S = card.style;
     /* a flat material has no blobs of its own; fall back to its face colours so
        the kept-glow chassis still has something to light. */
@@ -1156,12 +1370,12 @@ function skinTintRgb(sk){
     /* respect the material's own wash; only lift it off zero so the flat ones
        still catch a little light (the kept-glow rule). A heavy floor here
        greys every material out, which is the opposite of showing it off. */
-    S.setProperty('--plat-op', Math.max(0.10, parseFloat(sk.plat || '0') || 0).toFixed(2));
+    S.setProperty('--plat-op', egg ? '0' : Math.max(0.10, parseFloat(sk.plat || '0') || 0).toFixed(2));
     S.setProperty('--face', sk.face || 'linear-gradient(165deg,#0b0d12,#05070c)');
     S.setProperty('--mark', sk.mark || 'rgba(20,29,40,0.62)');
     S.setProperty('--ink',  sk.ink  || 'rgba(24,28,36,0.78)');
     S.setProperty('--mm-hue', (sk.rot||0) + 'deg');
-    var tint = skinTintRgb(sk);
+    var tint = sk.tint || skinTintRgb(sk);
     root.style.setProperty('--skin-rgb', tint);
     /* the ring burns in the material's own colour; its core is lifted toward
        white so even Ink or Oxblood still reads as a burning edge. */
@@ -1172,7 +1386,7 @@ function skinTintRgb(sk){
     var btn = buttonPair(tint);
     root.style.setProperty('--btn-bg', 'rgb(' + btn.bg + ')');
     root.style.setProperty('--btn-ink', btn.ink);
-    room.classList.add('is-on');
+    room.classList.toggle('is-on', !egg);   /* Cortex has no room glow */
     mark.textContent = n; mark.classList.add('is-on');
     try{ localStorage.setItem('mementoName', n); }catch(e){}
   }
