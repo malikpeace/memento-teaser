@@ -540,7 +540,7 @@ section{ padding:64px 0; }
    the mock's subtle edge, and the sway runs at 5.6s (14s / 2.5). */
 .tcard__cortex, .tfloor__cortex{ position:absolute; inset:0; width:100%; height:100%; display:block; z-index:0; }
 .tease-wrap.is-egg{ animation-duration:5.6s;
-  box-shadow: 0 12px 38px rgba(0,0,0,0.28), 0 0 0 1px rgba(255,255,255,0.04),
+  box-shadow: 0 12px 38px rgba(0,0,0,0.28),
               0 0 26px rgba(40,110,255,0.32), 0 0 70px rgba(200,60,255,0.20), 0 0 130px rgba(0,238,186,0.12); }
 /* the aura: the card's live frame behind the card, soft by upscaling, radial fade */
 .tease-aura{
@@ -553,9 +553,8 @@ section{ padding:64px 0; }
 .tease-aura.is-on{ opacity:0.9; }
 .tease-wrap.is-egg .tcard__liquid, .tease-wrap.is-egg .tcard__plat, .tease-wrap.is-egg .tcard__tint,
 .tease-wrap.is-egg .tcard__iri, .tease-wrap.is-egg .tcard__sheen, .tease-wrap.is-egg .tcard__burn{ display:none; }
-.tease-wrap.is-egg .tease-card{ background:#000;
-  box-shadow: inset 0 0 0 1px rgba(118,123,130,0.56), inset 0 1px 0 rgba(255,255,255,0.48); }
-.tease-wrap.is-egg .tcard__rim{ box-shadow: inset 0 0 0 1px rgba(216,245,255,0.31), inset 0 0 5px rgba(114,201,245,0.15); transition:none; }
+.tease-wrap.is-egg .tease-card{ background:#000; box-shadow:none; }   /* no border on this card, Malik's call */
+.tease-wrap.is-egg .tcard__rim{ box-shadow:none; transition:none; }
 .tease-wrap.is-egg .tcard__emblem{ fill:#eef6fa; opacity:0.94; filter:drop-shadow(0 1px 2px #000); }
 .tease-wrap.is-egg .tcard__name{ font-size:10px; font-weight:500; color:rgba(237,244,245,0.8); text-shadow:0 1px 3px #000; max-width:83%; overflow:hidden; white-space:nowrap; text-overflow:ellipsis; }
 .tease-wrap.is-egg .tfloor__card{ background:#000; }
