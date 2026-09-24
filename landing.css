@@ -1,0 +1,99 @@
+/* Shared base for the landing mockups. Dark, sharp, glassy. Arial (Malik's pick, 2026-09-23). */
+
+:root{
+  color-scheme: dark;
+  --bg:#030405; --hi:#f3f6f9; --body:rgba(243,246,249,0.92); --mid:#a9b3bc;
+  --glass:rgba(255,255,255,0.05); --glass-hi:rgba(255,255,255,0.08);
+  --skin:116,234,255;                 /* the name's material colour; set by the engine */
+  --btn-bg:#5865f2; --btn-ink:#fff;   /* the Discord button until a name is typed */
+  --ease:cubic-bezier(0.22, 1, 0.36, 1);
+  --safe-t:env(safe-area-inset-top, 0px); --safe-b:env(safe-area-inset-bottom, 0px);
+}
+*{ box-sizing:border-box; }
+[hidden]{ display:none !important; }
+html{ background:var(--bg); overflow-x:hidden; overflow-x:clip; -webkit-text-size-adjust:100%; }
+body{ margin:0; background:var(--bg); color:var(--hi); font:17px/1.55 Arial, "Helvetica Neue", Helvetica, sans-serif;
+  -webkit-font-smoothing:antialiased; overflow-x:hidden; overflow-x:clip; }
+::selection{ background:rgba(var(--skin),0.35); color:#fff; }
+a{ color:inherit; }
+img{ max-width:100%; }
+button, input{ font:inherit; color:inherit; }
+
+/* ---------------- wordmark (the bare M on the text baseline) */
+/* The live teaser's approved wordmark: the M sits ON the text's baseline (align baseline,
+   not flex-end, which dropped it into the descender space and read as off-line). */
+.wordmark{ display:inline-flex; align-items:baseline; font-weight:500; letter-spacing:-0.02em; line-height:1; text-decoration:none; }
+.wordmark svg{ height:0.82em; width:auto; flex:none; fill:currentColor; margin-right:0.08em; transform:translateY(0.04em); }
+
+/* ---------------- beta pill */
+.beta{ display:inline-flex; align-items:center; gap:9px; padding:8px 14px 8px 12px; border-radius:999px;
+  background:var(--glass); box-shadow:inset 0 1px 0 rgba(255,255,255,0.07);
+  -webkit-backdrop-filter:blur(24px) saturate(1.4); backdrop-filter:blur(24px) saturate(1.4);
+  font-size:13.5px; font-weight:500; color:var(--hi); white-space:nowrap; }
+.beta i{ width:7px; height:7px; border-radius:50%; background:#3fd94e; box-shadow:0 0 0 0 rgba(63,217,78,0.6); animation:betaPulse 2.4s var(--ease) infinite; }
+@keyframes betaPulse{ 0%{ box-shadow:0 0 0 0 rgba(63,217,78,0.55); } 70%,100%{ box-shadow:0 0 0 9px rgba(63,217,78,0); } }
+
+/* ---------------- buttons */
+.btn{ display:inline-flex; align-items:center; justify-content:center; gap:10px; height:54px; padding:0 26px; border:0; border-radius:13px;
+  font-size:16px; font-weight:600; letter-spacing:-0.01em; text-decoration:none; cursor:pointer; white-space:nowrap;
+  transition:transform .25s var(--ease), background-color 1.1s var(--ease), color 1.1s var(--ease), box-shadow .3s var(--ease); }
+.btn:active{ transform:scale(0.975); }
+.btn--primary{ background:#f5f7fa; color:#08090c; box-shadow:0 10px 30px rgba(255,255,255,0.10); }
+.btn--primary:hover{ box-shadow:0 12px 40px rgba(255,255,255,0.18); }
+.btn--glass{ background:var(--glass-hi); color:var(--hi); box-shadow:inset 0 1px 0 rgba(255,255,255,0.08);
+  -webkit-backdrop-filter:blur(24px) saturate(1.4); backdrop-filter:blur(24px) saturate(1.4); }
+.btn--discord{ background:var(--btn-bg); color:var(--btn-ink); }
+.btn--discord svg{ width:21px; height:21px; }
+.btn--skin{ background:var(--btn-bg); color:var(--btn-ink); }
+.btn:focus-visible, .field:focus-visible{ outline:2px solid rgba(var(--skin),0.9); outline-offset:3px; }
+
+/* ---------------- glass panel */
+.glass{ background:var(--glass); border-radius:18px; box-shadow:inset 0 1px 0 rgba(255,255,255,0.07), 0 30px 80px rgba(0,0,0,0.45);
+  -webkit-backdrop-filter:blur(32px) saturate(1.45); backdrop-filter:blur(32px) saturate(1.45); }
+
+/* ---------------- the name field */
+.field{ width:100%; height:56px; padding:0 18px; border:0; border-radius:13px; background:rgba(255,255,255,0.06);
+  box-shadow:inset 0 1px 0 rgba(255,255,255,0.07); font-size:17px; color:var(--hi); outline:none;
+  transition:box-shadow .3s var(--ease), background .3s var(--ease); }
+.field::placeholder{ color:rgba(243,246,249,0.5); }
+.field:focus{ background:rgba(255,255,255,0.08); box-shadow:inset 0 1px 0 rgba(255,255,255,0.08), 0 0 0 1.5px rgba(var(--skin),0.65); }
+
+/* ---------------- signup block (Beehiiv's own form sits inside) */
+/* Beehiiv's form has ~19px of its own side padding, so the frame is widened by that much
+   to line the visible field up with the buttons. color-scheme:normal on the frame stops
+   the browser painting an opaque white box behind a light-scheme document in a dark page. */
+.bh{ min-height:56px; --bh-inset:19px; width:calc(100% + var(--bh-inset) * 2) !important; max-width:none !important; margin-left:calc(-1 * var(--bh-inset)) !important; }
+.bh iframe{ width:100%; border:0; background:transparent; color-scheme:normal; }
+.bh-fallback{ display:none; margin-top:10px; font-size:14px; color:var(--mid); }
+.bh-fallback.is-on{ display:inline-block; }
+.fine{ font-size:13.5px; color:var(--mid); }
+
+/* ---------------- the card (engine-driven) */
+.mcard{ position:relative; width:100%; aspect-ratio:320 / 452; border-radius:14px; }
+.mcard__gl{ position:absolute; display:block; pointer-events:none; }
+.mcard--nogl{ background:linear-gradient(165deg,#101418,#07090c); box-shadow:inset 0 0 0 1px rgba(255,255,255,0.12); }
+.mcard__m{ position:absolute; left:50%; top:50%; width:37%; transform:translate(-50%,-50%); pointer-events:none;
+  fill:rgba(236,240,246,0.62); transition:fill 1s var(--ease);
+  filter:drop-shadow(0 1.5px 0 rgba(255,255,255,0.30)) drop-shadow(0 -1.5px 0.75px rgba(0,0,0,0.60)); }
+.mcard--darkmark .mcard__m{ filter:drop-shadow(0 1.5px 0 rgba(255,255,255,0.75)) drop-shadow(0 -1.5px 0.75px rgba(0,0,0,0.30)); }
+.mcard__name{ position:absolute; left:8.5%; bottom:5.2%; max-width:80%; overflow:hidden; white-space:nowrap; text-overflow:ellipsis;
+  font-size:calc(var(--card-w, 320px) * 0.033); font-weight:700; letter-spacing:0.15em; text-transform:uppercase;
+  color:rgba(236,240,246,0.72); text-shadow:0 -0.5px 0.6px rgba(0,0,0,0.5), 0 1px 0.6px rgba(255,255,255,0.22);
+  opacity:0; transform:translateY(3px); transition:opacity .6s var(--ease), transform .6s var(--ease), color 1s var(--ease); }
+.mcard__name.is-on{ opacity:1; transform:none; }
+.mcard__cortex{ position:absolute; inset:0; border-radius:14px; overflow:hidden; opacity:0; transition:opacity .7s var(--ease); pointer-events:none; }
+.mcard__cortex canvas{ position:absolute; inset:0; width:100%; height:100%; display:block; }
+.mcard--cortex .mcard__cortex{ opacity:1; }
+.mcard--cortex{ box-shadow:0 0 26px rgba(40,110,255,0.32), 0 0 70px rgba(200,60,255,0.20), 0 0 130px rgba(0,238,186,0.12); transition:box-shadow .8s var(--ease); }
+.mcard--cortex .mcard__m{ fill:#eef6fa !important; filter:drop-shadow(0 1px 2px #000); }
+.mcard--cortex .mcard__name{ color:rgba(237,244,245,0.8); text-shadow:0 1px 3px #000; }
+
+/* ---------------- reveal */
+.rv{ opacity:0; transform:translateY(18px); transition:opacity .9s var(--ease), transform .9s var(--ease); }
+.rv.in{ opacity:1; transform:none; }
+
+@media (prefers-reduced-motion: reduce){
+  .rv{ opacity:1; transform:none; transition:none; }
+  .beta i{ animation:none; }
+  *{ scroll-behavior:auto !important; }
+}
