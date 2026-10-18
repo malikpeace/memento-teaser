@@ -685,3 +685,24 @@
 .a-lk-nav:active { background: rgba(255, 255, 255, 0.1); }
 .a.is-phone .a-now-t { justify-content: center; }
 @media (prefers-reduced-motion: reduce) { .a-roll.roll { animation: none; } .a-adj-fill, .a-adj-th { transition: none; } }
+
+/* ===== round 41 ===== */
+/* phones: a small private-beta pill above the name on the first screen (computers have it in the header) */
+.a-beta-hero { display: none; }
+.a.is-phone .a-beta-hero { display: inline-flex; align-self: center; margin-bottom: 6px; font-size: 11.5px; padding: 6px 12px; color: var(--ink2); background: rgba(255, 255, 255, 0.06);
+  -webkit-backdrop-filter: blur(20px) saturate(1.4); backdrop-filter: blur(20px) saturate(1.4); box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.08), inset 0 1px 0 rgba(255, 255, 255, 0.06); }
+/* Clarity on phones: two small glass arrows beside the card step through the examples */
+.a-cnav { position: absolute; left: 0; right: 0; height: 0; z-index: 5; display: none; }
+.a.is-phone .a-cnav { display: block; }
+.a-cnav-b { position: absolute; top: -16px; width: 32px; height: 32px; padding: 0; border: 0; border-radius: 50%; display: grid; place-items: center; color: var(--ink2);
+  background: rgba(255, 255, 255, 0.06); -webkit-backdrop-filter: blur(24px) saturate(1.4); backdrop-filter: blur(24px) saturate(1.4);
+  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.1), inset 0 1px 0 rgba(255, 255, 255, 0.06); transition: background-color .15s ease-out, transform .1s ease-out; }
+.a-cnav-b svg { width: 16px; height: 16px; }
+.a-cnav-b[data-cn="-1"] { left: calc(var(--cx, 40px) - 16px); }
+.a-cnav-b[data-cn="-1"] svg { transform: rotate(90deg); }
+.a-cnav-b[data-cn="1"] { right: calc(var(--cx, 40px) - 16px); }
+.a-cnav-b[data-cn="1"] svg { transform: rotate(-90deg); }
+.a-cnav-b:active { transform: scale(0.94); background: rgba(255, 255, 255, 0.12); }
+/* Action: a paused deep work timer dims */
+.a-acts li.timer.paused em { color: var(--ink3); }
+@media (prefers-reduced-motion: reduce) { .a-cnav-b { transition: none; } }

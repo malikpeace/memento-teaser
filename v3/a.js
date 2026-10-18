@@ -10,7 +10,7 @@ var DIR_A = (function () {
     { id: 'keep', scale: 1 }, { id: 'evolve', scale: 1 }, { id: 'looks', scale: 1 }, { id: 'name', scale: 1 }
   ];
   var TEXT = {
-    hero: '<h1 class="sr">Memento</h1><div class="a-wmslot" aria-hidden="true"></div><button class="cta a-cta-d" type="button" data-join>Join for Updates + Discount</button>',
+    hero: '<h1 class="sr">Memento</h1><span class="beta a-beta-hero"><i></i>Currently in private beta</span><div class="a-wmslot" aria-hidden="true"></div><button class="cta a-cta-d" type="button" data-join>Join for Updates + Discount</button>',
     who: '<h2>Who This Is For:</h2><p>Memento is for people who are actually serious about getting more out of their life and are ready to do something about it.</p>',
     blank: '<h2>First, It’s Blank.</h2><p>Your Memento starts like this.</p>',
     clarity: '<h2>Then, You Find Clarity.</h2><p>We find exactly what you want, why you want it, in detail.</p>',
@@ -48,20 +48,21 @@ var DIR_A = (function () {
   };
   // iOS Settings-style grouped lists: each group's heading sits right on its card; one card per group, inset separators,
   // no bullets; a tapped line turns green with a check on the right
-  // "Specifically for:" is a glass row that opens the full list (Malik 2026-10-18: minimal, less wordy); his words unchanged inside
+  // "Especially if you:" (was "Specifically for:", Malik 2026-10-18) is a glass row that opens the full list (Malik 2026-10-18: minimal, less wordy); his words unchanged inside
   var CHEV = '<svg viewBox="0 0 20 20" aria-hidden="true"><path d="M5.5 8l4.5 4.5L14.5 8" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>';
   function whoView() {
     var lines = WHO_GROUPS[0][1];
-    return '<div class="who-wrap"><button type="button" class="who-toggle glass" aria-expanded="false" aria-controls="whoDrop"><span>Specifically for:</span>' + CHEV + '</button>' +
+    return '<div class="who-wrap"><button type="button" class="who-toggle glass" aria-expanded="false" aria-controls="whoDrop"><span>Especially if you:</span>' + CHEV + '</button>' +
       '<div class="who-drop" id="whoDrop"><ul class="who-card glass">' + lines.map(function (t) {
         return '<li class="wr"><button type="button" class="wli" data-g="0" aria-pressed="false"><span>' + t + '</span><i>' + CHECK + '</i></button></li>'; }).join('') + '</ul>' +
       '<p class="who-tap wr">Tap all that apply</p><p class="a-who-end" data-whoend>' + WHO_LINES.none + '</p></div></div>';
   }
   // a ring split in five, three of them lit: "3 of 5 days this week"
   var TICKS = 44, GOAL = 80, SCORE = 86;   // the consistency score: rate against their own goal, out of 100
+  var SEG_ON = '#3fd94e', SEG_OFF = 'rgba(255,255,255,0.16)';
   var SEG5 = (function () {
     var r = 8, C = 2 * Math.PI * r, seg = C / 5, gap = 2.6, out = '<svg class="a-ring" viewBox="0 0 20 20" aria-hidden="true">';
-    for (var k = 0; k < 5; k++) out += '<circle cx="10" cy="10" r="' + r + '" fill="none" stroke="' + (k < 3 ? '#3fd94e' : 'rgba(255,255,255,0.16)') + '" stroke-width="2.6" stroke-dasharray="' + (seg - gap).toFixed(2) + ' ' + (C - seg + gap).toFixed(2) + '" stroke-dashoffset="' + (-k * seg).toFixed(2) + '" transform="rotate(-90 10 10)"/>';
+    for (var k = 0; k < 5; k++) out += '<circle cx="10" cy="10" r="' + r + '" fill="none" stroke="' + (k < 3 ? SEG_ON : SEG_OFF) + '" stroke-width="2.6" stroke-dasharray="' + (seg - gap).toFixed(2) + ' ' + (C - seg + gap).toFixed(2) + '" stroke-dashoffset="' + (-k * seg).toFixed(2) + '" transform="rotate(-90 10 10)"/>';
     return out + '</svg>';
   })();
   var RING = '<svg class="a-ring" viewBox="0 0 36 36" aria-hidden="true"><circle cx="18" cy="18" r="15" fill="none" stroke="rgba(255,255,255,0.14)" stroke-width="3"/><circle class="arc" cx="18" cy="18" r="15" fill="none" stroke="#f3f6f9" stroke-width="3" stroke-linecap="round" stroke-dasharray="94.2" stroke-dashoffset="34" transform="rotate(-90 18 18)"/></svg>';
@@ -83,7 +84,7 @@ var DIR_A = (function () {
       '<li class="timer"><i class="ic">' + RING + '</i><span>Deep work on the product</span><em class="clock" data-clock>1:12:40</em></li>' +
       '<li class="adj"><i class="ic cal"><svg viewBox="0 0 20 20"><rect x="3.5" y="4.5" width="13" height="12" rx="3" fill="none" stroke="currentColor" stroke-width="1.6"/><path d="M3.5 8.5h13M7 2.8v3M13 2.8v3" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg></i><span>Go for a <b class="a-roll" data-miles>3</b> mile run</span><em class="chip">Tomorrow, 6:30 AM</em>' +
         '<div class="a-adj" aria-hidden="true"><svg viewBox="0 0 12 12"><path d="M2.5 6h7" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg><div class="a-adj-tr"><i class="a-adj-fill"></i><i class="a-adj-th"></i></div><svg viewBox="0 0 12 12"><path d="M2.5 6h7M6 2.5v7" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg></div></li>' +
-      '<li><i class="ic">' + SEG5 + '</i><span>Phone away by 10pm</span><em>3 of 5 days</em></li></ul>',
+      '<li class="days"><i class="ic">' + SEG5 + '</i><span>Phone away by 10pm</span><em data-days>3 of 5 days</em></li></ul>',
     keep: '<div class="a-keep glass"><div class="a-k-top"><span>Total actions completed</span><b><svg class="a-flame" viewBox="0 0 16 20" aria-hidden="true"><path d="M8 1.5c.6 3-2.6 4.6-2.6 8 0 1 .4 1.8 1 2.4-.2-1.8.9-3 2.1-3.9-.1 2.3 2.6 3.3 2.6 5.6 0 2-1.6 3.4-3.1 3.4C4.6 17 2.5 14.8 2.5 12c0-5 5.5-6.4 5.5-10.5z" fill="#3fd94e"/><path d="M11.8 7.2c1.2 1.2 1.9 2.9 1.9 4.8 0 2.4-1.4 4.4-3.5 5.1.9-.8 1.4-1.9 1.4-3.1 0-2.6-2-3.6-1.6-6.1.6.4 1.2.9 1.8 1.6z" fill="#9dff9f" opacity=".85"/></svg><span data-acts>0</span></b></div>' +
       '<div class="a-score"><span>Consistency score</span><b><span data-score>0</span><small> / 100</small></b></div>' +
       '<div class="a-ticks" data-ticks>' + new Array(TICKS + 1).join('<i></i>') + '<u class="a-goal" style="left:' + GOAL + '%"></u></div>' +
@@ -220,7 +221,10 @@ var DIR_A = (function () {
     function clarityIn() { clarOn = true; clearTimeout(typeT); if (K.CLEAN) { showPerson(true); return; } showPerson(false); }   // ?clean captures: already typed
     function clarityOut() { clarOn = false; clearTimeout(typeT); panels[3].querySelector('.a-clar2').classList.remove('swap'); showPerson(true); }
     clarityOut();
-    cDots.forEach(function (b) { b.addEventListener('click', function () { clearTimeout(typeT); typedOnce = true; person = +b.dataset.p; if (!clarOn) { showPerson(true); return; } var box = panels[3].querySelector('.a-clar2'); box.classList.add('swap'); typeT = setTimeout(function () { showPerson(false); }, 140); }); });
+    function pickPerson(j) { clearTimeout(typeT); typedOnce = true; person = j; if (!clarOn) { showPerson(true); return; } var box = panels[3].querySelector('.a-clar2'); box.classList.add('swap'); typeT = setTimeout(function () { showPerson(false); }, 140); }
+    cDots.forEach(function (b) { b.addEventListener('click', function () { pickPerson(+b.dataset.p); }); });
+    var cNav = E('div', 'a-cnav', '<button class="a-cnav-b glass" type="button" data-cn="-1" aria-label="Previous example">' + CHEV + '</button><button class="a-cnav-b glass" type="button" data-cn="1" aria-label="Next example">' + CHEV + '</button>', stage);
+    cNav.querySelectorAll('[data-cn]').forEach(function (b) { b.addEventListener('click', function () { var n = PEOPLE.length; pickPerson((((person % n) + +b.dataset.cn) % n + n) % n); }); });
     // Who: the lines come in one after another when the chapter arrives
     var whoRows = panels[1].querySelectorAll('.wr'), whoT = [];
     function whoIn() { whoT.forEach(clearTimeout); whoRows.forEach(function (r, i) { r.classList.remove('in'); whoT.push(setTimeout(function () { r.classList.add('in'); }, K.BAR ? 80 + i * 55 : 0)); }); }
@@ -326,7 +330,14 @@ var DIR_A = (function () {
     ageIn.addEventListener('input', function () { setAge(+ageIn.value); });
     setAge(18 + Math.floor(Math.random() * 12), true); Lx = LT; tickNumbers();
     // Action: tap any move to tick it; the deep work timer runs while you watch
-    panels[4].querySelectorAll('li').forEach(function (li) { li.addEventListener('click', function () { li.classList.toggle('done'); }); });
+    var autoTouched = false, timerPaused = 0, timerPausedAt = 0, phoneDays = 3;
+    var autoLi = panels[4].querySelector('.auto'), timerLi = panels[4].querySelector('.timer'), daysLi = panels[4].querySelector('.days');
+    autoLi.addEventListener('click', function () { autoTouched = true; autoLi.classList.toggle('done'); });
+    timerLi.addEventListener('click', function () { var t = performance.now(); if (timerPausedAt) { timerPaused += t - timerPausedAt; timerPausedAt = 0; } else timerPausedAt = t; timerLi.classList.toggle('paused', !!timerPausedAt); });
+    daysLi.addEventListener('click', function () {
+      phoneDays = phoneDays === 3 ? 2 : 3; daysLi.querySelector('[data-days]').textContent = phoneDays + ' of 5 days';
+      daysLi.querySelectorAll('.a-ring circle').forEach(function (c, j) { c.setAttribute('stroke', j < phoneDays ? SEG_ON : SEG_OFF); });
+    });
     var clockEl = panels[4].querySelector('[data-clock]'), arc = panels[4].querySelector('.arc'), clockS = 1 * 3600 + 12 * 60 + 40;
     // Keep Going: the live page's box
     var tickEls = panels[5].querySelectorAll('[data-ticks] i'), runEls = panels[5].querySelectorAll('[data-runs] i');
@@ -389,6 +400,7 @@ var DIR_A = (function () {
           k = Math.max(0.7, k);   // words and box shrink a little before anything is cut
           texts[i].dataset.k = k; panels[i].dataset.k = k;
           var thk = th * k, phk = ph * k, room = ch * sc * gk, G = thk + gT + room + gP + phk, y0 = top0 + Math.max(0, (avail - G) / 2);
+          if (st.id === 'clarity') { var cxS = Math.max(26, (vw / 2 - cwNow * sc / 2) / 2); cNav.style.top = (y0 + thk + gT + room / 2) + 'px'; cNav.style.setProperty('--cx', cxS.toFixed(1) + 'px'); }
           texts[i].style.top = y0 + 'px'; panels[i].style.top = (y0 + thk + gT + room + gP) + 'px';
           if (st.phoneHide) { var pTop = y0 + thk + gT + room + gP, bx = panels[i].querySelector('.who-wrap'), bh = bx ? bx.offsetHeight * k : phk, bTop = pTop + (bx ? bx.offsetTop * k : 0), behind = Math.min(1, bh * 0.8 / ch); fitS.push(behind / (st.scale || 1)); fitY.push(bTop + bh / 2 - vh / 2); }
           else { fitS.push(sc / (st.scale || 1)); fitY.push(y0 + thk + gT + room / 2 - vh / 2); }
@@ -405,9 +417,9 @@ var DIR_A = (function () {
         });
       } else { texts.forEach(function (t) { t.style.top = ''; t.dataset.k = 1; }); panels.forEach(function (t) { t.style.top = ''; t.dataset.k = 1; }); }
       // the big wordmark starts where the hero's slot is and ends as the header's
-      var slotEl = texts[0].querySelector('.a-wmslot'); bigwm.style.fontSize = getComputedStyle(hdrWm).fontSize;
-      var hr = hdrWm.getBoundingClientRect();
-      wmStart = { slot: slotEl, hx: hr.left, hy: hr.top, hw: hr.width, hh: hr.height, phone: phone };
+      var slotEl = texts[0].querySelector('.a-wmslot'), hr = hdrWm.getBoundingClientRect(), wmBase = Math.max(1, slotEl.getBoundingClientRect().height / Math.max(1, hr.height));
+      bigwm.style.fontSize = (parseFloat(getComputedStyle(hdrWm).fontSize) * wmBase).toFixed(2) + 'px';
+      wmStart = { slot: slotEl, hx: hr.left, hy: hr.top, hw: hr.width, hh: hr.height, phone: phone, base: wmBase };
       extra = 0;
       story.style.height = (vh * 0.85 * (STEPS.length - 1 + extra) + vh) + 'px';
       dLayout(); movePill(person % PEOPLE.length);
@@ -435,6 +447,7 @@ var DIR_A = (function () {
       var i0 = Math.floor(p), i1 = Math.min(STEPS.length - 1, i0 + 1), f = K.ease((p - i0 - 0.2) / 0.6);
       function fade(list, dy) { list.forEach(function (t, i) { var d = p - i, op = K.clamp(1 - Math.abs(d) * 2.4, 0, 1); t.style.opacity = op; t.style.transform = 'translateY(' + (-d * dy).toFixed(1) + 'px)' + (t.dataset.k && t.dataset.k != 1 ? ' scale(' + (+t.dataset.k).toFixed(3) + ')' : ''); t.style.visibility = op > 0.01 ? 'visible' : 'hidden'; t.style.pointerEvents = op > 0.6 ? 'auto' : 'none'; }); }
       fade(texts, 26); fade(panels, 18);
+      cNav.style.opacity = panels[3].style.opacity; cNav.style.visibility = panels[3].style.visibility; cNav.style.pointerEvents = panels[3].style.pointerEvents;
       hint.style.opacity = K.clamp(1 - p * 3, 0, 1);
       if (stick) stick.classList.toggle('past-hero', p > 0.35);
       whoShade.style.opacity = 0;
@@ -462,7 +475,7 @@ var DIR_A = (function () {
       if (wmStart) {   // Memento's name, big on the first screen, rises into the header as you start to scroll
         var sr = wmStart.slot.getBoundingClientRect(), s0 = sr.height / wmStart.hh;   // measured live, so it never drifts
         wmStart.s = s0; wmStart.x = sr.left + (wmStart.phone ? (sr.width - wmStart.hw * s0) / 2 : 0); wmStart.y = sr.top;
-        var k = K.ease(K.clamp(p / 0.55, 0, 1)), sx = K.lerp(wmStart.s, 1, k);
+        var k = K.ease(K.clamp(p / 0.55, 0, 1)), sx = K.lerp(wmStart.s, 1, k) / wmStart.base;
         bigwm.style.left = wmStart.hx + 'px'; bigwm.style.top = wmStart.hy + 'px';
         bigwm.style.transform = 'translate(' + ((wmStart.x - wmStart.hx) * (1 - k)).toFixed(1) + 'px,' + ((wmStart.y - wmStart.hy) * (1 - k)).toFixed(1) + 'px) scale(' + sx.toFixed(4) + ')';
       }
@@ -484,7 +497,7 @@ var DIR_A = (function () {
       var rn = Math.round(kp * 3); runEls.forEach(function (d, j) { d.classList.toggle('on', j < rn); }); $k('[data-runsv]').textContent = rn + ' of 3';
       $k('[data-lbs]').style.width = (60 * kp).toFixed(1) + '%'; $k('[data-lbsv]').textContent = Math.round(6 * kp) + ' of 10 lbs';
       $k('[data-rate]').style.width = (92 * kp).toFixed(1) + '%'; $k('[data-ratev]').textContent = Math.round(92 * kp) + '% rate';
-      panels[4].querySelector('.auto').classList.toggle('done', p > 3.85);
+      if (!autoTouched) autoLi.classList.toggle('done', p > 3.85);
       wl.paused = r.bottom < 0;
       beamsOp = K.clamp(1 - Math.max(0, p - 1) * 2, 0, 1); beamsHost.style.opacity = beamsOp.toFixed(3);
       wallHost.style.opacity = (K.clamp(r.bottom / (vh * 0.6), 0, 1) * wallNear * (1 - beamsOp)).toFixed(3);
@@ -521,7 +534,7 @@ var DIR_A = (function () {
       // Action's deep work timer counts down while it is on screen
       if (n === 4 && now - adjT > 2400) { adjT = now; adjI++; var mi = MILES[adjI % MILES.length], pc = ((mi - 1) / 4 * 100).toFixed(1) + '%';
         milesEl.textContent = mi; milesEl.classList.remove('roll'); void milesEl.offsetWidth; milesEl.classList.add('roll'); adjTh.style.left = pc; adjFill.style.width = pc; }
-      if (n === 4) { var s = Math.max(0, clockS - Math.floor((now - introT0) / 1000) % 3600), h = Math.floor(s / 3600), m = Math.floor(s / 60) % 60, ss = s % 60;
+      if (n === 4) { var s = Math.max(0, clockS - Math.floor(((timerPausedAt || now) - introT0 - timerPaused) / 1000) % 3600), h = Math.floor(s / 3600), m = Math.floor(s / 60) % 60, ss = s % 60;
         clockEl.textContent = h + ':' + (m < 10 ? '0' : '') + m + ':' + (ss < 10 ? '0' : '') + ss; arc.setAttribute('stroke-dashoffset', (94.2 * (1 - s / 7200)).toFixed(1)); }
       if (mode === 'looks' && now - cycleT > 2600) { cycleT = now; cycleI++; showLook(K.EARNED[cycleI % K.EARNED.length]); }
       if (mode === 'name' && typed.trim() && now - nameCycleT > 2600) { nameI++; showName(true); }
