@@ -335,7 +335,7 @@ var K = (function () {
     });
   }
   var sheet = null, opener = null;
-  function closeSheet() { sheet.classList.remove('on'); if (opener && opener.focus) opener.focus({ preventScroll: true }); }
+  function closeSheet() { sheet.classList.remove('on'); sheet.inert = true; if (opener && opener.focus) opener.focus({ preventScroll: true }); }
   function makeSheet() {
     if (!sheet) {
       sheet = el('div', 'sheet', '<div class="sheet-bg" data-x></div><div class="sheet-card glass"><button class="sheet-x" type="button" aria-label="Close" data-x>&times;</button>' +
@@ -343,13 +343,13 @@ var K = (function () {
         '<p class="small">Want to see it being built? Come hang out in the <a href="' + DISCORD + '" target="_blank" rel="noopener noreferrer">Discord</a>.</p><p class="small dim">You can unsubscribe anytime.</p></div>', document.body);
       sheet.addEventListener('click', function (e) { if (e.target.hasAttribute('data-x')) closeSheet(); });
       addEventListener('keydown', function (e) { if (e.key === 'Escape' && sheet.classList.contains('on')) closeSheet(); });
-      wireForms(sheet);
+      wireForms(sheet); sheet.inert = true;
     }
   }
   // live: the sheet (and its form) is built soon after load, so the form is ready the first time it opens
   if (LIVE) addEventListener('load', function () { setTimeout(makeSheet, 1200); });
   function openSheet() {
-    makeSheet();
+    makeSheet(); sheet.inert = false;
     opener = document.activeElement;
     requestAnimationFrame(function () { sheet.classList.add('on'); setTimeout(function () { var i = sheet.querySelector('input'); if (i && innerWidth > 979) i.focus({ preventScroll: true }); }, 320); });
   }
@@ -368,7 +368,7 @@ var K = (function () {
   function footer(parent) { return el('footer', 'foot', '<span>Built by <a href="https://www.youtube.com/@malikpeace_" target="_blank" rel="noopener noreferrer">Malik Peace</a></span><nav><a href="https://mementoapp.co/privacy/">Privacy</a><a href="https://mementoapp.co/terms/">Terms</a></nav>', parent); }
   function header(parent, o) {
     o = o || {};
-    return el('header', 'top', wordmark() + '<span class="top-r"><span class="beta"><i></i>Currently in private beta</span>' +
+    return el('header', 'top', wordmark() + '<span class="top-r">' +
       (o.cta ? '<button class="cta cta-sm" type="button" data-join><span class="l-full">Join for Updates + Discount</span><span class="l-short">Join</span></button>' : '') + '</span>', parent);
   }
   // phones: the sign-up button never leaves the screen (it steps aside only while the sign-up form itself is showing)

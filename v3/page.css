@@ -254,3 +254,12 @@ small, .small, .beta, .hint { letter-spacing: 0.01em; }
 .bh iframe { width: 100%; border: 0; background: transparent; color-scheme: normal; }
 .bh-fallback { align-self: flex-start; font-size: 13.5px; font-weight: 500; color: var(--ink3); text-decoration: none; }
 .bh-fallback:hover { color: var(--ink); }
+
+/* the sign-up sheet: Beehiiv's form is an embedded frame, and Chrome can leave a frame blank if it first drew while its
+   parent was hidden or faded out. So the closed sheet waits off screen to the left (fully drawn, inert) instead of hidden,
+   and the card only slides, never fades. */
+.sheet { transform: translateX(-300vw); transition: transform 0s linear .4s; }
+.sheet.on { transform: none; transition-delay: 0s; }
+.sheet-card, .sheet.on .sheet-card { opacity: 1; }
+.sheet-card { transition: transform .3s ease-out; }
+@media (max-width: 979px) { .sheet-card { transition: transform .38s cubic-bezier(.2, .9, .25, 1); } }

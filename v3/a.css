@@ -687,10 +687,6 @@
 @media (prefers-reduced-motion: reduce) { .a-roll.roll { animation: none; } .a-adj-fill, .a-adj-th { transition: none; } }
 
 /* ===== round 41 ===== */
-/* phones: a small private-beta pill above the name on the first screen (computers have it in the header) */
-.a-beta-hero { display: none; }
-.a.is-phone .a-beta-hero { display: inline-flex; align-self: center; margin-bottom: 6px; font-size: 11.5px; padding: 6px 12px; color: var(--ink2); background: rgba(255, 255, 255, 0.06);
-  -webkit-backdrop-filter: blur(20px) saturate(1.4); backdrop-filter: blur(20px) saturate(1.4); box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.08), inset 0 1px 0 rgba(255, 255, 255, 0.06); }
 /* Action: a paused deep work timer dims */
 .a-acts li.timer.paused em { color: var(--ink3); }
 
@@ -722,6 +718,9 @@
 .a.two .top .wm { font-size: calc(27px * var(--S, 1)); }
 .a.two .top-r { transform: scale(var(--S, 1)); transform-origin: 100% 50%; }
 .a.two .a-hint { font-size: calc(14px * var(--S, 1)); }
-.a.two .su, .a.two .letter, .a.two .foot { zoom: var(--S, 1); }
 /* Who on a phone: a narrower column, so the heading may take two lines */
 .a.is-phone .a-t-who h2 { text-wrap: balance; }
+
+/* ===== round 44 ===== */
+/* phones: the name field is as wide as the card (width set in layout) and sits centred under it */
+.a.is-phone .a-name { align-self: center; }

@@ -10,7 +10,7 @@ var DIR_A = (function () {
     { id: 'keep', scale: 1 }, { id: 'evolve', scale: 1 }, { id: 'looks', scale: 1 }, { id: 'name', scale: 1 }
   ];
   var TEXT = {
-    hero: '<h1 class="sr">Memento</h1><span class="beta a-beta-hero"><i></i>Currently in private beta</span><div class="a-wmslot" aria-hidden="true"></div><button class="cta a-cta-d" type="button" data-join>Join for Updates + Discount</button>',
+    hero: '<h1 class="sr">Memento</h1><div class="a-wmslot" aria-hidden="true"></div><button class="cta a-cta-d" type="button" data-join>Join for Updates + Discount</button>',
     who: '<h2>Who This Is For:</h2><p>Memento is for people who are actually serious about getting more out of their life and are ready to do something about it.</p>',
     blank: '<h2>First, It’s Blank.</h2><p>Your Memento starts like this.</p>',
     clarity: '<h2>Then, You Find Clarity.</h2><p>We find exactly what you want, why you want it, in detail.</p>',
@@ -359,7 +359,7 @@ var DIR_A = (function () {
       // computers: the page is designed at 1440x900; a bigger window scales the whole thing up (S), and a very wide one
       // keeps those proportions in a centred frame, so nothing turns small and lost on a big screen
       var S = 1, FW = vw, fx = 0, u = vw;
-      if (two) { S = Math.max(1, Math.min(1.8, vw / 1440, vh / 900)); FW = Math.min(vw, 1440 * S); fx = (vw - FW) / 2; u = FW / S; }
+      if (two) { S = Math.max(1, Math.min(1.12, vw / 1440, vh / 900)); FW = Math.min(vw, 1440 * S); fx = (vw - FW) / 2; u = FW / S; }
       var tl0 = K.clamp(0.07 * u, 32, 128), tw0 = Math.min(470, 0.4 * u);
       root.style.setProperty('--S', S.toFixed(4)); root.style.setProperty('--tl', (fx + S * tl0).toFixed(1) + 'px'); root.style.setProperty('--tw', tw0.toFixed(1) + 'px');
       root.style.setProperty('--cl', (fx + S * (tl0 + tw0 - 0.12 * u)).toFixed(1) + 'px'); root.style.setProperty('--cr', fx.toFixed(1) + 'px'); root.style.setProperty('--hp', (fx + S * K.clamp(0.03 * u, 20, 34)).toFixed(1) + 'px');
@@ -411,11 +411,13 @@ var DIR_A = (function () {
           k = Math.max(0.7, k);   // words and box shrink a little before anything is cut
           texts[i].dataset.k = k; panels[i].dataset.k = k;
           var thk = th * k, phk = ph * k, room = ch * sc * gk, G = thk + gT + room + gP + phk, y0 = top0 + Math.max(0, (avail - G) / 2);
+          if (st.id === 'name') nameIn.style.maxWidth = Math.round(cwNow * sc / k) + 'px';   // the name field is as wide as the card above it
           texts[i].style.top = y0 + 'px'; panels[i].style.top = (y0 + thk + gT + room + gP) + 'px';
           if (st.phoneHide) { var pTop = y0 + thk + gT + room + gP, bx = panels[i].querySelector('.who-wrap'), bh = bx ? bx.offsetHeight * k : phk, bTop = pTop + (bx ? bx.offsetTop * k : 0), behind = Math.min(1, bh * 0.8 / ch); fitS.push(behind / (st.scale || 1)); fitY.push(bTop + bh / 2 - vh / 2); }
           else { fitS.push(sc / (st.scale || 1)); fitY.push(y0 + thk + gT + room / 2 - vh / 2); }
         });
       } else if (two) {
+        nameIn.style.maxWidth = '';
         // two sides: each chapter's words with its box under them, centred as one group on the left; the card on the right
         var top1 = 84 * S, avail1 = vh - top1 - 56 * S;
         STEPS.forEach(function (st, i) {
