@@ -1,0 +1,653 @@
+/* Direction A: today's layout (text left, card centre, panel right; on phones text top, card middle, button bottom) */
+.a-wall { position: fixed; left: 0; right: 0; top: var(--bar); bottom: 0; z-index: 0; transition: opacity .3s linear; }
+.a-story { position: relative; z-index: 1; }
+.a-stage { position: sticky; top: var(--bar); height: calc(100vh - var(--bar)); height: calc(100svh - var(--bar)); overflow: hidden; }
+.a-text { position: absolute; left: clamp(28px, 6vw, 96px); top: 0; bottom: 0; width: min(390px, 30vw); z-index: 3; }
+.a-t { position: absolute; inset: 0; display: flex; flex-direction: column; justify-content: center; gap: 16px; }
+.a-t h2 { margin: 0; font-size: clamp(30px, 3.3vw, 46px); line-height: 1.04; letter-spacing: -0.025em; }
+.a-t p { margin: 0; font-size: 17px; line-height: 1.5; color: var(--ink2); }
+.a-t p b { color: var(--ink); }
+.a-t .eq { color: var(--ink); font-weight: 700; font-size: 21px; }
+.a-h1 { margin: 0; font-size: clamp(32px, 3.3vw, 48px); line-height: 1.08; font-weight: 400; letter-spacing: -0.02em; }
+.a-h1 b { font-weight: 700; }
+.a-cta-d { align-self: flex-start; margin-top: 10px; }
+.a-cardarea { position: absolute; inset: 0; display: grid; place-items: center; pointer-events: none; z-index: 2; }
+.a-slot { will-change: transform; }
+.a-panel { position: absolute; right: clamp(28px, 6vw, 96px); top: 0; bottom: 0; width: min(340px, 26vw); z-index: 3; }
+.a-p { position: absolute; inset: 0; display: flex; flex-direction: column; justify-content: center; gap: 12px; }
+.a-hint { position: absolute; left: 50%; bottom: 26px; transform: translateX(-50%); z-index: 3; white-space: nowrap; }
+.a-after { position: relative; z-index: 2; background: linear-gradient(to bottom, rgba(0,0,0,0), #000 220px); }
+.a-dev { width: min(1200px, calc(100% - 40px)); margin: 0 auto; padding-top: 140px; display: flex; flex-direction: column; gap: 14px; }
+.a-dev h2 { margin: 0; font-size: clamp(32px, 3.6vw, 48px); letter-spacing: -0.025em; }
+.a-dev > p { margin: 0 0 4px; font-size: 17px; color: var(--ink2); }
+.a-devrow { display: flex; gap: 60px; align-items: center; justify-content: center; margin-top: 44px; }
+/* phones */
+.a.is-phone .a-text { left: 20px; right: 20px; width: auto; top: 0; bottom: 0; height: auto; }
+.a.is-phone .a-t { inset: auto; left: 0; right: 0; top: 0; justify-content: flex-start; align-items: center; text-align: center; gap: 10px; }
+.a.is-phone .a-t h2 { font-size: 30px; line-height: 1.08; }
+.a.is-phone .a-t p { font-size: 16px; line-height: 1.45; max-width: 340px; }
+.a.is-phone .a-t .eq { font-size: 17px; }
+.a.is-phone .a-h1 { font-size: 27px; margin-top: 6px; }
+.a.is-phone .a-cta-d { display: none; }
+.a.is-phone .a-panel { left: 20px; right: 20px; width: auto; top: 0; bottom: 0; height: auto; }
+.a.is-phone .a-p { inset: auto; left: 0; right: 0; top: 0; justify-content: flex-start; gap: 8px; }
+.a.is-phone .a-hint { bottom: 92px; }
+.a.is-phone .a-name-cta { display: none; }
+.a.is-phone .a-name { font-size: 18px; padding: 14px; }
+.a.is-phone .a-dev { padding-top: 100px; }
+.a.is-phone .a-devrow { flex-direction: column; gap: 46px; margin-top: 30px; }
+/* round 2: the engraved name, what look is showing, the name field */
+.a-engr { position: absolute; left: 9%; bottom: 6.5%; z-index: 2; font-size: 12px; letter-spacing: 0.22em; text-transform: uppercase; color: rgba(255, 255, 255, 0.78); text-shadow: 0 1px 2px rgba(0, 0, 0, 0.35); opacity: 0; transition: opacity .3s ease-out; pointer-events: none; white-space: nowrap; max-width: 82%; overflow: hidden; }
+.a-engr.on { opacity: 1; }
+.a-now { display: flex; flex-direction: column; gap: 12px; }
+.a-now-t { display: flex; flex-direction: column; gap: 3px; }
+.a-now-t b { font-size: 22px; letter-spacing: -0.01em; }
+.a-now-t small { font-size: 14px; color: var(--ink3); }
+.a-dots { display: flex; gap: 7px; }
+.a-dots i { width: 6px; height: 6px; border-radius: 3px; background: rgba(255, 255, 255, 0.25); transition: width .3s ease-out, background-color .3s ease-out; }
+.a-dots i.on { width: 20px; background: #f3f6f9; }
+.a.is-phone .a-now { align-items: center; text-align: center; gap: 8px; }
+.a.is-phone .a-now-t b { font-size: 18px; }
+.a-name { width: 100%; border: 0; border-radius: 14px; padding: 16px 18px; font-size: 20px; text-align: center; background: rgba(255, 255, 255, 0.07); -webkit-backdrop-filter: blur(24px) saturate(1.4); backdrop-filter: blur(24px) saturate(1.4); box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.07), inset 0 0 0 1px rgba(255, 255, 255, 0.1); }
+.a-name::placeholder { color: rgba(243, 246, 249, 0.45); }
+.a-name:focus { outline: none; box-shadow: inset 0 0 0 1.5px rgba(255, 255, 255, 0.5); }
+.a-name-cta { width: 100%; }
+
+/* ---- round 5: the live page's card (memento-card.js) and its Evolve moment, verbatim from mementoapp.co */
+:root { --ease: cubic-bezier(.2, .8, .2, 1); }
+.mcard{ position:relative; width:100%; aspect-ratio:320 / 452; border-radius:14px; }
+.mcard__gl{ position:absolute; display:block; pointer-events:none; }
+.mcard--nogl{ background:linear-gradient(165deg,#101418,#07090c); box-shadow:inset 0 0 0 1px rgba(255,255,255,0.12); }
+.mcard__m{ position:absolute; left:50%; top:50%; width:37%; transform:translate(-50%,-50%); pointer-events:none;
+  fill:rgba(236,240,246,0.62); transition:fill 1s var(--ease);
+  filter:drop-shadow(0 1.5px 0 rgba(255,255,255,0.30)) drop-shadow(0 -1.5px 0.75px rgba(0,0,0,0.60)); }
+.mcard--darkmark .mcard__m{ filter:drop-shadow(0 1.5px 0 rgba(255,255,255,0.75)) drop-shadow(0 -1.5px 0.75px rgba(0,0,0,0.30)); }
+.mcard__name{ position:absolute; left:8.5%; bottom:5.2%; opacity:0; }
+.mcard__cortex{ display:none; }
+.a-grow { position: relative; }
+.a-grow.evolved { animation: evoPop 1.3s cubic-bezier(.25, .9, .3, 1) both; }
+@keyframes evoPop { 0% { transform: scale(1); } 14% { transform: scale(.96); } 48% { transform: scale(1.1); } 74% { transform: scale(1.04); } 100% { transform: scale(1.06); } }
+.a-halo { position: absolute; left: 50%; top: 50%; width: 240%; height: 190%; z-index: -1; pointer-events: none; opacity: 0; transform: translate(-50%, -50%) scale(.8); transition: opacity .9s var(--ease), transform .9s var(--ease);
+  background: radial-gradient(closest-side, rgba(235,255,250,0.42), rgba(0,255,190,0.2) 26%, rgba(40,200,255,0.13) 48%, rgba(150,90,255,0.06) 70%, rgba(0,0,0,0) 100%); }
+.a-grow.evolved .a-halo { animation: haloIn 2s var(--ease) forwards; }
+@keyframes haloIn { 0% { opacity: 0; transform: translate(-50%, -50%) scale(.6); } 30% { opacity: 1; transform: translate(-50%, -50%) scale(1.08); } 100% { opacity: .8; transform: translate(-50%, -50%) scale(1); } }
+.a-lwrap { position: relative; transition: opacity .45s ease-out; }
+.a-lflash { position: absolute; inset: 0; border-radius: 14px; pointer-events: none; opacity: 0; background: radial-gradient(120% 90% at 50% 45%, #fff, rgba(235,250,255,0.9) 55%, rgba(200,240,255,0.7)); }
+.a-lflash.go { animation: lflash 1.15s var(--ease) forwards; }
+@keyframes lflash { 0% { opacity: 0; } 16% { opacity: .9; } 100% { opacity: 0; } }
+.a-vwrap { position: absolute; left: 0; top: 0; opacity: 0; transition: opacity .45s ease-out; }
+.a-fire { position: fixed; left: 0; right: 0; top: var(--bar); bottom: 0; z-index: 0; opacity: 0; pointer-events: none; }
+@media (prefers-reduced-motion: reduce) { .a-grow.evolved, .a-grow.evolved .a-halo, .a-lflash.go { animation: none; } }
+
+/* the problem: three reasons */
+.a-why { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 8px; }
+.a-why li { display: flex; align-items: center; gap: 14px; padding: 14px 16px; border-radius: 14px; }
+.a-why b { flex: none; width: 28px; height: 28px; border-radius: 50%; display: grid; place-items: center; font-size: 14px; background: rgba(255, 255, 255, 0.1); font-variant-numeric: tabular-nums; }
+.a-why span { font-size: 16px; line-height: 1.35; }
+.a-why-end { margin: 6px 2px 0; font-size: 15px; color: var(--ink2); }
+/* Clarity: what, why, and the stages (the app's path: done, the one you're on, the goal) */
+.a-clar { border-radius: 14px; padding: 14px 16px; display: flex; flex-direction: column; gap: 10px; }
+.a-qa { display: flex; flex-direction: column; gap: 3px; min-height: 40px; }
+.a-qa small, .a-path small { font-size: 12.5px; color: var(--ink3); }
+.a-qa b { font-size: 15.5px; line-height: 1.3; }
+.a-path { display: flex; flex-direction: column; gap: 0; padding-top: 8px; border-top: 1px solid rgba(255, 255, 255, 0.08); }
+.a-path small { margin-bottom: 6px; }
+.a-st { position: relative; display: flex; align-items: center; gap: 10px; padding: 5px 0 5px 0; font-size: 14px; opacity: 0; transform: translateY(4px); transition: opacity .35s ease-out, transform .35s ease-out; }
+.a-st.in { opacity: 1; transform: none; }
+.a-st i { position: relative; flex: none; width: 14px; height: 14px; border-radius: 50%; box-shadow: inset 0 0 0 1.5px rgba(255, 255, 255, 0.4); }
+.a-st:not(:last-child) i::after { content: ""; position: absolute; left: 6.25px; top: 15px; width: 1.5px; height: 14px; background: rgba(255, 255, 255, 0.16); }
+.a-st.done i { background: #3ad9f5; box-shadow: none; }
+.a-st.done span { color: var(--ink3); }
+.a-st.cur i { box-shadow: inset 0 0 0 2px #3ad9f5, 0 0 10px rgba(58, 217, 245, 0.55); }
+.a-st.cur span { font-weight: 700; }
+.a-st.goal i { box-shadow: inset 0 0 0 1.5px #f3f6f9; }
+.a-st em { margin-left: auto; font-style: normal; font-size: 12px; color: var(--ink3); white-space: nowrap; }
+.a-st.cur em { color: #3ad9f5; }
+/* Action: four moves, four kinds (a tick, a running timer, a set time, a few days a week) */
+.a-acts { list-style: none; margin: 0; padding: 6px; border-radius: 14px; }
+.a-acts li { display: flex; align-items: center; gap: 12px; padding: 11px 10px; font-size: 15px; border-radius: 10px; cursor: pointer; }
+.a-acts li span { flex: 1; min-width: 0; transition: opacity .2s ease-out; }
+.a-acts li em { font-style: normal; color: var(--ink3); font-size: 13px; white-space: nowrap; font-variant-numeric: tabular-nums; }
+.a-acts .chk { flex: none; width: 20px; height: 20px; border-radius: 6px; background: rgba(255, 255, 255, 0.12); transition: background-color .2s ease-out; }
+.a-acts li.done .chk { background: var(--green); box-shadow: 0 0 10px rgba(63, 217, 78, .5); }
+.a-acts li.done span { text-decoration: line-through; opacity: .55; }
+.a-ring { flex: none; width: 22px; height: 22px; }
+.a-acts .clock { color: var(--ink); font-weight: 700; }
+.a-acts .sun { flex: none; width: 20px; height: 20px; border-radius: 50%; background: radial-gradient(circle, #ffd36b 0 34%, rgba(255, 211, 107, 0.25) 36% 60%, rgba(255, 211, 107, 0) 62%); }
+.a-acts .chip { color: var(--ink); background: rgba(255, 255, 255, 0.1); padding: 4px 8px; border-radius: 7px; font-size: 12px; }
+.a-acts .dots5 { flex: none; display: grid; grid-template-columns: repeat(5, 5px); gap: 2.5px; width: 20px; }
+.a-acts .dots5 b { width: 5px; height: 14px; border-radius: 2px; background: rgba(255, 255, 255, 0.16); }
+.a-acts .dots5 b.on { background: var(--green); }
+/* Keep Going: the live page's box, verbatim */
+.a-keep { border-radius: 14px; padding: 16px 18px; }
+.a-k-top { display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 10px; }
+.a-k-top span { font-size: 14.5px; }
+.a-k-top b { font-size: 17px; font-weight: 600; font-variant-numeric: tabular-nums; }
+.a-k-days { display: grid; grid-template-columns: repeat(7, 1fr); gap: 7px; }
+.a-k-days i { aspect-ratio: 1; border-radius: 6px; background: rgba(255, 255, 255, 0.07); transition: background .35s var(--ease), box-shadow .35s var(--ease); }
+.a-k-days i.on { background: #38ec47; box-shadow: 0 0 12px rgba(56, 236, 71, 0.4); }
+.a-k-row { display: flex; align-items: center; gap: 8px; margin-top: 8px; font-size: 14px; }
+.a-k-days + .a-k-row { margin-top: 13px; }
+.a-k-row span:first-child { flex: 1; min-width: 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.a-k-row b { flex: none; width: 78px; text-align: right; font-weight: 600; font-variant-numeric: tabular-nums; }
+.a-k-runs { flex: none; width: 52px; display: flex; gap: 4px; }
+.a-k-runs i { flex: 1; height: 8px; border-radius: 3px; background: rgba(255, 255, 255, 0.08); transition: background .3s var(--ease), box-shadow .3s var(--ease); }
+.a-k-runs i.on { background: #38ec47; box-shadow: 0 0 8px rgba(56, 236, 71, 0.35); }
+.a-k-bar { flex: none; width: 52px; height: 6px; border-radius: 3px; background: rgba(255, 255, 255, 0.08); overflow: hidden; }
+.a-k-bar i { display: block; height: 100%; width: 0; border-radius: 3px; background: #38ec47; }
+.a.is-phone .a-k-days { grid-template-columns: repeat(14, 1fr); gap: 5px; }
+.a.is-phone .a-k-days i { border-radius: 4px; }
+.a.is-phone .a-why li { padding: 10px 12px; }
+.a.is-phone .a-why span { font-size: 14.5px; }
+.a.is-phone .a-why-end { font-size: 14px; text-align: center; }
+.a.is-phone .a-clar { padding: 11px 13px; gap: 7px; }
+.a.is-phone .a-qa { min-height: 34px; }
+.a.is-phone .a-qa b { font-size: 14px; }
+.a.is-phone .a-st { padding: 3px 0; font-size: 13px; }
+.a.is-phone .a-st:not(:last-child) i::after { height: 10px; }
+.a.is-phone .a-acts li { padding: 8px 8px; font-size: 14px; }
+.a.is-phone .a-keep { padding: 12px 14px; }
+
+/* round 6: the name is the first screen; it rises into the header as you scroll */
+.sr { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+.a .top .wm { visibility: hidden; }
+.a-bigwm { position: fixed; z-index: 46; left: 0; top: 0; display: inline-flex; align-items: baseline; font-weight: 500; letter-spacing: -0.02em; line-height: 1.2;
+  transform-origin: 0 0; pointer-events: none; color: var(--ink); white-space: nowrap; will-change: transform; }
+.a-bigwm svg { height: 0.74em; width: auto; margin-right: 0.05em; fill: currentColor; transform: translateY(0.01em); }
+.a-wmslot { height: 92px; width: 100%; }
+.a.is-phone .a-wmslot { height: 62px; }
+/* who Memento is for */
+.a-who { list-style: none; margin: 0; padding: 8px 6px; border-radius: 14px; display: flex; flex-direction: column; }
+.a-who li { display: flex; align-items: flex-start; gap: 12px; padding: 8px 10px; font-size: 15px; line-height: 1.35; }
+.a-who i { flex: none; width: 6px; height: 6px; margin-top: 7px; border-radius: 50%; background: rgba(243, 246, 249, 0.6); }
+.a-who-end { margin: 8px 2px 0; font-size: 15px; line-height: 1.45; color: var(--ink2); }
+.a.is-phone .a-who li { padding: 6px 8px; font-size: 14.5px; }
+.a.is-phone .a-who-end { text-align: center; font-size: 15px; }
+/* round 7: Action's icons say what each move is (a tick, a running timer, a set time, days this week) */
+.a-acts .ic { flex: none; width: 22px; height: 22px; display: grid; place-items: center; color: var(--ink2); }
+.a-acts .ic svg { width: 22px; height: 22px; display: block; }
+.a-acts .ic.chk { width: 21px; height: 21px; border-radius: 6px; background: rgba(255, 255, 255, 0.12); transition: background-color .2s ease-out, box-shadow .2s ease-out; }
+.a-acts .ic.chk svg { width: 17px; height: 17px; opacity: 0; transition: opacity .2s ease-out; }
+.a-acts li.done .ic.chk { background: var(--green); box-shadow: 0 0 10px rgba(63, 217, 78, .5); }
+.a-acts li.done .ic.chk svg { opacity: 1; }
+.a-acts .ic.cal svg { width: 20px; height: 20px; }
+/* Keep Going: the streak as a chain, today's link glowing */
+.a-k-top b { display: inline-flex; align-items: center; gap: 6px; }
+.a-flame { width: 14px; height: 18px; }
+.a-chain { position: relative; display: flex; justify-content: space-between; align-items: center; height: 18px; margin: 6px 2px 0; }
+.a-chain-line { position: absolute; left: 5px; right: 5px; top: 50%; height: 2px; transform: translateY(-50%); background: rgba(255, 255, 255, 0.1); border-radius: 1px; }
+.a-chain-line i { display: block; height: 100%; width: 0; border-radius: 1px; background: #3fd94e; box-shadow: 0 0 8px rgba(63, 217, 78, 0.5); transition: width .3s var(--ease); }
+.a-chain b { position: relative; flex: none; width: 10px; height: 10px; border-radius: 50%; background: #141518; box-shadow: inset 0 0 0 1.5px rgba(255, 255, 255, 0.2); transition: background-color .3s var(--ease), box-shadow .3s var(--ease), transform .3s var(--ease); }
+.a-chain b.on { background: #3fd94e; box-shadow: 0 0 8px rgba(63, 217, 78, 0.5); }
+.a-chain b.now { transform: scale(1.4); box-shadow: 0 0 0 3px rgba(63, 217, 78, 0.22), 0 0 14px rgba(63, 217, 78, 0.85); }
+.a-chain-cap { display: flex; justify-content: space-between; margin-top: 6px; font-size: 11.5px; color: var(--ink3); }
+.a-k-row.first { margin-top: 14px; }
+/* Clarity: room for two lines so the box never jumps between people; a soft swap between them */
+.a-qa b { min-height: 2.6em; transition: opacity .25s ease-out; }
+.a-clar [data-stages] { transition: opacity .25s ease-out; }
+.a-clar.swap .a-qa b, .a-clar.swap [data-stages] { opacity: 0; }
+.a-cdots { justify-content: center; margin-top: 2px; }
+.a-keep { background: rgba(10, 12, 14, 0.6); }
+/* round 8: Who Memento is for, as an icon list with the key words in bold */
+.a-who { padding: 4px 16px; }
+.a-who li { align-items: center; gap: 13px; padding: 10px 0; border-top: 1px solid rgba(255, 255, 255, 0.07); opacity: 0; transform: translateY(6px); transition: opacity .3s ease-out, transform .3s ease-out; }
+.a-who li:first-child { border-top: 0; }
+.a-who li.in { opacity: 1; transform: none; }
+.a-who .wi { flex: none; width: 30px; height: 30px; margin: 0; border-radius: 9px; background: rgba(255, 255, 255, 0.08); display: grid; place-items: center; color: var(--ink); }
+.a-who .wi svg { width: 17px; height: 17px; }
+.a-who span { font-size: 15px; line-height: 1.35; color: var(--ink2); }
+.a-who span b { color: var(--ink); font-weight: 700; }
+.a-who-end b { color: var(--ink); }
+.a.is-phone .a-who { padding: 2px 13px; }
+.a.is-phone .a-who li { padding: 7px 0; gap: 11px; }
+.a.is-phone .a-who .wi { width: 27px; height: 27px; border-radius: 8px; }
+.a.is-phone .a-who .wi svg { width: 15px; height: 15px; }
+.a.is-phone .a-who span { font-size: 14px; }
+/* Clarity: example tabs you can tap */
+.a-ctabs { display: flex; gap: 4px; margin: -2px -4px 2px; overflow-x: auto; scrollbar-width: none; }
+.a-ctabs::-webkit-scrollbar { display: none; }
+.a-ctabs button { flex: none; border: 0; background: transparent; color: var(--ink3); font-size: 12.5px; font-weight: 700; padding: 6px 10px; border-radius: 8px; transition: background-color .2s ease-out, color .2s ease-out; }
+.a-ctabs button[aria-pressed="true"] { background: rgba(58, 217, 245, 0.16); color: #bff4ff; }
+.a-ctabs button:hover { color: var(--ink); }
+.a.is-phone .a-ctabs button { padding: 5px 8px; font-size: 12px; }
+/* all five example tabs fit on one line */
+.a-ctabs { justify-content: space-between; gap: 2px; overflow: visible; }
+.a-ctabs button { padding: 6px 7px; font-size: 12px; }
+.a.is-phone .a-ctabs button { padding: 5px 6px; font-size: 11.5px; }
+.a-panel { width: min(380px, 28vw); }
+/* round 9: phones squeeze words + box from the top centre when the room is short */
+.a.is-phone .a-t, .a.is-phone .a-p { transform-origin: 50% 0; }
+/* Clarity: a quick fade between people (the swap) */
+.a-qa b, .a-clar [data-stages] { transition: opacity .18s ease-out; }
+/* Keep Going: two weeks as pills, brighter toward today, the day letters under them */
+.a-pills { display: grid; grid-template-columns: repeat(14, 1fr); gap: 4px; margin-top: 2px; }
+.a-pills span { display: flex; flex-direction: column; align-items: center; gap: 5px; }
+.a-pills b { width: 100%; height: 22px; border-radius: 6px; background: rgba(255, 255, 255, 0.08); transition: background-color .3s var(--ease), box-shadow .3s var(--ease); }
+.a-pills b.on { background: #3fd94e; }
+.a-pills b.now { box-shadow: 0 0 0 2px rgba(63, 217, 78, 0.3), 0 0 14px rgba(63, 217, 78, 0.8); }
+.a-pills small { font-size: 9.5px; color: var(--ink3); }
+.a-pills span:nth-child(7) { margin-right: 4px; }
+/* round 10: two sides on a computer (Malik 2026-10-17): the words with their box under them on the left, Memento on the right */
+.a.two .a-text, .a.two .a-panel { left: clamp(32px, 7vw, 128px); right: auto; width: min(470px, 40vw); top: 0; bottom: 0; }
+.a.two .a-t, .a.two .a-p { inset: auto; left: 0; right: 0; top: 0; justify-content: flex-start; transform-origin: 0 0; }
+.a.two .a-cardarea { left: 50%; right: 0; }
+.a.two .a-hint { left: 75%; }
+.a.two .a-p-looks .a-now, .a.two .a-p-name { max-width: 380px; }
+.a.two .a-cardarea { left: calc(clamp(32px, 7vw, 128px) + min(470px, 40vw) - 12vw); }
+.a.two .a-hint { left: 50%; }
+/* round 11: snap points (one per chapter), the consistency score */
+.a-snap { position: absolute; left: 0; width: 1px; height: 1px; scroll-snap-align: start; scroll-margin-top: var(--bar); pointer-events: none; }
+.a-score { display: flex; justify-content: space-between; align-items: baseline; margin-top: 2px; }
+.a-score > span { font-size: 15px; font-weight: 700; color: #8ff0a0; }
+.a-score b { font-size: 26px; font-weight: 700; letter-spacing: -0.02em; font-variant-numeric: tabular-nums; }
+.a-score small { font-size: 14px; font-weight: 600; color: var(--ink3); }
+.a-ticks { position: relative; display: flex; justify-content: space-between; gap: 2px; height: 26px; margin-top: 8px; }
+.a-ticks i { flex: 1; border-radius: 2px; background: rgba(255, 255, 255, 0.1); transition: background-color .25s ease-out; }
+.a-goal { position: absolute; top: -4px; bottom: -4px; width: 2px; margin-left: -1px; border-radius: 1px; background: #f3f6f9; box-shadow: 0 0 6px rgba(255, 255, 255, 0.6); }
+.a-k-cap { display: flex; justify-content: space-between; margin-top: 8px; font-size: 12px; color: var(--ink3); }
+.a-k-cap span:first-child { color: #8ff0a0; }
+.a.is-phone .a-score b { font-size: 22px; }
+.a.is-phone .a-ticks { height: 22px; }
+/* round 12: total actions on top, the score as the box's headline */
+.a-k-top b { font-size: 17px; }
+.a-score { margin-top: 6px; padding-top: 10px; border-top: 1px solid rgba(255, 255, 255, 0.07); }
+.a-k-top { align-items: center; }
+/* round 13: Who Memento is for, three ways. Rows come in one after another (.wr.in) */
+.a-p-who .wr { opacity: 0; transform: translateY(6px); transition: opacity .3s ease-out, transform .3s ease-out; }
+.a-p-who .wr.in { opacity: 1; transform: none; }
+/* tags: one lead-in, then short pills */
+.who-tags { border-radius: 14px; padding: 16px; }
+.who-lead { margin: 0 0 12px; font-size: 15px; color: var(--ink2); }
+.who-tagrow { display: flex; flex-wrap: wrap; gap: 8px; }
+.who-tagrow .wr { padding: 9px 13px; border-radius: 999px; font-size: 14.5px; line-height: 1.2; color: var(--ink); background: rgba(255, 255, 255, 0.07); box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.1); }
+.a.is-phone .who-tags { padding: 14px; text-align: left; }
+.a.is-phone .who-tagrow { gap: 7px; }
+.a.is-phone .who-tagrow .wr { padding: 8px 12px; font-size: 14px; }
+/* groups: what you want, then what's hard */
+.who-groups { border-radius: 14px; padding: 6px 18px 10px; text-align: left; }
+.who-g h4 { margin: 12px 0 4px; font-size: 16px; font-weight: 700; }
+.who-g ul { list-style: none; margin: 0; padding: 0; }
+.who-g li { padding: 8px 0 8px 14px; position: relative; font-size: 15px; line-height: 1.35; color: var(--ink2); border-top: 1px solid rgba(255, 255, 255, 0.06); }
+.who-g li::before { content: ""; position: absolute; left: 0; top: 50%; width: 5px; height: 5px; margin-top: -2.5px; border-radius: 50%; background: rgba(243, 246, 249, 0.55); }
+.who-g.but h4 { margin-top: 16px; }
+.who-g.but li::before { background: var(--green); }
+.a.is-phone .who-g li { padding: 6px 0 6px 14px; font-size: 14.5px; }
+/* icons: thinner */
+.a-who .wi { background: rgba(255, 255, 255, 0.06); }
+/* round 14: who Memento is for, picked by tapping. Glass box, glass chips; a picked chip fills with a check */
+.who-pick { border-radius: 16px; padding: 16px 16px 18px; text-align: left; background: rgba(255, 255, 255, 0.045); -webkit-backdrop-filter: blur(34px) saturate(1.5); backdrop-filter: blur(34px) saturate(1.5);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.08), inset 0 0 0 1px rgba(255, 255, 255, 0.09), 0 20px 60px rgba(0, 0, 0, 0.45); }
+.who-hint { margin: 0 0 4px; font-size: 13.5px; color: var(--ink3); }
+.who-g2 h4 { margin: 12px 0 8px; font-size: 16px; font-weight: 700; }
+.who-chips { display: flex; flex-wrap: wrap; gap: 7px; }
+.wchip { display: inline-flex; align-items: center; gap: 8px; border: 0; padding: 9px 13px 9px 9px; border-radius: 999px; font-size: 14.5px; line-height: 1.2; color: var(--ink2); text-align: left;
+  background: rgba(255, 255, 255, 0.06); box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.06), inset 0 0 0 1px rgba(255, 255, 255, 0.1);
+  transition: background-color .2s ease-out, box-shadow .2s ease-out, color .2s ease-out, transform .15s ease-out; -webkit-tap-highlight-color: transparent; }
+.wchip:active { transform: scale(0.97); }
+.wchip i { flex: none; width: 18px; height: 18px; border-radius: 50%; display: grid; place-items: center; box-shadow: inset 0 0 0 1.5px rgba(255, 255, 255, 0.28); color: #04210a; transition: background-color .2s ease-out, box-shadow .2s ease-out; }
+.wchip i svg { width: 12px; height: 12px; opacity: 0; transform: scale(.6); transition: opacity .2s ease-out, transform .25s cubic-bezier(.2, 1.4, .4, 1); }
+.wchip[aria-pressed="true"] { color: var(--ink); background: rgba(63, 217, 78, 0.14); box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.08), inset 0 0 0 1px rgba(63, 217, 78, 0.45); }
+.wchip[aria-pressed="true"] i { background: var(--green); box-shadow: 0 0 10px rgba(63, 217, 78, 0.6); }
+.wchip[aria-pressed="true"] i svg { opacity: 1; transform: none; }
+.wchip:hover { color: var(--ink); }
+.a-who-end { transition: opacity .16s ease-out; }
+.a-who-end.swap { opacity: 0; }
+.a-who-end.yes b { color: #8ff0a0; }
+.a.is-phone .who-pick { padding: 13px 13px 15px; }
+.a.is-phone .who-g2 h4 { margin: 10px 0 7px; font-size: 15px; }
+.a.is-phone .wchip { padding: 8px 12px 8px 8px; font-size: 14px; }
+.a.is-phone .who-hint { text-align: center; }
+.a.is-phone .who-hint { text-align: left; }
+/* round 15: equal-width rows (an iOS-style picker): the words on the left, a check on the right; fewer outlines */
+.who-pick { padding: 18px 16px; border-radius: 16px; }
+.who-sec + .who-sec { margin-top: 18px; }
+.who-head { display: flex; justify-content: space-between; align-items: baseline; margin: 0 2px 9px; }
+.who-head h4 { margin: 0; font-size: 16px; font-weight: 700; color: var(--ink); }
+.who-head span { font-size: 12.5px; color: var(--ink3); }
+.who-list { display: flex; flex-direction: column; gap: 6px; }
+.who-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 6px; }
+.wopt { display: flex; align-items: center; justify-content: space-between; gap: 10px; width: 100%; border: 0; padding: 12px 12px 12px 14px; border-radius: 11px; text-align: left;
+  font-size: 15px; line-height: 1.25; color: var(--ink2); background: rgba(255, 255, 255, 0.05); box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.04);
+  transition: background-color .2s ease-out, box-shadow .2s ease-out, color .2s ease-out, transform .15s ease-out; -webkit-tap-highlight-color: transparent; }
+.wopt:hover { background: rgba(255, 255, 255, 0.075); color: var(--ink); }
+.wopt:active { transform: scale(0.985); }
+.wopt i { flex: none; width: 20px; height: 20px; border-radius: 50%; display: grid; place-items: center; color: #04210a; box-shadow: inset 0 0 0 1.5px rgba(255, 255, 255, 0.22); transition: background-color .2s ease-out, box-shadow .2s ease-out; }
+.wopt i svg { width: 12px; height: 12px; opacity: 0; transform: scale(.6); transition: opacity .2s ease-out, transform .25s cubic-bezier(.2, 1.4, .4, 1); }
+.wopt[aria-pressed="true"] { color: var(--ink); background: rgba(63, 217, 78, 0.12); box-shadow: inset 0 0 0 1px rgba(63, 217, 78, 0.32); }
+.wopt[aria-pressed="true"] i { background: var(--green); box-shadow: 0 0 10px rgba(63, 217, 78, 0.55); }
+.wopt[aria-pressed="true"] i svg { opacity: 1; transform: none; }
+.a.is-phone .who-pick { padding: 14px 12px; }
+.a.is-phone .who-sec + .who-sec { margin-top: 14px; }
+.a.is-phone .who-head { margin-bottom: 7px; }
+.a.is-phone .who-head h4 { font-size: 15px; }
+.a.is-phone .wopt { padding: 10px 10px 10px 12px; font-size: 14px; }
+.a.is-phone .who-list, .a.is-phone .who-grid { gap: 5px; }
+/* round 16: the list again, written straight onto dark glass (no boxes); a picked line turns green. On a phone the card
+   shows through the glass behind it, dimmed */
+.who-box { border-radius: 16px; padding: 16px 18px 12px; text-align: left; background: rgba(6, 7, 9, 0.62); -webkit-backdrop-filter: blur(22px) saturate(1.3); backdrop-filter: blur(22px) saturate(1.3);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.07), inset 0 0 0 1px rgba(255, 255, 255, 0.08), 0 24px 70px rgba(0, 0, 0, 0.5); }
+.who-box .who-sec + .who-sec { margin-top: 14px; }
+.who-box .who-head { margin: 0 0 4px; }
+.who-ul { list-style: none; margin: 0; padding: 0; }
+.wli { position: relative; display: block; width: 100%; border: 0; background: none; padding: 9px 0 9px 17px; text-align: left; font-size: 15px; line-height: 1.35; color: var(--ink2);
+  border-top: 1px solid rgba(255, 255, 255, 0.07); transition: color .2s ease-out; -webkit-tap-highlight-color: transparent; cursor: pointer; }
+.wli::before { content: ""; position: absolute; left: 1px; top: 50%; width: 6px; height: 6px; margin-top: -3px; border-radius: 50%; background: rgba(243, 246, 249, 0.4); transition: background-color .2s ease-out, box-shadow .2s ease-out; }
+.wli:hover { color: var(--ink); }
+.wli[aria-pressed="true"] { color: #8ff0a0; }
+.wli[aria-pressed="true"]::before { background: var(--green); box-shadow: 0 0 8px rgba(63, 217, 78, 0.7); }
+.a.is-phone .who-box { padding: 13px 15px 9px; }
+.a.is-phone .wli { padding: 7px 0 7px 16px; font-size: 14.5px; }
+.a.is-phone .who-box { background: rgba(5, 6, 8, 0.7); }
+/* round 17: the words lead into the list; the card behind it is a frosted glow (no blur needed, the same on every phone) */
+.who-lead2 { color: var(--ink) !important; font-weight: 700; }
+.who-tap { margin: 0 0 4px; font-size: 12.5px; color: var(--ink3); }
+.who-box { position: relative; isolation: isolate; }
+.who-box .who-sec { position: relative; z-index: 1; }
+.a.is-phone .who-box::before { content: ""; position: absolute; z-index: 0; left: 50%; top: 50%; width: 62%; height: 86%; transform: translate(-50%, -50%); pointer-events: none; border-radius: 40%;
+  background: radial-gradient(closest-side, rgba(225, 233, 255, 0.11), rgba(200, 220, 255, 0.05) 55%, rgba(200, 220, 255, 0) 100%); }
+.a.is-phone .who-lead2 { margin-top: 2px; }
+/* round 18 (Apple-style grouped lists): one glass card per group, its heading right on top, bright rows, inset
+   separators, no bullets, feedback on press, a green check when picked */
+.who-wrap { position: relative; isolation: isolate; text-align: left; }
+.who-grp + .who-grp { margin-top: 18px; }
+.who-gh { display: flex; justify-content: space-between; align-items: baseline; gap: 10px; flex-wrap: wrap; margin: 0 4px 8px; }
+.who-gh span { font-size: 16px; font-weight: 700; color: var(--ink); letter-spacing: -0.01em; }
+.who-gh small { font-size: 12.5px; color: var(--ink3); }
+.who-card { list-style: none; margin: 0; padding: 0; border-radius: 14px; overflow: hidden; background: rgba(255, 255, 255, 0.055);
+  -webkit-backdrop-filter: blur(28px) saturate(1.4); backdrop-filter: blur(28px) saturate(1.4); box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.08), 0 18px 50px rgba(0, 0, 0, 0.4); }
+.who-card li { position: relative; }
+.who-card li + li::before { content: ""; position: absolute; left: 16px; right: 0; top: 0; height: 1px; background: rgba(255, 255, 255, 0.08); }
+.who-card .wli { display: flex; align-items: center; justify-content: space-between; gap: 12px; border: 0; border-top: 0; padding: 13px 16px; font-size: 16px; line-height: 1.3;
+  color: rgba(243, 246, 249, 0.92); background: transparent; transition: background-color .1s ease-out, color .2s ease-out; }
+.who-card .wli::before { display: none; }
+.who-card .wli:active { background: rgba(255, 255, 255, 0.06); }
+.who-card .wli i { flex: none; width: 18px; height: 18px; color: var(--green); opacity: 0; transform: scale(.7); transition: opacity .2s ease-out, transform .25s cubic-bezier(.2, 1.3, .4, 1); }
+.who-card .wli i svg { width: 18px; height: 18px; display: block; }
+.who-card .wli[aria-pressed="true"] { color: #8ff0a0; }
+.who-card .wli[aria-pressed="true"] i { opacity: 1; transform: none; }
+.a.is-phone .who-wrap::before { content: ""; position: absolute; z-index: -1; left: 50%; top: 50%; width: 62%; height: 80%; transform: translate(-50%, -50%); pointer-events: none; border-radius: 40%;
+  background: radial-gradient(closest-side, rgba(225, 233, 255, 0.1), rgba(200, 220, 255, 0.04) 55%, rgba(200, 220, 255, 0) 100%); }
+.a.is-phone .who-card .wli { padding: 11px 14px; font-size: 15px; }
+.a.is-phone .who-card li + li::before { left: 14px; }
+.a.is-phone .who-gh span { font-size: 15px; }
+.a.is-phone .who-grp + .who-grp { margin-top: 14px; }
+@media (prefers-reduced-transparency: reduce) { .who-card { background: #161719; -webkit-backdrop-filter: none; backdrop-filter: none; } }
+/* round 19: on a phone the Who chapter's two groups share one place and take turns as you scroll */
+.a.is-phone .who-wrap { display: grid; }
+.a.is-phone .who-grp { grid-area: 1 / 1; align-self: start; }
+.a.is-phone .who-grp + .who-grp { margin-top: 0; }
+.a-who-end { margin-top: 14px; }
+.a.is-phone .a-who-end { text-align: center; }
+
+/* ===== Apple polish pass (round 20) ===== */
+/* one type scale: headings tight, body comfortable */
+.a-t h2 { font-size: clamp(34px, 3.4vw, 50px); line-height: 1.04; letter-spacing: -0.03em; }
+.a-t p { font-size: 17px; line-height: 1.5; letter-spacing: 0; }
+.a.is-phone .a-t h2 { font-size: 30px; line-height: 1.08; letter-spacing: -0.025em; }
+.a.is-phone .a-t p { font-size: 16px; line-height: 1.45; }
+/* the problem: one big number */
+.a-t .big-n { font-size: clamp(64px, 7.4vw, 104px); line-height: 0.95; letter-spacing: -0.05em; font-variant-numeric: tabular-nums; }
+.a.is-phone .a-t .big-n { font-size: 60px; letter-spacing: -0.045em; }
+.a-t .a-sol { color: var(--ink); font-weight: 700; }
+/* press feedback on everything tappable in the story */
+.a-acts li, .a-ctabs button, .wli { transition: background-color .1s ease-out, color .2s ease-out, transform .1s ease-out; }
+.a-acts li:active { background: rgba(255, 255, 255, 0.06); transform: scale(0.99); }
+.a-ctabs button:active { transform: scale(0.95); }
+/* Clarity's example tabs: a 44px tap area around the small labels */
+.a-ctabs button { position: relative; }
+.a-ctabs button::after { content: ""; position: absolute; left: -2px; right: -2px; top: -8px; bottom: -8px; }
+/* Reduce Motion: words cross-fade in place, the fire and the Evolve pop stay still */
+@media (prefers-reduced-motion: reduce) {
+  .a-t, .a-p { transform: none !important; }
+  .a-fire { display: none; }
+  .a-grow.evolved { animation: none; transform: scale(1.06); }
+  .a-st, .a-p-who .wr { transition: opacity .2s ease-out; transform: none !important; }
+}
+/* round 21: ~27,000 days, and how many are left at your age (the Life Audit in one line) */
+.a-days { border-radius: 16px; padding: 14px 16px 12px; }
+.a-days-top { display: flex; justify-content: space-between; align-items: center; }
+.a-days-top > span { font-size: 15px; color: var(--ink2); }
+.a-age { display: flex; align-items: center; gap: 4px; }
+.a-age b { min-width: 34px; text-align: center; font-size: 18px; font-variant-numeric: tabular-nums; }
+.a-age button { width: 32px; height: 32px; border: 0; border-radius: 50%; background: rgba(255, 255, 255, 0.08); color: var(--ink); font-size: 18px; line-height: 1; transition: transform .1s ease-out, background-color .15s ease-out; }
+.a-age button:active { transform: scale(0.92); background: rgba(255, 255, 255, 0.16); }
+.a-agerange { width: 100%; margin: 10px 0 6px; accent-color: #f3f6f9; height: 28px; background: transparent; }
+.a-left { display: flex; align-items: baseline; gap: 8px; }
+.a-left b { font-size: 34px; letter-spacing: -0.03em; font-variant-numeric: tabular-nums; }
+.a-left span { font-size: 15px; color: var(--ink2); }
+.a-lifebar { height: 8px; border-radius: 4px; margin-top: 8px; overflow: hidden; background: linear-gradient(90deg, rgba(63, 217, 78, 0.85), rgba(58, 217, 245, 0.85)); }
+.a-lifebar i { display: block; height: 100%; width: 0; background: rgba(255, 255, 255, 0.16); transition: width .15s ease-out; }
+.a-for { margin: 14px 2px 0; font-size: 15.5px; line-height: 1.5; color: var(--ink2); }
+.a-sol2 { margin: 8px 2px 0; font-size: 15.5px; font-weight: 700; color: var(--ink); }
+.a.is-phone .a-days { padding: 12px 14px 10px; }
+.a.is-phone .a-left b { font-size: 28px; }
+.a.is-phone .a-for, .a.is-phone .a-sol2 { text-align: center; font-size: 14.5px; }
+.a.is-phone .a-for { margin-top: 10px; }
+.a-lifebar i { background: rgba(8, 9, 11, 0.78); box-shadow: inset -1px 0 0 rgba(255, 255, 255, 0.5); }
+.a-days .a-k-cap span:first-child { color: var(--ink3); }
+/* round 22: the days, full screen (after Opal's one-statement screen). Every day of an average life as a mark behind one
+   statement; the days already lived fall away from the top as you set your age */
+.a-days-full { position: absolute; inset: 0; z-index: 4; opacity: 0; visibility: hidden; }
+.a-days-cv { position: absolute; left: 0; top: 0; display: block; }
+.a-days-scrim { position: absolute; left: 50%; top: 52%; width: min(1100px, 140vw); height: min(560px, 82vh); transform: translate(-50%, -50%); pointer-events: none;
+  background: radial-gradient(closest-side, rgba(0, 0, 0, 0.94), rgba(0, 0, 0, 0.8) 55%, rgba(0, 0, 0, 0) 100%); }
+.a-days-in { position: absolute; left: 50%; top: 52%; width: min(880px, calc(100% - 48px)); transform: translateY(0); margin-left: max(-440px, calc(-50% + 24px)); translate: 0 -50%;
+  display: flex; flex-direction: column; align-items: center; gap: 30px; text-align: center; }
+.a-days-line { margin: 0; font-size: clamp(30px, 4vw, 56px); line-height: 1.16; letter-spacing: -0.025em; font-weight: 600; color: #e7eaee;
+  background: linear-gradient(180deg, #ffffff 0%, #c7ccd4 100%); -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent; text-wrap: balance; }
+.a-days-line b { font-weight: 700; }
+.a-days-line span { font-variant-numeric: tabular-nums; }
+.a-days-age { display: flex; align-items: center; gap: 14px; padding: 10px 18px; border-radius: 999px; background: rgba(255, 255, 255, 0.06); box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.07), inset 0 0 0 1px rgba(255, 255, 255, 0.08); }
+.a-days-age > span { font-size: 14px; color: var(--ink2); white-space: nowrap; }
+.a-days-age input { width: min(260px, 46vw); accent-color: #f3f6f9; margin: 0; }
+.a-days-age b { min-width: 26px; text-align: right; font-size: 17px; font-variant-numeric: tabular-nums; }
+.a.is-phone .a-days-line { font-size: 29px; line-height: 1.18; }
+.a.is-phone .a-days-in { gap: 24px; }
+/* round 23: the age in the sentence ticks with a small pulse each year */
+.a-days-line .nw { white-space: nowrap; }
+.a-days-line span.tick { animation: ageTick .35s ease-out; }
+@keyframes ageTick { 0% { -webkit-text-fill-color: #8ff0a0; color: #8ff0a0; } 100% { -webkit-text-fill-color: #eef1f4; color: #eef1f4; } }
+@media (prefers-reduced-motion: reduce) { .a-days-line span.tick { animation: none; } }
+/* the ticking numbers carry their own fill (a transformed piece of gradient-clipped text can vanish in Safari) */
+.a-days-line span[data-age], .a-days-line span[data-left] { -webkit-text-fill-color: #eef1f4; color: #eef1f4; }
+
+/* ===== round 24: Clarity, Apple-style. A segmented control with a sliding pill, one grouped glass card for the what and
+   the why, the stages as a connected path (done = filled with a check, now = cyan ring, goal = white ring) ===== */
+.a-clar2 { display: flex; flex-direction: column; gap: 10px; }
+.a-seg { position: relative; display: flex; padding: 3px; border-radius: 12px; }
+.a-seg button { position: relative; z-index: 1; flex: 1 1 auto; border: 0; background: transparent; padding: 7px 6px; border-radius: 9px; font-size: 12.5px; font-weight: 600; letter-spacing: 0; color: var(--ink3); white-space: nowrap; transition: color .25s ease-out, transform .1s ease-out; }
+.a-seg button[aria-pressed="true"] { color: var(--ink); }
+.a-seg button:active { transform: scale(0.96); }
+.a-seg button::after { content: ""; position: absolute; left: 0; right: 0; top: -6px; bottom: -6px; }
+.a-seg-pill { position: absolute; z-index: 0; left: 0; top: 3px; bottom: 3px; width: 0; border-radius: 9px; background: rgba(255, 255, 255, 0.13);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.12), 0 2px 10px rgba(0, 0, 0, 0.35); transition: transform .34s cubic-bezier(.3, .85, .3, 1), width .34s cubic-bezier(.3, .85, .3, 1); }
+.a-cbody { border-radius: 16px; overflow: hidden; }
+.a-cq { position: relative; padding: 12px 16px 12px; display: flex; flex-direction: column; gap: 3px; }
+.a-cq + .a-cq::before, .a-cpath::before { content: ""; position: absolute; left: 16px; right: 0; top: 0; height: 1px; background: rgba(255, 255, 255, 0.08); }
+.a-cq small, .a-cpath > small { font-size: 12.5px; color: var(--ink3); letter-spacing: 0.01em; }
+.a-cq b { font-size: 15.5px; line-height: 1.3; font-weight: 700; min-height: 2.6em; transition: opacity .18s ease-out; }
+.a-cpath { position: relative; padding: 12px 16px 14px; }
+.a-cpath > small { display: block; margin-bottom: 8px; }
+.a-cpath [data-stages] { transition: opacity .18s ease-out; }
+.a-clar2.swap .a-cq b, .a-clar2.swap [data-stages] { opacity: 0; }
+.a-cpath .a-st { display: flex; align-items: center; gap: 12px; padding: 0; height: 30px; font-size: 14.5px; }
+.a-cpath .a-st i { position: relative; flex: none; width: 18px; height: 18px; border-radius: 50%; display: grid; place-items: center; box-shadow: inset 0 0 0 1.5px rgba(255, 255, 255, 0.28); background: transparent; }
+.a-cpath .a-st i svg { width: 12px; height: 12px; display: block; }
+.a-cpath .a-st:not(:last-child) i::after { content: ""; position: absolute; left: 8.25px; top: 19px; width: 1.5px; height: 11px; border-radius: 1px; background: rgba(255, 255, 255, 0.16); }
+.a-cpath .a-st.done i { background: #3ad9f5; box-shadow: none; }
+.a-cpath .a-st.done i::after { background: rgba(58, 217, 245, 0.7); }
+.a-cpath .a-st.done span { color: var(--ink3); }
+.a-cpath .a-st.cur i { box-shadow: inset 0 0 0 2px #3ad9f5, 0 0 12px rgba(58, 217, 245, 0.55); }
+.a-cpath .a-st.cur span { font-weight: 700; color: var(--ink); }
+.a-cpath .a-st.goal i { box-shadow: inset 0 0 0 1.5px #f3f6f9; }
+.a-cpath .a-st.goal i::before { content: ""; width: 6px; height: 6px; border-radius: 50%; background: #f3f6f9; }
+.a-cpath .a-st em { margin-left: auto; font-style: normal; font-size: 12px; color: var(--ink3); white-space: nowrap; }
+.a-cpath .a-st.cur em { color: #bff4ff; background: rgba(58, 217, 245, 0.14); padding: 3px 9px; border-radius: 999px; font-weight: 600; }
+.a.is-phone .a-seg button { font-size: 12px; padding: 6px 4px; }
+.a.is-phone .a-cq { padding: 10px 14px; }
+.a.is-phone .a-cq b { font-size: 14.5px; }
+.a.is-phone .a-cpath { padding: 10px 14px 12px; }
+.a.is-phone .a-cpath .a-st { height: 26px; font-size: 13.5px; }
+.a.is-phone .a-cpath .a-st:not(:last-child) i::after { height: 8px; }
+.a:not(.is-phone) .a-cq b { min-height: 0; }
+
+/* ===== round 26: the days, Opal-premium. No box: the statement sits on the dark; the days behind it are softly out of
+   focus and fade out toward the edges (no hard rectangle); today is the one sharp, glowing mark ===== */
+.a-days-cv { filter: blur(1.6px); -webkit-mask-image: radial-gradient(ellipse 72% 68% at 50% 52%, #000 45%, rgba(0, 0, 0, 0.55) 72%, transparent 100%); mask-image: radial-gradient(ellipse 72% 68% at 50% 52%, #000 45%, rgba(0, 0, 0, 0.55) 72%, transparent 100%); }
+.a:not(.is-phone) .a-days-cv { filter: blur(2.4px); }
+.a-today { position: absolute; left: 0; top: 0; z-index: 2; width: 7px; height: 7px; margin: -3.5px 0 0 -3.5px; border-radius: 1.5px; background: #3fd94e;
+  box-shadow: 0 0 0 3px rgba(63, 217, 78, 0.18), 0 0 14px 2px rgba(63, 217, 78, 0.75); pointer-events: none; will-change: transform; }
+.a:not(.is-phone) .a-today { width: 9px; height: 9px; margin: -4.5px 0 0 -4.5px; }
+.a-days-scrim { z-index: 1; background: radial-gradient(closest-side, rgba(0, 0, 0, 0.82), rgba(0, 0, 0, 0.55) 55%, rgba(0, 0, 0, 0) 100%); }
+.a-days-in { z-index: 3; gap: 0; }
+.a-days-num { margin: 0; font-size: clamp(60px, 7.6vw, 112px); line-height: 0.95; font-weight: 700; letter-spacing: -0.05em; font-variant-numeric: tabular-nums;
+  background: linear-gradient(180deg, #ffffff 0%, #c9ced6 100%); -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent; }
+.a-days-line { margin: 22px 0 0 !important; max-width: 30em; font-size: clamp(18px, 1.55vw, 22px) !important; line-height: 1.45 !important; font-weight: 500 !important; letter-spacing: -0.01em !important;
+  color: rgba(243, 246, 249, 0.68) !important; background: none !important; -webkit-text-fill-color: currentColor !important; }
+.a-days-line span[data-age], .a-days-line span[data-left] { -webkit-text-fill-color: #f3f6f9; color: #f3f6f9; font-weight: 600; }
+.a-days-sol { margin: 6px 0 0; max-width: 30em; font-size: clamp(18px, 1.55vw, 22px); line-height: 1.45; font-weight: 600; letter-spacing: -0.01em; color: #f3f6f9; }
+.a-days-age { margin-top: 30px; }
+.a.is-phone .a-days-num { font-size: 58px; }
+.a.is-phone .a-days-line { margin-top: 16px !important; font-size: 17px !important; }
+.a.is-phone .a-days-sol { font-size: 17px; }
+.a.is-phone .a-days-age { margin-top: 24px; }
+@media (prefers-reduced-transparency: reduce) { .a-days-cv { filter: none; } }
+.a-days-cv { -webkit-mask-image: radial-gradient(closest-side at 50% 52%, #000 38%, rgba(0, 0, 0, 0.6) 70%, transparent 100%); mask-image: radial-gradient(closest-side at 50% 52%, #000 38%, rgba(0, 0, 0, 0.6) 70%, transparent 100%); }
+.a-days-cv { filter: blur(1.1px); }
+.a:not(.is-phone) .a-days-cv { filter: blur(1.8px); }
+.a-days-scrim { background: radial-gradient(closest-side, rgba(0, 0, 0, 0.72), rgba(0, 0, 0, 0.42) 55%, rgba(0, 0, 0, 0) 100%); }
+.a.is-phone .a-days-cv { filter: blur(0.8px); }
+/* round 27: no blur, no vignette, no bubble: every day sharp and edge to edge; the words carry their own soft shadow */
+.a-days-cv, .a:not(.is-phone) .a-days-cv, .a.is-phone .a-days-cv { filter: none; -webkit-mask-image: none; mask-image: none; }
+.a-days-scrim { display: none; }
+.a-days-num { filter: drop-shadow(0 4px 30px rgba(0, 0, 0, 0.95)) drop-shadow(0 0 2px rgba(0, 0, 0, 0.9)); }
+.a-days-line, .a-days-sol { text-shadow: 0 2px 18px rgba(0, 0, 0, 1), 0 0 3px rgba(0, 0, 0, 0.95); }
+.a-days-age { background: rgba(14, 15, 18, 0.82); }
+.a-days-line { color: rgba(243, 246, 249, 0.84) !important; }
+.a-days-full { display: none !important; }
+.who-wrap .a-who-end { margin-top: 14px; }
+
+/* ===== round 29: phone typography. Bigger, tighter headlines; a narrower, airier, quieter line of body text; wider gutters ===== */
+.a.is-phone .a-text { left: 24px; right: 24px; }
+.a.is-phone .a-panel { left: 18px; right: 18px; }
+.a.is-phone .a-t { gap: 12px; }
+.a.is-phone .a-t h2 { font-size: 34px; line-height: 1.06; font-weight: 700; letter-spacing: -0.028em; text-wrap: balance; }
+.a.is-phone .a-t p { max-width: 320px; font-size: 16px; line-height: 1.5; letter-spacing: -0.012em; color: rgba(243, 246, 249, 0.74); text-wrap: pretty; }
+.a.is-phone .a-t p b { color: #f3f6f9; }
+.a.is-phone .a-hint { bottom: 88px; font-size: 13px; }
+.a.is-phone .a-who-end { font-size: 15px; color: rgba(243, 246, 249, 0.74); }
+.a.is-phone .a-t p { text-wrap: balance; max-width: 330px; }
+
+/* round 30: phones. Story words left-aligned (not everything centred); Who gets the screen while the card turns off to the right */
+.a.is-phone .a-t:not(.a-t-hero) { align-items: flex-start; text-align: left; }
+.a.is-phone .a-t:not(.a-t-hero) p { max-width: 340px; text-wrap: pretty; }
+.a.is-phone .a-p .a-who-end, .a.is-phone .a-p .a-now { text-align: left; align-items: flex-start; }
+.a.is-phone .a-t-who { right: 40px; }
+.a.is-phone .a-p-who { right: 48px; }
+.a.is-phone .a-t-who h2 { font-size: 36px; }
+.a.is-phone .who-card .wli { padding: 12px 14px; font-size: 15.5px; }
+/* Clarity: no dead space under the answers; each stage's status sits right next to it */
+.a-cq b, .a.is-phone .a-cq b { min-height: 0; }
+.a.is-phone .a-cq b { font-size: 16px; }
+.a.is-phone .a-cq { padding: 11px 14px; }
+.a-cpath .a-st em { margin-left: 2px; padding: 2px 8px; border-radius: 999px; background: rgba(255, 255, 255, 0.07); font-size: 11.5px; font-weight: 600; }
+.a-cpath .a-st.cur em { padding: 2px 8px; }
+.a-cpath .a-st { height: 28px; }
+.a.is-phone .a-cpath .a-st { height: 27px; }
+.a.is-phone .a-t-who { right: 64px; }
+.a.is-phone .a-p-who { right: 76px; }
+.a.is-phone .who-card .wli span { text-wrap: balance; }
+
+/* ===== round 31 ===== */
+/* phones: the first screen, the name big and high */
+.a.is-phone .a-wmslot { height: 86px; }
+/* Who This Is For: the list sits in front of the tilted card; a shade under it keeps the words readable */
+.a.is-phone .a-t-who, .a.is-phone .a-p-who { right: 0; }
+.a-whoshade { position: absolute; left: 0; right: 0; bottom: 0; height: 72%; z-index: 2; pointer-events: none; opacity: 0;
+  background: linear-gradient(to bottom, rgba(0, 0, 0, 0) 0%, rgba(0, 0, 0, 0.72) 30%, rgba(0, 0, 0, 0.94) 52%, #000 100%); }
+.who-tap { margin: 10px 4px 0; font-size: 12.5px; color: var(--ink3); }
+.who-tap + .a-who-end { margin-top: 10px; }
+.who-gh span { font-size: 15px; }
+.a-whoshade { top: 40%; height: auto; background: linear-gradient(to bottom, rgba(0, 0, 0, 0) 0, rgba(0, 0, 0, 0.82) 110px, rgba(0, 0, 0, 0.95) 170px, #000 260px); }
+
+/* ===== round 32 ===== */
+/* the hero's beams layer (the app's beams with their falling dust) */
+.a-beams { position: fixed; left: 0; right: 0; top: var(--bar); bottom: 0; z-index: 0; pointer-events: none; }
+/* Clarity: two rounder, softer glass boxes; the answers lead, the questions are quiet labels */
+.a-cbox { border-radius: 22px; }
+.a-cstage .a-cpath::before { display: none; }
+.a-cbox .a-cq { padding: 14px 18px; gap: 4px; }
+.a-cbox .a-cq + .a-cq { padding-top: 12px; }
+.a-cbox .a-cq + .a-cq::before { left: 18px; right: 18px; }
+.a-cbox .a-cq small, .a-cstage .a-cpath > small { font-size: 12px; font-weight: 500; color: rgba(243, 246, 249, 0.55); letter-spacing: 0.01em; }
+.a-cbox .a-cq b { font-size: 17px; line-height: 1.3; font-weight: 650; letter-spacing: -0.012em; }
+.a-cstage .a-cpath { padding: 14px 18px 14px; }
+.a-cstage .a-cpath > small { margin-bottom: 8px; }
+.a-cstage .a-st span { font-size: 15px; }
+.a.is-phone .a-cbox .a-cq { padding: 12px 16px; }
+.a.is-phone .a-cbox .a-cq b { font-size: 16.5px; }
+.a.is-phone .a-cstage .a-cpath { padding: 12px 16px; }
+.a.is-phone .a-cbox { border-radius: 20px; }
+/* round 33: the full list again; compact rows on phones so it fits */
+.a.is-phone .who-card .wli { padding: 10px 14px; font-size: 15px; }
+.a.is-phone .who-grp + .who-grp { margin-top: 12px; }
+.a.is-phone .who-gh { margin-bottom: 6px; }
+/* the two groups sit one under the other again (the old phone two-beat stacked them) */
+.a.is-phone .who-wrap { display: block; }
+.a.is-phone .who-grp { grid-area: auto; }
+.a.is-phone .who-grp + .who-grp { margin-top: 12px; }
+@media (max-height: 720px) { .a.is-phone .who-card .wli { padding: 8px 14px; font-size: 14.5px; } .a.is-phone .a-t-who h2 { font-size: 32px; } .a.is-phone .who-tap { margin-top: 6px; } }
+
+/* ===== round 34 ===== */
+/* phone hero: a slightly smaller name */
+.a.is-phone .a-wmslot { height: 70px; }
+/* Who on a phone: lighter shade (the black glass already darkens), the list a touch roomier */
+.a-whoshade { background: linear-gradient(to bottom, rgba(0, 0, 0, 0) 0, rgba(0, 0, 0, 0.55) 90px, rgba(0, 0, 0, 0.85) 170px, rgba(0, 0, 0, 0.92) 100%); }
+.a.is-phone .a-t-who h2 { font-size: 36px; letter-spacing: -0.03em; }
+.a.is-phone .who-card { background: rgba(14, 15, 18, 0.62); }
+/* Make Memento Yours: the look's name centred under the card on phones */
+.a.is-phone .a-p-looks .a-now { align-items: center; text-align: center; }
+/* round 35: the deeper list (nine lines) fits on phones */
+.a.is-phone .who-card .wli { padding: 9px 14px; font-size: 14.5px; line-height: 1.3; }
+.a.is-phone .a-t-who p { font-size: 15px; }
+@media (max-height: 720px) { .a.is-phone .who-card .wli { padding: 7px 12px; font-size: 13.5px; } .a.is-phone .a-t-who h2 { font-size: 30px; } .a.is-phone .a-t-who p { font-size: 14px; } }
+.a.is-phone .who-card .wli span { text-wrap: wrap; }
+
+/* ===== round 36: "Specifically for:" opens the full list ===== */
+.who-toggle { display: flex; align-items: center; justify-content: space-between; width: 100%; border: 0; padding: 14px 16px; border-radius: 16px;
+  font-size: 16px; font-weight: 600; letter-spacing: -0.01em; color: var(--ink); text-align: left; background: rgba(255, 255, 255, 0.06);
+  -webkit-backdrop-filter: blur(28px) saturate(1.4); backdrop-filter: blur(28px) saturate(1.4); box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.08), inset 0 0 0 1px rgba(255, 255, 255, 0.08);
+  transition: background-color .15s ease-out, transform .1s ease-out; }
+.who-toggle:active { transform: scale(0.985); background: rgba(255, 255, 255, 0.1); }
+.who-toggle svg { width: 20px; height: 20px; color: var(--ink2); transition: transform .3s cubic-bezier(.3, .85, .3, 1); }
+.who-wrap.open .who-toggle { border-radius: 16px 16px 6px 6px; }
+.who-wrap.open .who-toggle svg { transform: rotate(180deg); }
+.who-drop { display: none; }
+.who-wrap.open .who-drop { display: block; animation: whoDrop .32s cubic-bezier(.2, .8, .2, 1) both; }
+@keyframes whoDrop { from { opacity: 0; transform: translateY(-6px); } to { opacity: 1; transform: none; } }
+.who-drop .who-card { margin-top: 4px; border-radius: 6px 6px 16px 16px; }
+.who-drop .who-tap { margin-top: 10px; }
+/* the chapter glides to its new place when the list opens or closes */
+.a.who-moving .a-t-who, .a.who-moving .a-p-who, .a.who-moving .a-whoshade { transition: top .38s cubic-bezier(.2, .8, .2, 1); }
+.a.who-moving .a-slot { transition: transform .38s cubic-bezier(.2, .8, .2, 1); }
+.a.is-phone .who-toggle { padding: 13px 15px; font-size: 15.5px; }
+@media (prefers-reduced-motion: reduce) { .who-wrap.open .who-drop { animation: none; } .a.who-moving .a-t-who, .a.who-moving .a-p-who, .a.who-moving .a-slot { transition: none; } }
+.who-toggle { background: rgba(22, 24, 28, 0.62); }
+.who-toggle:active { background: rgba(34, 36, 41, 0.7); }
+
+/* ===== round 37: store-style "Coming soon" badges, then one quiet line for the other screens ===== */
+.a-soon { display: flex; flex-direction: column; align-items: flex-start; gap: 12px; }
+.a-soon-b { display: flex; gap: 10px; }
+.a-also { margin: 0; font-size: 13px; line-height: 1.3; color: var(--ink3); letter-spacing: 0.01em; }
+.a.is-phone .a-p-hero .a-soon { align-items: center; text-align: center; }
+.su .a-soon { margin-top: 22px; }
+.a-badge { display: inline-flex; align-items: center; gap: 8px; height: 44px; padding: 0 14px 0 11px; border-radius: 10px; background: #000; color: #fff;
+  box-shadow: inset 0 0 0 1px rgba(166, 166, 166, 0.75); font-family: var(--sys); white-space: nowrap; }
+.a-badge svg { width: 22px; height: 22px; flex: none; }
+.a-badge > span { display: flex; flex-direction: column; line-height: 1; }
+.a-badge small { font-size: 9.5px; font-weight: 500; letter-spacing: 0.01em; color: rgba(255, 255, 255, 0.92); }
+.a-badge b { margin-top: 2px; font-size: 17px; font-weight: 600; letter-spacing: -0.02em; }
+.a.is-phone .a-badge { height: 40px; padding: 0 12px 0 10px; }
+.a.is-phone .a-badge b { font-size: 15.5px; }
+/* Who: the intro reads at the same size as the other chapters */
+.a.is-phone .a-t-who p { font-size: 16px; }
