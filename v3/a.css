@@ -651,3 +651,13 @@
 .a.is-phone .a-badge b { font-size: 15.5px; }
 /* Who: the intro reads at the same size as the other chapters */
 .a.is-phone .a-t-who p { font-size: 16px; }
+
+/* ===== round 39 (his iPhone): story words centred over the centred card; Who keeps its words on the left with the card off to the right ===== */
+.a.is-phone .a-t:not(.a-t-hero):not(.a-t-who) { align-items: center; text-align: center; }
+.a.is-phone .a-t:not(.a-t-hero):not(.a-t-who) p { max-width: 330px; text-wrap: balance; }
+.a.is-phone .a-t-who { right: 72px; }
+.a.is-phone .a-p-who { right: 72px; }
+/* Clarity on phones: no person tabs (the examples still cycle on their own) */
+.a.is-phone .a-p-clarity .a-seg { display: none; }
+/* Who opened: the list takes the width and the card slides the rest of the way off */
+.a.is-phone.who-open .a-t-who, .a.is-phone.who-open .a-p-who { right: 24px; }

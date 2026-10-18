@@ -6,7 +6,7 @@
 var DIR_A = (function () {
   var E = K.el;
   var STEPS = [
-    { id: 'hero', scale: 1, big: true }, { id: 'who', scale: 1 }, { id: 'blank', scale: 1 }, { id: 'clarity', scale: 1 }, { id: 'action', scale: 1 },
+    { id: 'hero', scale: 1, big: true }, { id: 'who', scale: 1, side: true }, { id: 'blank', scale: 1 }, { id: 'clarity', scale: 1 }, { id: 'action', scale: 1 },
     { id: 'keep', scale: 1 }, { id: 'evolve', scale: 1 }, { id: 'looks', scale: 1 }, { id: 'name', scale: 1 }
   ];
   var TEXT = {
@@ -219,7 +219,7 @@ var DIR_A = (function () {
     whoBtn.addEventListener('click', function () {
       var open = !whoWrap.classList.contains('open'); whoWrap.classList.toggle('open', open); whoBtn.setAttribute('aria-expanded', open ? 'true' : 'false');
       if (open) whoIn();
-      STEPS[1].phoneHide = open; root.classList.add('who-moving'); layout(); setTimeout(function () { root.classList.remove('who-moving'); }, 420);
+      root.classList.add('who-moving'); root.classList.toggle('who-open', open); layout(); setTimeout(function () { root.classList.remove('who-moving'); }, 420);
     });
     panels[1].querySelectorAll('.wli').forEach(function (b) {
       b.addEventListener('click', function () {
@@ -329,10 +329,11 @@ var DIR_A = (function () {
     var stick = K.stickyBar(root, su);
     root.querySelectorAll('[data-join]').forEach(function (b) { b.addEventListener('click', K.openSheet); });
 
-    var wallNear = 1, lastStep = -1, platOn = false, auroraOn = false, holdUntil = 0, lastKey = '', kickT = 0, spring = 0, fitY = [], fitS = [], fitX = [], fitR = [], fitZ = [], baseT = '', slotScale = 1, cwNow = 300;
+    var wallNear = 1, lastStep = -1, platOn = false, auroraOn = false, holdUntil = 0, lastKey = '', kickT = 0, spring = 0, fitY = [], fitS = [], fitX = [], fitR = [], fitZ = [], vhNow = 0, baseT = '', slotScale = 1, cwNow = 300;
     var intro = K.RM ? 1 : 0, introT0 = performance.now(), pNow = 0;
     function layout() {
-      var vw = document.documentElement.clientWidth, vh = innerHeight - K.BAR, phone = vw < 980, two = !phone;
+      var vw = document.documentElement.clientWidth, vh = stage.clientHeight || (innerHeight - K.BAR), phone = vw < 980, two = !phone;   // the stage (100svh), never the window: iPhone Safari's window can be taller
+      vhNow = vh;
       root.classList.toggle('is-phone', phone); root.classList.toggle('two', two);
       cwNow = phone ? Math.round(Math.min(vw * 0.66, 300)) : Math.round(Math.max(230, Math.min(360, vh * 0.4)));
       lhost.style.width = cwNow + 'px'; cd.size(cwNow);
@@ -344,18 +345,24 @@ var DIR_A = (function () {
         // the real room: from under the logo to just above the sign-up button (a short phone, the app's own bars and
         // the home indicator all take from it, so it is measured, never assumed)
         var hb = hdrWm.getBoundingClientRect(), sbtn = root.querySelector('.stickybar .cta'), sb = sbtn ? sbtn.getBoundingClientRect() : null;
-        var top0 = Math.max(60, hb.bottom - K.BAR + 24), botHero = (sb && sb.height ? sb.top - K.BAR : vh - 80) - 14, bot0 = vh - 34, avail = bot0 - top0;
+        var top0 = Math.max(60, hb.bottom - K.BAR + 24), botHero = (sb && sb.height ? vh - (innerHeight - sb.top) : vh - 80) - 14, bot0 = vh - 34, avail = bot0 - top0;
         STEPS.forEach(function (st, i) {
           texts[i].dataset.k = 1; panels[i].dataset.k = 1;
           var avail = (i === 0 ? botHero : bot0) - top0;
           var th = texts[i].offsetHeight, ph = panels[i].firstElementChild ? panels[i].offsetHeight : 0;
-          var gT = th ? 20 : 0, gP = ph ? 18 : 0;
+          var gT = th ? 26 : 0, gP = ph ? 24 : 0;
           if (st.big) {   // the first screen: the name high and big, the card large, the "coming soon" row under it
             var hintTop = hint.offsetHeight ? hint.offsetTop : botHero, hBot = Math.min(botHero - 34, hintTop - 28);   // the group ends clear of the scroll hint
             var hTop = top0 - 14, gW = 24, gS = 28, soonH = ph ? ph + gS : 0, room0 = hBot - hTop - th - gW - soonH, big = Math.min(room0 / ch, (vw - 140) / cwNow, 1.2);
             var gH = th + gW + ch * big + soonH, hy = hTop + Math.max(0, (hBot - hTop - gH) * 0.5);   // the group sits centred
             texts[i].style.top = hy + 'px'; panels[i].style.top = (hy + th + gW + ch * big + gS) + 'px';
             fitS.push(big); fitY.push(hy + th + gW + ch * big / 2 - vh / 2); fitX.push(0); fitR.push(0); fitZ.push(0); return;
+          }
+          if (st.side) {   // Who: the words centred on the left, the card turned toward them and mostly off the right edge
+            var k3 = Math.max(0.74, Math.min(1, avail / Math.max(1, th + 22 + ph))); texts[i].dataset.k = k3; panels[i].dataset.k = k3;
+            var th3 = th * k3, gP3 = ph ? 22 * k3 : 0, G3 = th3 + gP3 + ph * k3, y3 = top0 + Math.max(0, (avail - G3) / 2), sS = 0.9;
+            texts[i].style.top = y3 + 'px'; panels[i].style.top = (y3 + th3 + gP3) + 'px';
+            fitS.push(sS / (st.scale || 1)); fitY.push(top0 + avail / 2 - vh / 2); fitX.push(vw / 2 + cwNow * sS * (whoWrap.classList.contains('open') ? 0.75 : 0.02)); fitR.push(-26); fitZ.push(0); return;
           }
           if (st.tilt) {   // Who: the card upright and large, high behind the frosted header; the words in front, low
             var k2 = Math.max(0.8, Math.min(1, avail / Math.max(1, th + gP + ph))); texts[i].dataset.k = k2; panels[i].dataset.k = k2; th *= k2; ph *= k2; gP *= k2;
@@ -365,7 +372,7 @@ var DIR_A = (function () {
           }
           fitX.push(0); fitR.push(0); fitZ.push(0);
           var gk = st.id === 'evolve' ? 1.12 : 1;   // Evolve's card grows in its moment: leave it the room
-          var minS = 0.42, sc = st.phoneHide ? 0 : Math.max(0, Math.min(1, (avail - th - ph - gT - gP) / (ch * gk))), k = 1;
+          var minS = 0.42, sc = st.phoneHide ? 0 : Math.max(0, Math.min(1, ph ? avail * 0.42 / (ch * gk) : 1, (avail - th - ph - gT - gP) / (ch * gk))), k = 1;
           if (st.phoneHide) { gT = 0; k = Math.min(1, (avail - gP) / Math.max(1, th + ph)); }
           else if (sc < minS) { sc = minS; k = Math.min(1, (avail - ch * gk * minS - gT - gP) / Math.max(1, th + ph)); }
           k = Math.max(0.7, k);   // words and box shrink a little before anything is cut
@@ -402,7 +409,7 @@ var DIR_A = (function () {
       onScroll();
     }
     function onScroll() {
-      var vh = innerHeight - K.BAR, r = story.getBoundingClientRect(), stepLen = vh * 0.85;
+      var vh = vhNow || (innerHeight - K.BAR), r = story.getBoundingClientRect(), stepLen = vh * 0.85;
       var raw = (K.BAR - r.top) / stepLen;
       if (!isFinite(raw)) raw = 0;   // a window with no height yet (a hidden tab, some in-app browsers at load) reads as the top
       if (extra) { whoQ = K.clamp(raw - 1, 0, 1); raw = raw <= 1 ? raw : raw <= 2 ? 1 : raw - 1; } else whoQ = 0;
