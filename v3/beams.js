@@ -23,7 +23,7 @@ var BEAMS = (function () {
       if (cv.width !== w || cv.height !== h) { cv.width = w; cv.height = h; }
       gl.viewport(0, 0, w, h);
       gl.uniform2f(U.res, w, h); gl.uniform1f(U.ext, 844 * r.width / r.height);   // wider screens get a wider room at true proportions
-      gl.uniform1f(U.t, (performance.now() - t0) / 1000 * 1.45 + 6); gl.uniform1f(U.p, 1); gl.uniform1f(U.amp, o.amp || 1); gl.uniform1f(U.lit, 0); gl.uniform1f(U.plat, 0);
+      gl.uniform1f(U.t, (performance.now() - t0) / 1000 * (o.speed || 1.45) + 6); gl.uniform1f(U.p, 1); gl.uniform1f(U.amp, o.amp || 1); gl.uniform1f(U.lit, 0); gl.uniform1f(U.plat, 0);
       gl.uniform3fv(U.au1, c1); gl.uniform3fv(U.au2, c2); gl.uniform3fv(U.tc1, c1); gl.uniform3fv(U.tc2, c2); gl.uniform1f(U.tint, o.tint == null ? 0.85 : o.tint);
       gl.uniform3f(U.ink, 0.1, 0.6, 0.72);
       gl.drawArrays(gl.TRIANGLES, 0, 3);

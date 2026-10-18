@@ -146,7 +146,7 @@ var DIR_A = (function () {
     var lcRef = { host: lhost };
     var wl = K.wall(wallHost, { bg: 'waterfall', skin: 'house', card: lcRef, dprK: innerWidth < 700 ? 0.55 : 0.5 });
     cd.wall = wl;
-    var beams = window.BEAMS ? BEAMS.make(beamsHost, { dprK: innerWidth < 700 ? 0.55 : 0.5, amp: innerWidth < 700 ? 0.85 : 0.7, tint: 0.88, c1: [0.2, 0.95, 0.82], c2: [0.5, 0.48, 1] }) : null, beamsOp = 1;
+    var beams = window.BEAMS ? BEAMS.make(beamsHost, { speed: innerWidth < 980 ? 1.1 : 0.5, dprK: innerWidth < 700 ? 0.55 : 0.5, amp: innerWidth < 700 ? 0.85 : 0.7, tint: 0.88, c1: [0.2, 0.95, 0.82], c2: [0.5, 0.48, 1] }) : null, beamsOp = 1;
     var fire = window.FIRE ? FIRE.make(fireHost, { dprK: innerWidth < 700 ? 0.5 : 0.45, sparks: 44, flare: 0.6 }) : null;
     var L = { clar: 0, act: 0, cons: 0 }, wallMode = '', boostT = 0;
     function boost() { if (!boostT) return 1; var a = (performance.now() - boostT) / 1000; return 1 + 0.22 * Math.max(0, Math.sin(Math.PI * Math.min(1, a / 1.4))); }
@@ -356,12 +356,19 @@ var DIR_A = (function () {
       var vw = document.documentElement.clientWidth, vh = stage.clientHeight || (innerHeight - K.BAR), phone = vw < 980, two = !phone;   // the stage (100svh), never the window: iPhone Safari's window can be taller
       vhNow = vh;
       root.classList.toggle('is-phone', phone); root.classList.toggle('two', two);
-      cwNow = phone ? Math.round(Math.min(vw * 0.66, 300)) : Math.round(Math.max(230, Math.min(360, vh * 0.4)));
+      // computers: the page is designed at 1440x900; a bigger window scales the whole thing up (S), and a very wide one
+      // keeps those proportions in a centred frame, so nothing turns small and lost on a big screen
+      var S = 1, FW = vw, fx = 0, u = vw;
+      if (two) { S = Math.max(1, Math.min(1.8, vw / 1440, vh / 900)); FW = Math.min(vw, 1440 * S); fx = (vw - FW) / 2; u = FW / S; }
+      var tl0 = K.clamp(0.07 * u, 32, 128), tw0 = Math.min(470, 0.4 * u);
+      root.style.setProperty('--S', S.toFixed(4)); root.style.setProperty('--tl', (fx + S * tl0).toFixed(1) + 'px'); root.style.setProperty('--tw', tw0.toFixed(1) + 'px');
+      root.style.setProperty('--cl', (fx + S * (tl0 + tw0 - 0.12 * u)).toFixed(1) + 'px'); root.style.setProperty('--cr', fx.toFixed(1) + 'px'); root.style.setProperty('--hp', (fx + S * K.clamp(0.03 * u, 20, 34)).toFixed(1) + 'px');
+      cwNow = phone ? Math.round(Math.min(vw * 0.66, 300)) : Math.round(Math.max(230, Math.min(360 * S, vh * 0.4)));
       lhost.style.width = cwNow + 'px'; cd.size(cwNow);
       fitY = []; fitS = []; fitX = []; fitR = []; fitZ = [];
       var ch = cwNow * 452 / 320;
       // Who on a phone: where the turned card's near edge lands, so the words and the button stop 18px short of it
-      var whoOpen = whoWrap.classList.contains('open'), sideS = 0.9, sideX = vw / 2 + cwNow * sideS * (whoOpen ? 0.75 : 0.06), sideR = -26;
+      var whoOpen = whoWrap.classList.contains('open'), sideS = 0.84, sideX = vw / 2 + cwNow * sideS * (whoOpen ? 0.75 : -0.14), sideR = -24;
       var sHW = cwNow * sideS / 2, sRad = -sideR * Math.PI / 180, sideEdge = vw / 2 + sideX - sHW * Math.cos(sRad) * 1100 / (1100 + sHW * Math.sin(sRad));
       texts[1].style.right = phone && !whoOpen ? Math.max(48, vw - sideEdge - 6).toFixed(0) + 'px' : '';
       panels[1].style.right = phone && !whoOpen ? Math.max(48, vw - sideEdge).toFixed(0) + 'px' : '';
@@ -410,11 +417,11 @@ var DIR_A = (function () {
         });
       } else if (two) {
         // two sides: each chapter's words with its box under them, centred as one group on the left; the card on the right
-        var top1 = 84, avail1 = vh - top1 - 56;
+        var top1 = 84 * S, avail1 = vh - top1 - 56 * S;
         STEPS.forEach(function (st, i) {
           texts[i].dataset.k = 1; panels[i].dataset.k = 1;
           var th = texts[i].offsetHeight, ph = panels[i].firstElementChild ? panels[i].offsetHeight : 0, gP = ph ? 28 : 0;
-          var G = th + gP + ph, k = Math.max(0.72, Math.min(1, avail1 / Math.max(1, G))), y0 = top1 + Math.max(0, (avail1 - G * k) / 2);
+          var G = th + gP + ph, k = S * Math.max(0.72, Math.min(1, avail1 / Math.max(1, G * S))), y0 = top1 + Math.max(0, (avail1 - G * k) / 2);
           texts[i].dataset.k = k; panels[i].dataset.k = k;
           texts[i].style.top = y0 + 'px'; panels[i].style.top = (y0 + (th + gP) * k) + 'px';
         });

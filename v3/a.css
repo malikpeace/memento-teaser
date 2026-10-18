@@ -714,3 +714,14 @@
 .a-acts li { -webkit-tap-highlight-color: transparent; transition: background-color .15s ease-out; }
 .a-acts li:active { background: rgba(255, 255, 255, 0.06); }
 @media (prefers-reduced-motion: reduce) { .a-cnav-b { transition: none; } }
+
+/* ===== round 43: computers scale with the window (vars set in layout from the 1440x900 design) ===== */
+.a.two .a-text, .a.two .a-panel { left: var(--tl, clamp(32px, 7vw, 128px)); width: var(--tw, min(470px, 40vw)); }
+.a.two .a-cardarea { left: var(--cl, calc(clamp(32px, 7vw, 128px) + min(470px, 40vw) - 12vw)); right: var(--cr, 0px); }
+.a.two .top { padding-left: var(--hp, 34px); padding-right: var(--hp, 34px); }
+.a.two .top .wm { font-size: calc(27px * var(--S, 1)); }
+.a.two .top-r { transform: scale(var(--S, 1)); transform-origin: 100% 50%; }
+.a.two .a-hint { font-size: calc(14px * var(--S, 1)); }
+.a.two .su, .a.two .letter, .a.two .foot { zoom: var(--S, 1); }
+/* Who on a phone: a narrower column, so the heading may take two lines */
+.a.is-phone .a-t-who h2 { text-wrap: balance; }
