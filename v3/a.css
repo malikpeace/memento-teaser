@@ -661,3 +661,27 @@
 .a.is-phone .a-p-clarity .a-seg { display: none; }
 /* Who opened: the list takes the width and the card slides the rest of the way off */
 .a.is-phone.who-open .a-t-who, .a.is-phone.who-open .a-p-who { right: 24px; }
+
+/* ===== round 40 ===== */
+/* Clarity stages: no status tags; every stage on one line */
+.a-cpath .a-st span { min-width: 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+/* Action: the run's size is adjustable (a slider that moves, the number follows) */
+.a-acts li.adj { flex-wrap: wrap; row-gap: 9px; }
+.a-adj { flex-basis: 100%; display: flex; align-items: center; gap: 10px; padding-left: 34px; color: var(--ink3); }
+.a-adj svg { width: 12px; height: 12px; flex: none; }
+.a-adj-tr { position: relative; flex: 1; height: 4px; border-radius: 2px; background: rgba(255, 255, 255, 0.12); }
+.a-adj-fill { position: absolute; left: 0; top: 0; bottom: 0; width: 50%; border-radius: 2px; background: rgba(243, 246, 249, 0.5); transition: width .55s cubic-bezier(.3, .7, .2, 1); }
+.a-adj-th { position: absolute; top: 50%; left: 50%; width: 16px; height: 16px; margin: -8px 0 0 -8px; border-radius: 50%; background: #f3f6f9; box-shadow: 0 1px 4px rgba(0, 0, 0, 0.5); transition: left .55s cubic-bezier(.3, .7, .2, 1); }
+.a-roll { display: inline-block; font-weight: 700; font-variant-numeric: tabular-nums; }
+.a-roll.roll { animation: aRoll .35s ease-out; }
+@keyframes aRoll { from { opacity: 0; transform: translateY(45%); } to { opacity: 1; transform: none; } }
+/* Make Memento Yours: arrows either side of the name (and a sideways swipe) */
+.a-now-t { flex-direction: row; align-items: center; gap: 14px; }
+.a-lk-nav { display: grid; place-items: center; width: 32px; height: 32px; margin: -6px; border: 0; border-radius: 10px; background: transparent; color: var(--ink3); transition: color .15s ease-out, background-color .15s ease-out; }
+.a-lk-nav svg { width: 18px; height: 18px; }
+.a-lk-nav[data-lk="-1"] svg { transform: rotate(90deg); }
+.a-lk-nav[data-lk="1"] svg { transform: rotate(-90deg); }
+.a-lk-nav:hover { color: var(--ink); background: rgba(255, 255, 255, 0.06); }
+.a-lk-nav:active { background: rgba(255, 255, 255, 0.1); }
+.a.is-phone .a-now-t { justify-content: center; }
+@media (prefers-reduced-motion: reduce) { .a-roll.roll { animation: none; } .a-adj-fill, .a-adj-th { transition: none; } }

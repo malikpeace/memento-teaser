@@ -81,7 +81,8 @@ var DIR_A = (function () {
     action: '<ul class="a-acts glass">' +
       '<li class="auto"><i class="ic chk"><svg viewBox="0 0 20 20"><path d="M5 10.5l3.2 3.2L15 6.8" fill="none" stroke="#06210b" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg></i><span>Send three cold emails</span><em>Today</em></li>' +
       '<li class="timer"><i class="ic">' + RING + '</i><span>Deep work on the product</span><em class="clock" data-clock>1:12:40</em></li>' +
-      '<li><i class="ic cal"><svg viewBox="0 0 20 20"><rect x="3.5" y="4.5" width="13" height="12" rx="3" fill="none" stroke="currentColor" stroke-width="1.6"/><path d="M3.5 8.5h13M7 2.8v3M13 2.8v3" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg></i><span>Go for a 3 mile run</span><em class="chip">Tomorrow, 6:30 AM</em></li>' +
+      '<li class="adj"><i class="ic cal"><svg viewBox="0 0 20 20"><rect x="3.5" y="4.5" width="13" height="12" rx="3" fill="none" stroke="currentColor" stroke-width="1.6"/><path d="M3.5 8.5h13M7 2.8v3M13 2.8v3" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg></i><span>Go for a <b class="a-roll" data-miles>3</b> mile run</span><em class="chip">Tomorrow, 6:30 AM</em>' +
+        '<div class="a-adj" aria-hidden="true"><svg viewBox="0 0 12 12"><path d="M2.5 6h7" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg><div class="a-adj-tr"><i class="a-adj-fill"></i><i class="a-adj-th"></i></div><svg viewBox="0 0 12 12"><path d="M2.5 6h7M6 2.5v7" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg></div></li>' +
       '<li><i class="ic">' + SEG5 + '</i><span>Phone away by 10pm</span><em>3 of 5 days</em></li></ul>',
     keep: '<div class="a-keep glass"><div class="a-k-top"><span>Total actions completed</span><b><svg class="a-flame" viewBox="0 0 16 20" aria-hidden="true"><path d="M8 1.5c.6 3-2.6 4.6-2.6 8 0 1 .4 1.8 1 2.4-.2-1.8.9-3 2.1-3.9-.1 2.3 2.6 3.3 2.6 5.6 0 2-1.6 3.4-3.1 3.4C4.6 17 2.5 14.8 2.5 12c0-5 5.5-6.4 5.5-10.5z" fill="#3fd94e"/><path d="M11.8 7.2c1.2 1.2 1.9 2.9 1.9 4.8 0 2.4-1.4 4.4-3.5 5.1.9-.8 1.4-1.9 1.4-3.1 0-2.6-2-3.6-1.6-6.1.6.4 1.2.9 1.8 1.6z" fill="#9dff9f" opacity=".85"/></svg><span data-acts>0</span></b></div>' +
       '<div class="a-score"><span>Consistency score</span><b><span data-score>0</span><small> / 100</small></b></div>' +
@@ -90,7 +91,7 @@ var DIR_A = (function () {
       '<div class="a-k-row first"><span>Run 3x a week</span><span class="a-k-runs" data-runs><i></i><i></i><i></i></span><b data-runsv>0 of 3</b></div>' +
       '<div class="a-k-row"><span>Lose 10 lbs by Dec 1</span><span class="a-k-bar"><i data-lbs></i></span><b data-lbsv>0 of 10 lbs</b></div>' +
       '<div class="a-k-row"><span>Screen time under 2h</span><span class="a-k-bar"><i data-rate></i></span><b data-ratev>0% rate</b></div></div>',
-    looks: '<div class="a-now"><div class="a-now-t"><b data-ln></b></div><div class="a-dots">' + K.EARNED.map(function () { return '<i></i>'; }).join('') + '</div></div>',
+    looks: '<div class="a-now"><div class="a-now-t"><button class="a-lk-nav" type="button" data-lk="-1" aria-label="Previous style">' + CHEV + '</button><b data-ln></b><button class="a-lk-nav" type="button" data-lk="1" aria-label="Next style">' + CHEV + '</button></div><div class="a-dots">' + K.EARNED.map(function () { return '<i></i>'; }).join('') + '</div></div>',
     name: '<input class="a-name" type="text" placeholder="Your name" aria-label="Your name" autocomplete="given-name" maxlength="24" spellcheck="false"><button class="cta a-name-cta" type="button" data-join>Join for Updates + Discount</button>'
   };
   // the live page's looks (index.html on mementoapp.co, verbatim)
@@ -159,12 +160,22 @@ var DIR_A = (function () {
     storyWall('beams');
 
     // the looks cycle by themselves (nothing to pick); the name cycles Default, Fused, Mesh and Frost in its own colour
+    var milesEl = panels[4].querySelector('[data-miles]'), adjTh = panels[4].querySelector('.a-adj-th'), adjFill = panels[4].querySelector('.a-adj-fill'), MILES = [3, 2, 3, 4], adjI = 0, adjT = 0;
     var nowName = panels[7].querySelector('[data-ln]'), dots = panels[7].querySelectorAll('.a-dots i');
     function showLook(lk) {
       cd.chan = null; cd.set(lk, true); wl.card = cd; wl.look(lk, true); wallMode = 'look';
       nowName.textContent = lk.name;
       var i = K.EARNED.indexOf(lk); dots.forEach(function (d, j) { d.classList.toggle('on', j === i); });
     }
+    // swipe (or tap an arrow) to the next or previous style; the cycle waits a moment after
+    function stepLook(d) { var n = K.EARNED.length; cycleI = ((cycleI + d) % n + n) % n; cycleT = performance.now() + 2400; showLook(K.EARNED[cycleI]); }
+    panels[7].querySelectorAll('[data-lk]').forEach(function (b) { b.addEventListener('click', function () { stepLook(+b.dataset.lk); }); });
+    var swX = null, swY = 0;
+    document.addEventListener('touchstart', function (e) { swX = mode === 'looks' && e.touches.length === 1 ? e.touches[0].clientX : null; if (swX !== null) swY = e.touches[0].clientY; }, { passive: true });
+    document.addEventListener('touchend', function (e) {
+      if (swX === null || mode !== 'looks') return; var t = e.changedTouches[0], dx = t.clientX - swX, dy = t.clientY - swY; swX = null;
+      if (Math.abs(dx) > 40 && Math.abs(dx) > Math.abs(dy) * 1.4) stepLook(dx < 0 ? 1 : -1);
+    }, { passive: true });
     var nameIn = panels[8].querySelector('.a-name'), nameT = 0, NAME_STYLES = ['light', 'fused', 'mesh', 'frost'], nameI = 0, nameCycleT = 0;
     function showName(fade) {
       var n = typed.trim(); wl.card = cd; wallMode = 'name';
@@ -185,8 +196,8 @@ var DIR_A = (function () {
       { what: 'Grow my book page to $10k a month.', why: 'So books are the job, not the thing squeezed in after a shift.', st: [['Pivot the account to books', 'done'], ['Post on a steady schedule', 'cur'], ['Land regular brand deals', ''], ['$10k a month', 'goal']] }
     ];
     var tWhat = panels[3].querySelector('[data-what]'), tWhy = panels[3].querySelector('[data-why]'), stBox = panels[3].querySelector('[data-stages]'), cDots = panels[3].querySelectorAll('.a-seg button'), segPill = panels[3].querySelector('.a-seg-pill');
-    var typeT = 0, person = 0, clarOn = false, typedOnce = false, NOTE = { done: 'Done', cur: 'You’re on this one', goal: 'Goal' }, ST_CHECK = '<svg viewBox="0 0 12 12"><path d="M3 6.2l2 2L9 4" fill="none" stroke="#04131a" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>';
-    function stagesOf(P) { return P.st.map(function (x) { return '<div class="a-st ' + x[1] + '"><i>' + (x[1] === 'done' ? ST_CHECK : '') + '</i><span>' + x[0] + '</span>' + (NOTE[x[1]] ? '<em>' + NOTE[x[1]] + '</em>' : '') + '</div>'; }).join(''); }
+    var typeT = 0, person = 0, clarOn = false, typedOnce = false, ST_CHECK = '<svg viewBox="0 0 12 12"><path d="M3 6.2l2 2L9 4" fill="none" stroke="#04131a" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>';
+    function stagesOf(P) { return P.st.map(function (x) { return '<div class="a-st ' + x[1] + '"><i>' + (x[1] === 'done' ? ST_CHECK : '') + '</i><span>' + x[0] + '</span></div>'; }).join(''); }
     function movePill(j) { var b = cDots[j]; if (!b || !b.offsetWidth) return; segPill.style.width = b.offsetWidth + 'px'; segPill.style.transform = 'translateX(' + b.offsetLeft + 'px)'; }
     function typeInto(el, text, done) { var k = 0; el.textContent = ''; (function ty() { k += 2; el.textContent = text.slice(0, k); if (k < text.length) typeT = setTimeout(ty, 16); else if (done) typeT = setTimeout(done, 90); })(); }
     function showPerson(full) {
@@ -508,6 +519,8 @@ var DIR_A = (function () {
       if (beams && beamsOp > 0.01) beams.draw();
       if (fire && fv > 0.01) fire.draw(root.classList.contains('is-phone') ? 0.74 : 0.52);   // taller on phones, where the box sits low
       // Action's deep work timer counts down while it is on screen
+      if (n === 4 && now - adjT > 2400) { adjT = now; adjI++; var mi = MILES[adjI % MILES.length], pc = ((mi - 1) / 4 * 100).toFixed(1) + '%';
+        milesEl.textContent = mi; milesEl.classList.remove('roll'); void milesEl.offsetWidth; milesEl.classList.add('roll'); adjTh.style.left = pc; adjFill.style.width = pc; }
       if (n === 4) { var s = Math.max(0, clockS - Math.floor((now - introT0) / 1000) % 3600), h = Math.floor(s / 3600), m = Math.floor(s / 60) % 60, ss = s % 60;
         clockEl.textContent = h + ':' + (m < 10 ? '0' : '') + m + ':' + (ss < 10 ? '0' : '') + ss; arc.setAttribute('stroke-dashoffset', (94.2 * (1 - s / 7200)).toFixed(1)); }
       if (mode === 'looks' && now - cycleT > 2600) { cycleT = now; cycleI++; showLook(K.EARNED[cycleI % K.EARNED.length]); }
