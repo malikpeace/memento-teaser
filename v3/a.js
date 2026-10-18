@@ -62,7 +62,7 @@ var DIR_A = (function () {
   var SEG_ON = '#3fd94e', SEG_OFF = 'rgba(255,255,255,0.16)';
   var SEG5 = (function () {
     var r = 8, C = 2 * Math.PI * r, seg = C / 5, gap = 2.6, out = '<svg class="a-ring" viewBox="0 0 20 20" aria-hidden="true">';
-    for (var k = 0; k < 5; k++) out += '<circle cx="10" cy="10" r="' + r + '" fill="none" stroke="' + (k < 3 ? SEG_ON : SEG_OFF) + '" stroke-width="2.6" stroke-dasharray="' + (seg - gap).toFixed(2) + ' ' + (C - seg + gap).toFixed(2) + '" stroke-dashoffset="' + (-k * seg).toFixed(2) + '" transform="rotate(-90 10 10)"/>';
+    for (var k = 0; k < 5; k++) out += '<circle cx="10" cy="10" r="' + r + '" fill="none" stroke="' + (k < 2 ? SEG_ON : SEG_OFF) + '" stroke-width="2.6" stroke-dasharray="' + (seg - gap).toFixed(2) + ' ' + (C - seg + gap).toFixed(2) + '" stroke-dashoffset="' + (-k * seg).toFixed(2) + '" transform="rotate(-90 10 10)"/>';
     return out + '</svg>';
   })();
   var RING = '<svg class="a-ring" viewBox="0 0 36 36" aria-hidden="true"><circle cx="18" cy="18" r="15" fill="none" stroke="rgba(255,255,255,0.14)" stroke-width="3"/><circle class="arc" cx="18" cy="18" r="15" fill="none" stroke="#f3f6f9" stroke-width="3" stroke-linecap="round" stroke-dasharray="94.2" stroke-dashoffset="34" transform="rotate(-90 18 18)"/></svg>';
@@ -78,13 +78,13 @@ var DIR_A = (function () {
 
     clarity: '<div class="a-clar2"><div class="a-seg glass" role="group" aria-label="Examples"><i class="a-seg-pill"></i>' + ['Fitness', 'Screen time', 'Business', 'School', 'Creator'].map(function (n, i) { return '<button type="button" data-p="' + i + '">' + n + '</button>'; }).join('') + '</div>' +
       '<div class="a-cbody glass a-cbox"><div class="a-cq"><small>What do you actually want?</small><b data-what></b></div><div class="a-cq"><small>Why does that matter to you?</small><b data-why></b></div>' +
-      '</div><div class="a-cbody glass a-cbox a-cstage"><div class="a-cpath"><small>Your stages</small><div data-stages></div></div></div></div>',
+      '</div><div class="a-cbody glass a-cbox a-cstage"><div class="a-cpath"><div class="a-cpath-h"><small>Your stages</small><span class="a-cnav"><button class="a-cnav-b" type="button" data-cn="-1" aria-label="Previous example">' + CHEV + '</button><button class="a-cnav-b" type="button" data-cn="1" aria-label="Next example">' + CHEV + '</button></span></div><div data-stages></div></div></div></div>',
     action: '<ul class="a-acts glass">' +
       '<li class="auto"><i class="ic chk"><svg viewBox="0 0 20 20"><path d="M5 10.5l3.2 3.2L15 6.8" fill="none" stroke="#06210b" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg></i><span>Send three cold emails</span><em>Today</em></li>' +
       '<li class="timer"><i class="ic">' + RING + '</i><span>Deep work on the product</span><em class="clock" data-clock>1:12:40</em></li>' +
       '<li class="adj"><i class="ic cal"><svg viewBox="0 0 20 20"><rect x="3.5" y="4.5" width="13" height="12" rx="3" fill="none" stroke="currentColor" stroke-width="1.6"/><path d="M3.5 8.5h13M7 2.8v3M13 2.8v3" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg></i><span>Go for a <b class="a-roll" data-miles>3</b> mile run</span><em class="chip">Tomorrow, 6:30 AM</em>' +
         '<div class="a-adj" aria-hidden="true"><svg viewBox="0 0 12 12"><path d="M2.5 6h7" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg><div class="a-adj-tr"><i class="a-adj-fill"></i><i class="a-adj-th"></i></div><svg viewBox="0 0 12 12"><path d="M2.5 6h7M6 2.5v7" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg></div></li>' +
-      '<li class="days"><i class="ic">' + SEG5 + '</i><span>Phone away by 10pm</span><em data-days>3 of 5 days</em></li></ul>',
+      '<li class="days"><i class="ic">' + SEG5 + '</i><span>Phone away by 10pm</span><em data-days>2 of 5 days</em></li></ul>',
     keep: '<div class="a-keep glass"><div class="a-k-top"><span>Total actions completed</span><b><svg class="a-flame" viewBox="0 0 16 20" aria-hidden="true"><path d="M8 1.5c.6 3-2.6 4.6-2.6 8 0 1 .4 1.8 1 2.4-.2-1.8.9-3 2.1-3.9-.1 2.3 2.6 3.3 2.6 5.6 0 2-1.6 3.4-3.1 3.4C4.6 17 2.5 14.8 2.5 12c0-5 5.5-6.4 5.5-10.5z" fill="#3fd94e"/><path d="M11.8 7.2c1.2 1.2 1.9 2.9 1.9 4.8 0 2.4-1.4 4.4-3.5 5.1.9-.8 1.4-1.9 1.4-3.1 0-2.6-2-3.6-1.6-6.1.6.4 1.2.9 1.8 1.6z" fill="#9dff9f" opacity=".85"/></svg><span data-acts>0</span></b></div>' +
       '<div class="a-score"><span>Consistency score</span><b><span data-score>0</span><small> / 100</small></b></div>' +
       '<div class="a-ticks" data-ticks>' + new Array(TICKS + 1).join('<i></i>') + '<u class="a-goal" style="left:' + GOAL + '%"></u></div>' +
@@ -223,8 +223,7 @@ var DIR_A = (function () {
     clarityOut();
     function pickPerson(j) { clearTimeout(typeT); typedOnce = true; person = j; if (!clarOn) { showPerson(true); return; } var box = panels[3].querySelector('.a-clar2'); box.classList.add('swap'); typeT = setTimeout(function () { showPerson(false); }, 140); }
     cDots.forEach(function (b) { b.addEventListener('click', function () { pickPerson(+b.dataset.p); }); });
-    var cNav = E('div', 'a-cnav', '<button class="a-cnav-b glass" type="button" data-cn="-1" aria-label="Previous example">' + CHEV + '</button><button class="a-cnav-b glass" type="button" data-cn="1" aria-label="Next example">' + CHEV + '</button>', stage);
-    cNav.querySelectorAll('[data-cn]').forEach(function (b) { b.addEventListener('click', function () { var n = PEOPLE.length; pickPerson((((person % n) + +b.dataset.cn) % n + n) % n); }); });
+    panels[3].querySelectorAll('[data-cn]').forEach(function (b) { b.addEventListener('click', function () { var n = PEOPLE.length; pickPerson((((person % n) + +b.dataset.cn) % n + n) % n); }); });
     // Who: the lines come in one after another when the chapter arrives
     var whoRows = panels[1].querySelectorAll('.wr'), whoT = [];
     function whoIn() { whoT.forEach(clearTimeout); whoRows.forEach(function (r, i) { r.classList.remove('in'); whoT.push(setTimeout(function () { r.classList.add('in'); }, K.BAR ? 80 + i * 55 : 0)); }); }
@@ -330,12 +329,12 @@ var DIR_A = (function () {
     ageIn.addEventListener('input', function () { setAge(+ageIn.value); });
     setAge(18 + Math.floor(Math.random() * 12), true); Lx = LT; tickNumbers();
     // Action: tap any move to tick it; the deep work timer runs while you watch
-    var autoTouched = false, timerPaused = 0, timerPausedAt = 0, phoneDays = 3;
+    var autoTouched = false, timerPaused = 0, timerPausedAt = 0, phoneDays = 2;
     var autoLi = panels[4].querySelector('.auto'), timerLi = panels[4].querySelector('.timer'), daysLi = panels[4].querySelector('.days');
     autoLi.addEventListener('click', function () { autoTouched = true; autoLi.classList.toggle('done'); });
     timerLi.addEventListener('click', function () { var t = performance.now(); if (timerPausedAt) { timerPaused += t - timerPausedAt; timerPausedAt = 0; } else timerPausedAt = t; timerLi.classList.toggle('paused', !!timerPausedAt); });
     daysLi.addEventListener('click', function () {
-      phoneDays = phoneDays === 3 ? 2 : 3; daysLi.querySelector('[data-days]').textContent = phoneDays + ' of 5 days';
+      phoneDays = phoneDays === 3 ? 2 : 3; daysLi.classList.toggle('done', phoneDays === 3); daysLi.querySelector('[data-days]').textContent = phoneDays + ' of 5 days';
       daysLi.querySelectorAll('.a-ring circle').forEach(function (c, j) { c.setAttribute('stroke', j < phoneDays ? SEG_ON : SEG_OFF); });
     });
     var clockEl = panels[4].querySelector('[data-clock]'), arc = panels[4].querySelector('.arc'), clockS = 1 * 3600 + 12 * 60 + 40;
@@ -361,6 +360,11 @@ var DIR_A = (function () {
       lhost.style.width = cwNow + 'px'; cd.size(cwNow);
       fitY = []; fitS = []; fitX = []; fitR = []; fitZ = [];
       var ch = cwNow * 452 / 320;
+      // Who on a phone: where the turned card's near edge lands, so the words and the button stop 18px short of it
+      var whoOpen = whoWrap.classList.contains('open'), sideS = 0.9, sideX = vw / 2 + cwNow * sideS * (whoOpen ? 0.75 : 0.06), sideR = -26;
+      var sHW = cwNow * sideS / 2, sRad = -sideR * Math.PI / 180, sideEdge = vw / 2 + sideX - sHW * Math.cos(sRad) * 1100 / (1100 + sHW * Math.sin(sRad));
+      texts[1].style.right = phone && !whoOpen ? Math.max(48, vw - sideEdge - 6).toFixed(0) + 'px' : '';
+      panels[1].style.right = phone && !whoOpen ? Math.max(48, vw - sideEdge).toFixed(0) + 'px' : '';
       if (phone) {
         // each chapter is ONE group (words, card, box) centred in the room between the header and the sign-up bar,
         // with even gaps; the card shrinks only when the group would not fit
@@ -384,7 +388,7 @@ var DIR_A = (function () {
             var k3 = Math.max(0.74, Math.min(1, avail / Math.max(1, th + 22 + ph))); texts[i].dataset.k = k3; panels[i].dataset.k = k3;
             var th3 = th * k3, gP3 = ph ? 22 * k3 : 0, G3 = th3 + gP3 + ph * k3, y3 = top0 + Math.max(0, (avail - G3) / 2), sS = 0.9;
             texts[i].style.top = y3 + 'px'; panels[i].style.top = (y3 + th3 + gP3) + 'px';
-            fitS.push(sS / (st.scale || 1)); fitY.push(top0 + avail / 2 - vh / 2); fitX.push(vw / 2 + cwNow * sS * (whoWrap.classList.contains('open') ? 0.75 : 0.02)); fitR.push(-26); fitZ.push(0); return;
+            fitS.push(sideS / (st.scale || 1)); fitY.push(top0 + avail / 2 - vh / 2); fitX.push(sideX); fitR.push(sideR); fitZ.push(0); return;
           }
           if (st.tilt) {   // Who: the card upright and large, high behind the frosted header; the words in front, low
             var k2 = Math.max(0.8, Math.min(1, avail / Math.max(1, th + gP + ph))); texts[i].dataset.k = k2; panels[i].dataset.k = k2; th *= k2; ph *= k2; gP *= k2;
@@ -400,7 +404,6 @@ var DIR_A = (function () {
           k = Math.max(0.7, k);   // words and box shrink a little before anything is cut
           texts[i].dataset.k = k; panels[i].dataset.k = k;
           var thk = th * k, phk = ph * k, room = ch * sc * gk, G = thk + gT + room + gP + phk, y0 = top0 + Math.max(0, (avail - G) / 2);
-          if (st.id === 'clarity') { var cxS = Math.max(26, (vw / 2 - cwNow * sc / 2) / 2); cNav.style.top = (y0 + thk + gT + room / 2) + 'px'; cNav.style.setProperty('--cx', cxS.toFixed(1) + 'px'); }
           texts[i].style.top = y0 + 'px'; panels[i].style.top = (y0 + thk + gT + room + gP) + 'px';
           if (st.phoneHide) { var pTop = y0 + thk + gT + room + gP, bx = panels[i].querySelector('.who-wrap'), bh = bx ? bx.offsetHeight * k : phk, bTop = pTop + (bx ? bx.offsetTop * k : 0), behind = Math.min(1, bh * 0.8 / ch); fitS.push(behind / (st.scale || 1)); fitY.push(bTop + bh / 2 - vh / 2); }
           else { fitS.push(sc / (st.scale || 1)); fitY.push(y0 + thk + gT + room / 2 - vh / 2); }
@@ -447,7 +450,6 @@ var DIR_A = (function () {
       var i0 = Math.floor(p), i1 = Math.min(STEPS.length - 1, i0 + 1), f = K.ease((p - i0 - 0.2) / 0.6);
       function fade(list, dy) { list.forEach(function (t, i) { var d = p - i, op = K.clamp(1 - Math.abs(d) * 2.4, 0, 1); t.style.opacity = op; t.style.transform = 'translateY(' + (-d * dy).toFixed(1) + 'px)' + (t.dataset.k && t.dataset.k != 1 ? ' scale(' + (+t.dataset.k).toFixed(3) + ')' : ''); t.style.visibility = op > 0.01 ? 'visible' : 'hidden'; t.style.pointerEvents = op > 0.6 ? 'auto' : 'none'; }); }
       fade(texts, 26); fade(panels, 18);
-      cNav.style.opacity = panels[3].style.opacity; cNav.style.visibility = panels[3].style.visibility; cNav.style.pointerEvents = panels[3].style.pointerEvents;
       hint.style.opacity = K.clamp(1 - p * 3, 0, 1);
       if (stick) stick.classList.toggle('past-hero', p > 0.35);
       whoShade.style.opacity = 0;
