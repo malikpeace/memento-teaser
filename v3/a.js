@@ -127,8 +127,8 @@ var DIR_A = (function () {
     var vwrap = E('div', 'a-vwrap', null, grow), vhost = E('div', 'k-host', null, vwrap), engr = E('div', 'a-engr', '', vhost);
     var panelBox = E('div', 'a-panel', null, stage);
     var bigwm = E('div', 'a-bigwm', K.mark() + '<span>emento</span>', root), hdrWm = root.querySelector('.top .wm'), hdrEl = root.querySelector('.top'), wmStart = null;
-    var snaps = STEPS.concat([{}]).map(function () { return E('div', 'a-snap', null, story); }), extra = 0, whoQ = 0;
-    document.documentElement.style.scrollSnapType = 'y proximity';
+    var snaps = STEPS.map(function () { return E('div', 'a-snap', null, story); }), extra = 0, whoQ = 0;
+    document.documentElement.style.scrollSnapType = 'y mandatory';   // every scroll settles on a chapter (Malik: never caught between two)
     var days = E('div', 'a-days-full', '<canvas class="a-days-cv" aria-hidden="true"></canvas><div class="a-days-scrim"></div><i class="a-today" aria-hidden="true"></i>' +
       '<div class="a-days-in"><p class="a-days-num">~27,000 days.</p><p class="a-days-line">That’s what the average person gets. <span class="nw">At <span data-age>25</span>,</span> you have about <span data-left>17,700</span> left.</p>' +
       '<p class="a-days-sol">Memento is here to make sure you get the most out of them.</p>' +
@@ -439,7 +439,8 @@ var DIR_A = (function () {
       var car = cardArea.getBoundingClientRect(), fcx = car.left + car.width / 2, W = document.documentElement.clientWidth;
       if (two) { fireHost.style.left = Math.round(fcx - W * 0.7) + 'px'; fireHost.style.right = 'auto'; fireHost.style.width = Math.round(W * 1.4) + 'px'; }
       else { fireHost.style.left = ''; fireHost.style.right = ''; fireHost.style.width = ''; }
-      // a gentle snap: each chapter's resting point is a snap point (proximity, so a fast swipe still flies past)
+      // the snap: each chapter's resting point is a snap point, and the sign-up and letter after the story are one tall snap
+      // area that scrolls freely inside (mandatory, so a scroll always settles on a chapter, never between two)
       snaps.forEach(function (m, i) { m.style.display = i < STEPS.length + extra ? '' : 'none'; m.style.top = (i * vh * 0.85) + 'px'; });
       onScroll();
     }

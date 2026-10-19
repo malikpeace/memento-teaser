@@ -724,3 +724,9 @@
 /* ===== round 44 ===== */
 /* phones: the name field is as wide as the card (width set in layout) and sits centred under it */
 .a.is-phone .a-name { align-self: center; }
+
+/* ===== round 46: the snap ===== */
+/* after the story, the sign-up, letter and footer are one snap area taller than the screen, so they scroll freely */
+.a-after { scroll-snap-align: start; scroll-margin-top: var(--bar); }
+/* the very bottom is always a resting place too (a hard fling to the end lands on the footer, never back at the sign-up) */
+.a-after .foot { scroll-snap-align: end; }
