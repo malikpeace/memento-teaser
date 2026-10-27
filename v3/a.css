@@ -730,3 +730,8 @@
 .a-after { scroll-snap-align: start; scroll-margin-top: var(--bar); }
 /* the very bottom is always a resting place too (a hard fling to the end lands on the footer, never back at the sign-up) */
 .a-after .foot { scroll-snap-align: end; }
+
+/* The text and panel layers each cover the whole column; only the chapter on screen takes taps (its .a-t / .a-p sets
+   pointer-events itself). Without this the empty panel layer sat on top of the hero's Join button on computers and
+   swallowed every click (Malik 2026-10-27). */
+.a-text, .a-panel { pointer-events: none; }

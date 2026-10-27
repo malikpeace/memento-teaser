@@ -5,6 +5,16 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <script>/* always open at the top, so a refresh plays the intro instead of landing mid-story (carried from the old page) */
 if ('scrollRestoration' in history) history.scrollRestoration = 'manual';
+/* ...no matter what (Malik 2026-10-27): phones also brought the page back mid-story from the back/forward cache or a
+   restored tab, and a late layout could leave it off the top. Until the visitor scrolls on their own, keep it at 0. */
+(function () {
+  var moved = false;
+  ['wheel', 'touchstart', 'keydown', 'pointerdown'].forEach(function (t) { addEventListener(t, function () { moved = true; }, { capture: true, passive: true }); });
+  function top() { if (!moved && (window.scrollY || document.documentElement.scrollTop)) window.scrollTo(0, 0); }
+  addEventListener('pageshow', function (e) { if (e.persisted) { moved = false; window.scrollTo(0, 0); } else top(); });
+  addEventListener('load', function () { top(); setTimeout(top, 250); setTimeout(top, 900); });
+  document.addEventListener('DOMContentLoaded', top);
+})();
 /* the real site: no mockup bar, the real Beehiiv sign-up */
 window.MEMENTO_LIVE = true;</script>
 <title>Memento · The personal system for those who actually want to lock in</title>
@@ -26,7 +36,7 @@ window.MEMENTO_LIVE = true;</script>
 <meta name="description" content="Get clear on what you want, take the one action that matters today, and keep going until it's automatic. Memento is in private beta.">
 <meta name="theme-color" content="#000000">
 <link rel="stylesheet" href="v3/page.css?v=12">
-<link rel="stylesheet" href="v3/a.css?v=12">
+<link rel="stylesheet" href="v3/a.css?v=13">
 </head>
 <body>
 <main id="app"></main>
