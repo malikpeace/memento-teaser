@@ -146,7 +146,7 @@ var DIR_A = (function () {
     var lcRef = { host: lhost };
     var wl = K.wall(wallHost, { bg: 'waterfall', skin: 'house', card: lcRef, dprK: innerWidth < 700 ? 0.55 : 0.5 });
     cd.wall = wl;
-    var beams = window.BEAMS ? BEAMS.make(beamsHost, { speed: innerWidth < 980 ? 1.1 : 0.5, dprK: innerWidth < 700 ? 0.55 : 0.5, amp: innerWidth < 700 ? 0.85 : 0.5, len: innerWidth < 980 ? 1 : 0.62, tint: 0.88, c1: [0.2, 0.95, 0.82], c2: [0.5, 0.48, 1] }) : null, beamsOp = 1;
+    var beams = window.BEAMS ? BEAMS.make(beamsHost, { speed: innerWidth < 980 ? 1.1 : 0.5, dprK: innerWidth < 700 ? 0.55 : 0.5, amp: innerWidth < 700 ? 0.85 : innerWidth < 980 ? 0.7 : 0.5, len: innerWidth < 980 ? 1 : 0.62, tint: 0.88, c1: [0.2, 0.95, 0.82], c2: [0.5, 0.48, 1] }) : null, beamsOp = 1;
     var fire = window.FIRE ? FIRE.make(fireHost, { dprK: innerWidth < 700 ? 0.5 : 0.45, sparks: 44, flare: 0.6 }) : null;
     var L = { clar: 0, act: 0, cons: 0 }, wallMode = '', boostT = 0;
     function boost() { if (!boostT) return 1; var a = (performance.now() - boostT) / 1000; return 1 + 0.22 * Math.max(0, Math.sin(Math.PI * Math.min(1, a / 1.4))); }
