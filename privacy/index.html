@@ -40,7 +40,7 @@
 <main>
   <a class="back" href="/">&larr; Back to Memento</a>
   <h1>Privacy</h1>
-  <div class="date">Updated October 30, 2026</div>
+  <div class="date">Updated November 20, 2026</div>
 
   <p class="lead">Memento is a personal app. What you write in it belongs to you. This page says what we collect, why we collect it, which companies help us run Memento, how long we keep things, and how to get your data back or delete it.</p>
 
@@ -60,8 +60,10 @@
   <ul>
     <li><b>Your account.</b> Your email address and how you sign in (an email code, Apple, or Google). If you use Apple or Google, they share the identity details needed to sign you in.</li>
     <li><b>What you write and do in Memento.</b> Your name and birthday from setup (the birthday powers your life-in-weeks and day counts), your Clarity answers and conversations, including completed conversations, your goals, plans, notes, reflections, check-ins and progress. If you sign in, this syncs to your account so you can restore it on another device.</li>
-    <li><b>Photos you add.</b> These stay on your device. They are not uploaded to our servers or included in account sync.</li>
-    <li><b>Screen Time.</b> If you turn on app blocking, your app usage is read by Apple's Screen Time system on your iPhone. That data never leaves your device and we never receive it.</li>
+    <li><b>Your chats with Memento.</b> Your conversations with Memento's AI, their titles, and the changes you make from them are stored in your account, so they appear on every device you sign in to.</li>
+    <li><b>Team, if you join one.</b> Your teammates see your first name, color and Team photo, which days you did your main action or took a rest day, your current run of days, and your Team's total. They never see your goal, your actions, your notes, or anything else you write. Your first name appears in the nudges you send.</li>
+    <li><b>Photos you add.</b> Proof photos, your profile picture, your Team photo, and photos you send in a chat with Memento are stored in your account on our servers, so they appear on every device you sign in to. Only you can see them, except your Team photo, which your teammates see. A photo you send in a chat is also sent to our AI provider so it can reply.</li>
+    <li><b>App blocking.</b> If you turn it on, your app usage is read on your phone: by Apple's Screen Time on iPhone, and through the Usage access permission you grant on Android. That data never leaves your device and we never receive it.</li>
     <li><b>App blocking and Screen Time on Android.</b> If you turn on app blocking, Memento uses Android's Accessibility service. It receives one thing: the name of the app that just came to the front of your screen. While a block is on (deep work, Block now, your schedule or a daily limit you set), Memento checks that name against what you chose to block and, if it's blocked, sends you to your home screen and shows Memento's block screen. Memento doesn't read what's on your screen or what you type, and app names stay on your phone. If you turn on Usage access for Screen Time, Memento reads how long you used each app from Android and shows it to you; those numbers stay on your phone too. Memento does save, with your account, when each block was on and what started it, so it can show your total blocked time. It never saves which apps you opened. You can turn off either permission any time in Android's settings.</li>
     <li><b>Reminders, if you turn them on.</b> A push address for your device, your time zone, your reminder settings, and the limited goal and day details needed to choose the right reminder. Turning notifications off in your phone's settings stops them showing but does not immediately delete the server registration; Memento removes it the next time it runs, or you can turn reminders off inside Memento.</li>
     <li><b>Purchases.</b> Your plan, store, transaction and subscription identifiers, status, expiry and refunds. We never receive or store your card number.</li>
@@ -83,7 +85,7 @@
   <p>If you are in the EU or UK, our legal bases are: performing our contract with you (running the app you use), our legitimate interests (security and improving the app, balanced against your rights), your consent (reminders and the newsletter, which you can withdraw at any time), and legal obligations.</p>
 
   <h2>AI features</h2>
-  <p>When you use an AI feature, the text it needs, such as your goals, answers and the conversation so far, is sent through our server to Anthropic or OpenAI to write the reply. Under their commercial API terms, these providers do not use it to train their models, and they may keep it for a limited time for safety and abuse monitoring. AI replies can be wrong. Memento is not medical, mental-health, legal or financial advice.</p>
+  <p>When you use an AI feature, what it needs is sent through our server to Anthropic or OpenAI to write the reply. For a chat with Memento, that is your message and the recent conversation, your plan and your last week, your Moons, your Mori answers if you gave them, the details needed for a change you ask for (such as your checklist or a setting), and a photo if you attach one. Before a message reaches the AI, a safety check reads it. If it shows signs of crisis, Memento shows help lines instead of a reply, and may pause your reminders for 24 hours. We keep only that pause, never what you wrote. Under their commercial API terms, these providers do not use it to train their models, and they may keep it for a limited time for safety and abuse monitoring. AI replies can be wrong. Memento is not medical, mental-health, legal or financial advice.</p>
   <p>Background plan building stores its inputs, intermediate passes and result for about 24 hours so the work can finish while the app is closed, then removes them through scheduled cleanup.</p>
 
   <h2>Companies that help us run Memento</h2>
@@ -91,7 +93,7 @@
   <ul>
     <li><b>Supabase</b>: accounts, database and server functions (servers in the United States).</li>
     <li><b>Anthropic</b> and <b>OpenAI</b>: the AI features.</li>
-    <li><b>Apple</b>: Sign in with Apple, App Store purchases and iPhone notifications. <b>Google</b>: Sign in with Google.</li>
+    <li><b>Apple</b>: Sign in with Apple, App Store purchases and iPhone notifications. <b>Google</b>: Sign in with Google, and notifications on Android (Firebase Cloud Messaging).</li>
     <li><b>Polar</b>: purchases made on our website.</li>
     <li><b>PostHog</b>: usage events. <b>Sentry</b>: crash reports.</li>
     <li><b>Resend</b>: sign-in code emails. <b>beehiiv</b>: the optional email list.</li>
@@ -107,6 +109,11 @@
     <li><b>Your account and what you write:</b> until you delete it or delete your account.</li>
     <li><b>Recovery copies</b> of your synced data (to undo a bad sync): up to 30 days and a limited number, removed by scheduled cleanup.</li>
     <li><b>Background AI work:</b> about 24 hours.</li>
+    <li><b>Chats with Memento and their photos:</b> until you delete the chat, delete all chats, or delete your account.</li>
+    <li><b>Proof photos and your profile picture:</b> until you delete them or delete your account.</li>
+    <li><b>Daily AI message counts:</b> 14 days.</li>
+    <li><b>Team nudges and votes:</b> up to 7 days. Your Team details: until you leave the Team or delete your account.</li>
+    <li><b>A safety pause:</b> 24 hours.</li>
     <li><b>Error reports:</b> about 90 days.</li>
     <li><b>Reports</b> stay in GitHub as our support record, including your words, even after you delete your account. Photos and videos are deleted 90 days after the report is filed, or when you delete your account, whichever comes first. If you want a report removed, write to us.</li>
     <li><b>Purchase records:</b> as long as needed for refunds, tax, accounting and fraud prevention. Apple and Polar keep their own records.</li>
@@ -125,7 +132,7 @@
   <p><b>EU and UK residents</b> also have the right to restrict or object to our use of their data, to receive it in a portable format, and to complain to their local data protection authority.</p>
 
   <h2>Security</h2>
-  <p>Data travels encrypted, each account can only reach its own data, sign-in keys are kept in your iPhone's secure Keychain, and access to our systems is limited. No system is perfectly secure; if a breach affects your information, we will tell you as the law requires.</p>
+  <p>Data travels encrypted, each account can only reach its own data, sign-in keys are kept in your phone's secure storage (the Keychain on iPhone, the Keystore on Android), and access to our systems is limited. No system is perfectly secure; if a breach affects your information, we will tell you as the law requires.</p>
 
   <h2>Children</h2>
   <p>Memento is for people 18 or older and is not directed at children. If you believe a child has given us information, write to us and we will delete it.</p>
